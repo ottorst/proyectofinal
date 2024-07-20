@@ -22,8 +22,7 @@ Plataforma que permite a los chefs ofrecer sus servicios en sus propios hogares 
 </ul>
 <h3>Modelo de negocio:</h3>
 <ul>
-<li>La aplicación cobra una comisión por cada evento realizado a través de la plataforma.</li>
-<li>Los chefs pagan una suscripción mensual para acceder a la plataforma y a sus funcionalidades.</li>
+<li>La aplicación cobra a los clientes del chef una comisión por cada evento realizado a través de la plataforma.</li>
 </ul>
 <h3>Canales de marketing:</h3>
 <ul>
