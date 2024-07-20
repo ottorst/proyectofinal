@@ -10,7 +10,6 @@ const Home:React.FC = () => {
 <div className={`flex flex-col lg:flex-row items-center justify-between w-full space-y-4 md:space-y-0 md:space-x-4 bg-smokegrey`}>
         <div className="relative w-full md:w-[509px] md:h-[423px] flex items-center text-center font-serif text-[20px] md:text-[25px]">
           <p className="text-center px-4">Chef Mike is committed to using only the highest quality ingredients in his culinary creations. He meticulously sources fresh, organic produce, sustainably caught seafood, and ethically raised meats to ensure every dish meets the highest standards of flavor and nutrition. </p>
-          <p>PRUEBA DE FRONT</p>
         </div>
         <div className="relative flex-shrink-0 w-full md:w-auto">
           <Image src="/assets/tablacomida.png" alt="Tabla Carnes frias" width={500} height={450}/>
