@@ -15,9 +15,10 @@ const About:React.FC = () => {
   
           <h1 className=" text-gray-100 text-3xl font-bold md:text-4xl">Chef Tony Stephen</h1>
   
+          <h2>About Me</h2>
           <p className="text-slate-100 leading-loose md:text-left text-xl">Chef Tony is considered the best at cooking Japanese cuisine due to his mastery of both traditional and modern techniques, 
             honed over decades of experience. 
-            His dedication to quality and fresh ingredients ensures authentic and exquisite flavors in every dish.</p>
+            His dedication to quality and fresh ingredients ensures authentic and exquisite flavors in every dish. Beyond his culinary skills, Chef Tony is also renowned for his impeccable presentation, turning each plate into a work of art that delights both the eyes and the palate.</p>
   
         </article>
         
