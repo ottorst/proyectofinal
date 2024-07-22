@@ -2,9 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-
 body{
-    background-color: #343434;
-    color: white;
-    font-family: bakersvill;
+    background-color: #0b0909f0;
+    color: #ffffff
+    
+}
+
+@layer components{
+    .wrapper{
+       @apply w-[90%] mx-auto max-w-screen-xl
+       overflow-hidden;
+   
+   }
 }
