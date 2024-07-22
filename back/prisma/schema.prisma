@@ -15,14 +15,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Usuario {
+model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
   name      String
   password  String
-  birthday  DateTime
+  phone     String?
+  birthday  DateTime @default(now())
   allergies String?
-  auth0Id   String
+  address   String?
+  city      String?
+  country   String?
   picture   String?
+  auth0Id   String
   admin     Boolean  @default(false)
 }
