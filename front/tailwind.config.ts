@@ -16,7 +16,9 @@ const config: Config = {
           "open-menu":"url('/assets/hamburgerwhite.svg')"
       },
       colors:{
-         'gray-500-50': 'rgba(107, 114, 128, 0.1)'
+         'gray-500-50': 'rgba(107, 114, 128, 0.1)',
+         'black-smoked':' #0b0909f0',
+         
       },
       fontFamily: {
         'lora': ['Lora', 'serif'],

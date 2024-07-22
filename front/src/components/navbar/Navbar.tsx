@@ -21,7 +21,7 @@ const Navbar:React.FC = () => {
     <div className="fixed inset-0 bg-gradient-to-b from-black/70 to-white/70 translate-x-full
     peer-checked:translate-x-0 transition-transform md:static md:bg-none md:translate-x-0 font-lora
     ">
-      <ul className="absolute inset-x-0 top-24 p-12 bg-gray-400 w-[90%] mx-auto
+      <ul className="absolute inset-x-0 top-24 p-12 bg-black-smoked w-[90%] mx-auto
       rounded-md h-max text-center grid gap-6 md:w-max md:bg-transparent md:p-0 md:grid-flow-col md:static
       text-xl
       ">
