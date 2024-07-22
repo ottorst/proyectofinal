@@ -7,6 +7,7 @@ const Navbar:React.FC = () => {
     <div>
     <header>
     <p></p>
+    <p></p>
       <nav className="wrapper h-28 flex items-center justify-between">
       <Link href={"/"}
       className="w-1/3 max-w-[100px]"
