@@ -26,10 +26,12 @@ const Navbar:React.FC = () => {
       rounded-md h-max text-center grid gap-6 md:w-max md:bg-transparent md:p-0 md:grid-flow-col md:static
       text-xl
       ">
-             <Link href={""}> <li>Home</li></Link>              
-             <Link href={""}> <li>About</li></Link>
-             <Link href={""}> <li>Menu</li></Link>
-             <Link href={""}> <li>Contact</li></Link>
+             <Link href={"/"}> <li>Home</li></Link>              
+             <Link href={"/about"}> <li>About</li></Link>
+             <Link href={"experience"}> <li>Experience</li></Link>
+             <Link href={"/login"}><li>Login</li></Link>
+             <Link href={"/contact"}><li>Contact</li></Link>
+
       </ul>
     </div>
 
