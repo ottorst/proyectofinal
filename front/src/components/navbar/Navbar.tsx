@@ -4,28 +4,39 @@ import Image from "next/image";
 
 const Navbar:React.FC = () => {
   return (
-    <div className="flex flex-col md:flex-row items-center max-w-screen-xl mx-auto">
-      
-      <Image src="/assets/cocinero.png" alt="Logo chef" width={118} height={133} className="mt-4 relative flex-shrink-0 w-full md:w-auto"/>
+    <div>
+    <header>
+    <p></p>
+    <p></p>
+      <nav className="wrapper h-28 flex items-center justify-between">
+      <Link href={"/"}
+      className="w-1/3 max-w-[100px]"
+      ><Image src={"/assets/sombrero.png"} alt="" width={50} height={50} className="w-full"/></Link>
 
+      <input type="checkbox" id="menu" className="peer hidden"/>
       
-      <div className="flex-grow"></div>
-
-      <div className="flex flex-col md:flex-row md:gap-9 mr-12 text-slate-50 text-xl space-y-4 md:space-y-0 ">
-        <Link href="#">
-          Home
-        </Link>
-        <Link href="#">
-          About
-        </Link>
-        <Link href="#">
-          Register
-        </Link>
-        <Link href="#">
-          Contact
-        </Link>
-      </div>
+      <label htmlFor="menu" className="bg-open-menu w-14 h-12 bg-cover bg-center
+      cursor-pointer peer-checked:bg-close-menu z-50 md:hidden 
+      "></label>
+    
+    <div className="fixed inset-0 bg-gradient-to-b from-black/70 to-white/70 translate-x-full
+    peer-checked:translate-x-0 transition-transform md:static md:bg-none md:translate-x-0 font-lora
+    ">
+      <ul className="absolute inset-x-0 top-24 p-12 bg-black-smoked w-[90%] mx-auto
+      rounded-md h-max text-center grid gap-6 md:w-max md:bg-transparent md:p-0 md:grid-flow-col md:static
+      text-xl
+      ">
+             <Link href={""}> <li>Home</li></Link>              
+             <Link href={""}> <li>About</li></Link>
+             <Link href={""}> <li>Menu</li></Link>
+             <Link href={""}> <li>Contact</li></Link>
+      </ul>
     </div>
+
+      </nav>
+
+    </header>
+   </div>
   );
 };
 

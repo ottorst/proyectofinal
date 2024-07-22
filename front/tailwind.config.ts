@@ -12,10 +12,17 @@ const config: Config = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+          "close-menu":"url('/assets/icon-close.svg')",
+          "open-menu":"url('/assets/hamburgerwhite.svg')"
       },
       colors:{
-        smokegrey:"#a9a9a90b",
-      }
+         'gray-500-50': 'rgba(107, 114, 128, 0.1)',
+         'black-smoked':' #0b0909f0',
+         
+      },
+      fontFamily: {
+        'lora': ['Lora', 'serif'],
+      },
     },
   },
   plugins: [],
