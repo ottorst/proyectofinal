@@ -23,7 +23,6 @@ const Home:React.FC = () => {
         </div>
 
         <div className="relative w-full md:w-[509px] md:h-[423px] flex items-center text-center font-serif text-[20px] md:text-[25px] order-1 lg:order-2">
-          <h2>About me</h2>
           <h1>Chef Mike is a seasoned culinary expert renowned for his innovative approach to traditional cuisine. With over 15 years of experience in the culinary industry, he excels in creating exquisite dishes that blend classic flavors with contemporary techniques.</h1>
         </div>
       </div>
