@@ -6,10 +6,10 @@ import {
   MaxLength,
   Matches,
   IsDateString,
-  isString,
   IsOptional,
   IsBoolean,
 } from 'class-validator';
+
 export class CreateUserDto {
   @IsEmail()
   @IsNotEmpty()
