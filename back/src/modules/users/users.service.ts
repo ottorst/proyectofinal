@@ -33,7 +33,7 @@ export class UsersService {
     const findUser = await this.findByEmail(createUserDto.email);
 
     if (findUser) {
-      throw new Error(`User with email ${createUserDto.email} already exists.`);
+      throw new Error(`Can't create the user.`);
     }
 
     const user = await prisma.user.create({

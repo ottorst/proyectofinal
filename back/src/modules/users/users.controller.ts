@@ -1,3 +1,5 @@
+// @Controller('users')
+
 import {
   Controller,
   Get,
@@ -15,12 +17,27 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiExcludeEndpoint,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('seeder')
   @HttpCode(HttpStatus.CREATED)
+  @ApiResponse({
+    status: HttpStatus.CREATED, //201
+    description: `${HttpStatus.CREATED}: Users database seeded initializer (15 users, 4 admins).`,
+  })
   seeder() {
     return this.usersService.seeder();
   }
@@ -38,6 +55,18 @@ export class UsersController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: `${HttpStatus.OK}: Users list retrieved successfully.`,
+    type: CreateUserDto,
+    isArray: true,
+  })
+  @ApiQuery({ name: 'name', required: false, type: String })
+  @ApiQuery({ name: 'page', required: true, type: Number })
+  @ApiQuery({ name: 'limit', required: true, type: Number })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized. Role: ADMIN, AuthGuard.',
+  })
   async findAll() {
     return await this.usersService.findAll();
   }
@@ -89,6 +118,16 @@ export class UsersController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.ACCEPTED,
+    description: `${HttpStatus.ACCEPTED}: Delete user by UUID.`,
+    type: CreateUserDto,
+  })
+  @ApiBadRequestResponse({ description: 'Invalid UUID' })
+  @ApiQuery({ name: 'id', required: true, type: String })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized. Role: ADMIN, AuthGuard.',
+  })
   async remove(@Param('id') id: string) {
     // TODO: check if user is admin
     try {

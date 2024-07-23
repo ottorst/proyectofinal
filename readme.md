@@ -1,4 +1,7 @@
 <p align="center"><h1>Invitación Gourmet</h1></p>
+<h2>Introducción</h2>
+<p>Vídeos de la aplicación</p>
+<p><a href="https://youtu.be/VMqe1zCP_Yo">Documentación de la aplicación (http://localhost:3001/apidoc)</a></p>
 <h2>Explicación del modelo de negocio y la web</h2>
 <h3>Problema que resuelve la aplicación:</h3>
 <p>
