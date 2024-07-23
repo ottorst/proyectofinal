@@ -21,7 +21,7 @@ model User {
   name      String
   password  String
   phone     String?
-  birthday  DateTime @default(now())
+  birthday  DateTime? // Campo opcional
   allergies String?
   address   String?
   city      String?
@@ -30,3 +30,4 @@ model User {
   auth0Id   String
   admin     Boolean  @default(false)
 }
+
