@@ -1,3 +1,5 @@
+
+import { IsEmail, IsNotEmpty, IsString, MinLength, MaxLength, Matches, IsOptional, IsBoolean } from 'class-validator';
 import {
   IsEmail,
   IsNotEmpty,
@@ -10,6 +12,7 @@ import {
   IsBoolean,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+
 
 export class CreateUserDto {
   @ApiProperty({
@@ -26,6 +29,7 @@ export class CreateUserDto {
   })
   @IsString()
   @IsNotEmpty()
+  @IsString()
   @MinLength(3)
   @MaxLength(80)
   name: string;
@@ -36,16 +40,12 @@ export class CreateUserDto {
     example: 'MyPassw0rd!',
   })
   @IsNotEmpty()
-  @Matches(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[=!@#$%^&*])[A-Za-z\d=!@#$%^&*]{6,15}$/,
-    {
-      message:
-        'The Password must have at least: one lowercase letter, one uppercase letter, one number, one special character, between 6 and 15 characters long.',
-    },
-  )
   @IsString()
   @MinLength(6)
   @MaxLength(15)
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[=!@#$%^&*])[A-Za-z\d=!@#$%^&*]{6,15}$/, {
+    message: 'La contraseña debe cumplir con los requisitos.',
+  })
   password: string;
 
   @ApiProperty({
@@ -58,6 +58,7 @@ export class CreateUserDto {
   @IsString()
   passwordConfirm: string;
 
+  @IsOptional()
   @ApiProperty({
     description: 'User phone. Optional.',
     nullable: true,
@@ -81,29 +82,32 @@ export class CreateUserDto {
     example: 'peanuts, milk',
   })
   @IsString()
-  @IsOptional()
-  allergies: string;
+  phone?: string;
 
+  @IsOptional()
   @ApiProperty({
     description: 'User address. Optional.',
     nullable: true,
     example: 'Calle Falsa 123',
   })
   @IsString()
-  @MinLength(3)
-  @MaxLength(80)
-  @IsOptional()
-  address: string;
+  birthday?: string;
 
+  @IsOptional()
+  @IsString()
+  allergies?: string;
+
+  @IsOptional()
   @ApiProperty({
     description: 'User city. Optional.',
     nullable: true,
     example: 'Madrid',
   })
   @IsString()
-  @MinLength(5)
-  @MaxLength(20)
+  address?: string;
+
   @IsOptional()
+  @IsString()
   city?: string;
 
   @ApiProperty({
@@ -115,8 +119,10 @@ export class CreateUserDto {
   @MinLength(5)
   @MaxLength(20)
   @IsOptional()
+  @IsString()
   country?: string;
 
+  @IsOptional()
   @ApiProperty({
     description: 'User profile picture, as URL of Cloudinary. Optional..',
     nullable: true,
@@ -125,8 +131,9 @@ export class CreateUserDto {
     default: false,
   })
   @IsString()
-  picture: string;
+  picture?: string;
 
+  @IsOptional()
   @ApiProperty({
     description:
       'Integration with auth0 integration. Optional. Default value: email.',
@@ -135,8 +142,9 @@ export class CreateUserDto {
     default: false,
   })
   @IsString()
-  authOId: string;
+  authOId?: string;
 
+  @IsOptional()
   @ApiProperty({
     description: 'User role for administrators, as bool. Default value: false.',
     nullable: true,
@@ -144,5 +152,5 @@ export class CreateUserDto {
     default: false,
   })
   @IsBoolean()
-  admin: boolean;
+  admin?: boolean;
 }

@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as fs from 'fs';
-import * as bcryp from 'bcrypt';
-import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
+import { PrismaService } from '../prisma/prisma.service';
 
-const prisma = new PrismaClient();
 @Injectable()
 export class UsersService {
-  // constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaService) {}
+
   async seeder() {
     const usersData = fs.readFileSync('src/datainit/users.json', 'utf8');
     const parseData = JSON.parse(usersData);
@@ -24,19 +24,13 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto) {
-    const cryptedPassword = await bcryp.hash(createUserDto.password, 10);
-
-    if (createUserDto.password !== createUserDto.passwordConfirm) {
-      throw new Error(`Passwords do not match.${cryptedPassword}`);
-    }
-
+    console.log('CreateUserDto received in create method:', createUserDto);
     const findUser = await this.findByEmail(createUserDto.email);
-
     if (findUser) {
       throw new Error(`Can't create the user.`);
     }
 
-    const user = await prisma.user.create({
+    const user = await this.prisma.user.create({
       data: {
         name: createUserDto.name,
         email: createUserDto.email,
@@ -47,30 +41,30 @@ export class UsersService {
         city: createUserDto.city,
         country: createUserDto.country,
         picture: createUserDto.picture,
-        auth0Id: createUserDto.email,
+        auth0Id: createUserDto.authOId,
         admin: createUserDto.admin,
-        password: cryptedPassword,
+        password: createUserDto.password
       },
     });
 
-    user.password = null;
+    const { password, ...userWithoutPassword } = user;
 
-    return user;
+    return userWithoutPassword;
   }
 
   async findAll() {
-    return await prisma.user.findMany();
+    return await this.prisma.user.findMany();
   }
 
   async findOne(id: number) {
-    const user = await prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { id },
     });
     return user;
   }
 
   async findByEmail(email: string) {
-    const user = await prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { email },
     });
     return user;
@@ -82,7 +76,7 @@ export class UsersService {
 
   async remove(id: number) {
     try {
-      const user = await prisma.user.delete({
+      const user = await this.prisma.user.delete({
         where: { id },
       });
       return user;
