@@ -1,5 +1,3 @@
-
-import { IsEmail, IsNotEmpty, IsString, MinLength, MaxLength, Matches, IsOptional, IsBoolean } from 'class-validator';
 import {
   IsEmail,
   IsNotEmpty,
@@ -12,7 +10,6 @@ import {
   IsBoolean,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-
 
 export class CreateUserDto {
   @ApiProperty({
@@ -43,9 +40,12 @@ export class CreateUserDto {
   @IsString()
   @MinLength(6)
   @MaxLength(15)
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[=!@#$%^&*])[A-Za-z\d=!@#$%^&*]{6,15}$/, {
-    message: 'La contraseña debe cumplir con los requisitos.',
-  })
+  @Matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[=!@#$%^&*])[A-Za-z\d=!@#$%^&*]{6,15}$/,
+    {
+      message: 'La contraseña debe cumplir con los requisitos.',
+    },
+  )
   password: string;
 
   @ApiProperty({
@@ -66,7 +66,7 @@ export class CreateUserDto {
   })
   @IsString()
   @IsOptional()
-  phone: string;
+  phone?: string;
 
   @ApiProperty({
     description:
@@ -74,23 +74,6 @@ export class CreateUserDto {
     example: '2020-01-01T00:00:00.000Z',
   })
   @IsDateString()
-  birthday: string;
-
-  @ApiProperty({
-    description: 'Customer allergies. Optional.',
-    nullable: true,
-    example: 'peanuts, milk',
-  })
-  @IsString()
-  phone?: string;
-
-  @IsOptional()
-  @ApiProperty({
-    description: 'User address. Optional.',
-    nullable: true,
-    example: 'Calle Falsa 123',
-  })
-  @IsString()
   birthday?: string;
 
   @IsOptional()
