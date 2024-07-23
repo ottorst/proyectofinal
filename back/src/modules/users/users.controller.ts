@@ -89,9 +89,20 @@ export class UsersController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     // TODO: check if user is admin
-    // TODO: try/catch (handle errors)
-    return this.usersService.remove(+id);
+    try {
+      const user = await this.usersService.remove(+id);
+      if (!user) {
+        throw new Error('User to delete was not found');
+      }
+      user.password = null;
+      return user;
+    } catch (err: any) {
+      throw new HttpException(
+        `Error deleting a user. ${err.message}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 }

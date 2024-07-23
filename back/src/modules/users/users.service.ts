@@ -12,21 +12,24 @@ export class UsersService {
   async seeder() {
     const usersData = fs.readFileSync('src/datainit/users.json', 'utf8');
     const parseData = JSON.parse(usersData);
-    console.log(parseData);
+    const createdUsers = [];
     for (const userJson of parseData) {
-      // TODO:  I'll need to change this to PrismaService
-      // await this.usersRepository.create(user);
+      try {
+        createdUsers.push(await this.create(userJson));
+      } catch (error) {
+        console.log(error);
+      }
     }
-    // throw new Error('Method not implemented.');
-    return parseData;
+    return createdUsers;
   }
 
   async create(createUserDto: CreateUserDto) {
-    console.log('createUserDto:', createUserDto);
     const cryptedPassword = await bcryp.hash(createUserDto.password, 10);
+
     if (createUserDto.password !== createUserDto.passwordConfirm) {
       throw new Error(`Passwords do not match.${cryptedPassword}`);
     }
+
     const findUser = await this.findByEmail(createUserDto.email);
 
     if (findUser) {
@@ -78,9 +81,13 @@ export class UsersService {
   }
 
   async remove(id: number) {
-    const user = await prisma.user.delete({
-      where: { id },
-    });
-    return `This action removes a #${id} user`;
+    try {
+      const user = await prisma.user.delete({
+        where: { id },
+      });
+      return user;
+    } catch (error) {
+      console.log('User not found');
+    }
   }
 }
