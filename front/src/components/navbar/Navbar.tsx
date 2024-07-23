@@ -8,10 +8,10 @@ const Navbar:React.FC = () => {
     <header>
     <p></p>
     <p></p>
-      <nav className="wrapper h-28 flex items-center justify-between">
+      <nav className="wrapper h-40 flex items-center justify-between">
       <Link href={"/"}
       className="w-1/3 max-w-[100px]"
-      ><Image src={"/assets/sombrero.png"} alt="" width={50} height={50} className="w-full"/></Link>
+      ><Image src={"/assets/sombrerologo.svg"} alt="" width={100} height={100} className="w-full"/></Link>
 
       <input type="checkbox" id="menu" className="peer hidden"/>
       
@@ -30,8 +30,6 @@ const Navbar:React.FC = () => {
              <Link href={"/about"}> <li>About</li></Link>
              <Link href={"experience"}> <li>Experience</li></Link>
              <Link href={"/login"}><li>Login</li></Link>
-             <Link href={"/contact"}><li>Contact</li></Link>
-
       </ul>
     </div>
 

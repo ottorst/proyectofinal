@@ -1,10 +1,10 @@
 
 
 
-const Login = ()=> {
+const LoginView = ()=> {
   return (
     <div>Si no tienes cuenta button register</div>
   )
 }
 
-export default Login;
+export default LoginView;
