@@ -56,7 +56,7 @@ export class CreateUserDto {
   })
   @IsOptional()
   @IsString()
-  passwordConfirm: string;
+  passwordConfirm?: string;
 
   @IsOptional()
   @ApiProperty({

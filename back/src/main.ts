@@ -6,6 +6,9 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Cors
+  app.enableCors();
+
   // Swagger
   const config = new DocumentBuilder()
     .setTitle('Invitación Gourmet API')
