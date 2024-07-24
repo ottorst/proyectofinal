@@ -14,4 +14,13 @@ body{
        overflow-hidden;
    
    }
+   .neon-shadow {
+    color: #fff;
+    transition: text-shadow 0.3s ease, color 0.3s ease;
+  }
+  
+  .neon-shadow:hover {
+    text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 12px #ffffff, 0 0 15px #ffffff;
+    color: #fff; /* Asegúrate de que el texto siga siendo blanco */
+  }
 }
