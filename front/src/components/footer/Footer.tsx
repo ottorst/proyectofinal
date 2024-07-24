@@ -22,10 +22,14 @@ const Footer:React.FC = () => {
 
         <ul className="flex flex-col md:flex-row md:space-x-5 space-y-2 md:space-y-0">
 
-            <li><Link href={"/"}>Home</Link></li>
-            <li><Link href={"/about"}>About</Link></li>
-            <li><Link href={"/contact"}>Contact</Link></li>
-            <li><Link href={"/privacity"}>Privacity</Link></li>
+            <li><Link href={"/home"} className="hover:underline 
+            decoration-4 underline-offset-8">Home</Link></li>
+            <li><Link href={"/about"} className="hover:underline 
+            decoration-4 underline-offset-8 decoration-yellow-500">About</Link></li>
+            <li><Link href={"/contact"} className="hover:underline 
+            decoration-4 underline-offset-8">Contact</Link></li>
+            <li><Link href={"/privacity"} className="hover:underline 
+            decoration-4 underline-offset-8 decoration-yellow-500">Privacity</Link></li>
 
         </ul>
     </footer>

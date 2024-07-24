@@ -11,7 +11,7 @@ const AnimacionLogo = () => {
       className="m-0 p-0 h-400 w-50 flex justify-center items-center flex-col perspective-500"
     >
       <div className="relative flex justify-center">
-        <Link href="/about">
+        <Link href="/home">
         <Image
           className="flex m-0 p-0 w-full h-full object-cover drop-shadow-custom animate-rotate-y hover:cursor-pointer"
           src={"/assets/logoCocinero2.png"}
