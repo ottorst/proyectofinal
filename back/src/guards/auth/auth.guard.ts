@@ -7,12 +7,14 @@ import {
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-
+import { PrismaService } from 'src/modules/prisma/prisma.service';
+import { Rol } from "src/guards/role/roles.enum";
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly prisma: PrismaService
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest();
@@ -22,11 +24,21 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
+      const ValidTokenData = await this.jwtService.verifyAsync(token, {
         secret: this.configService.get<string>('JWT_SECRET'),
       });
-      console.log('Payload', payload);
-      request['user'] = payload;
+      if (!ValidTokenData)throw new UnauthorizedException('Invalid token');
+      const payload  = await this.prisma.user.findUnique({
+        where: { email:ValidTokenData.email},
+      });
+
+      const userPayload = {
+        id: payload.id,
+        email: payload.email,
+        roles: payload.admin ? Rol.Admin :Rol.User,
+      };
+      request['user'] = userPayload;
+      console.log('Payload', userPayload);
     } catch {
       throw new UnauthorizedException('Invalid token');
     }
