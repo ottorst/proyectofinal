@@ -1,9 +1,10 @@
+import LoginFormClient from "@/src/components/Login/login";
 
 
 
 const LoginView = ()=> {
   return (
-    <div>Si no tienes cuenta button register</div>
+    <div><LoginFormClient /></div>
   )
 }
 
