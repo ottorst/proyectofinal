@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 import { ValidateLogin } from './validateLogin'; 
 import { LoginFormErrors, LoginForm } from './interfaces'; 
 import { useRouter } from 'next/navigation';
@@ -32,8 +33,17 @@ const LoginFormClient: React.FC = () => {
         try {
             setFormError("");
             const userData = await loginUser(dataUser.email, dataUser.password);
+            
             localStorage.setItem('token', userData.token);
-            router.push('/'); 
+
+            Swal.fire({
+                title: 'Login Successful',
+                text: 'You have successfully logged in!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                router.push('/');
+            });
         } catch (error) {
             if (error instanceof Error) {
                 setFormError(error.message); 
