@@ -1,17 +1,42 @@
+"use client"
 
 // Vendors
 import Link from "next/link";
 import Image from "next/image";
 import { useRef } from "react";
+import { FaUser } from 'react-icons/fa';
+import { useState,useEffect } from "react";
+
+
+
 const Navbar:React.FC = () => {
   const menuRef = useRef<HTMLInputElement>(null);
+  const [isLogin, setIsLogin] = useState(false);
+   const[token,setToken] = useState<string|null>(null);
+   
+   useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken);
+  }, [])
+   
 
-  // Función para cerrar el menú
   const handleLinkClick = () => {
     if (menuRef.current) {
       menuRef.current.checked = false;
     }
   };
+
+  const handleLogOut = () => {
+    if (menuRef.current) {
+      menuRef.current.checked = false;
+    }
+    localStorage.removeItem("token");
+    setToken(null);
+  };
+
+  
+
+  
   return (
     <div>
     <header>
@@ -37,13 +62,32 @@ const Navbar:React.FC = () => {
       text-xl mr-6
       ">
              <Link href={"/home"} onClick={handleLinkClick}> <li className="hover:underline 
-             decoration-4 underline-offset-8 neon-shadow">Home</li></Link>              
+             decoration-4 underline-offset-8 ">Home</li></Link> 
+
              <Link href={"/about"} onClick={handleLinkClick}> <li className="hover:underline 
-             decoration-4 underline-offset-8 neon-shadow decoration-yellow-500">About</li></Link>
+             decoration-4 underline-offset-8  decoration-yellow-500">About</li></Link>
+
              <Link href={"/experience"} onClick={handleLinkClick}> <li className="hover:underline 
-             decoration-4 underline-offset-8 neon-shadow ">Experiences</li></Link>
-             <Link href={"/login"} onClick={handleLinkClick}><li className="hover:underline 
-             decoration-4 underline-offset-8 decoration-yellow-500 neon-shadow">Login</li></Link>
+             decoration-4 underline-offset-8  ">Experiences</li></Link>
+
+             {token ?<Link href={"/login"} onClick={handleLogOut}><li className="hover:underline
+             offset-8 decoration-yellow-500">
+              <Image src={"/assets/signout-icon.svg"} alt="" width={45} height={50} className="red-filter shadow-xl"/>
+              </li></Link>:
+
+            <Link href={"/login"} onClick={handleLinkClick}><li className="hover:underline 
+              decoration-4 underline-offset-8 decoration-yellow-500">
+                <Image src={"/assets/signin-icon.svg"} alt="" width={45} height={50} className="green-filter shadow-xl"/>
+                </li></Link>}
+
+             {token ? <Link href={"/dashboardadmin"} onClick={handleLinkClick}><li className="hover:underline 
+             decoration-4 underline-offset-8 decoration-yellow-500 "><FaUser size={45}
+             className=" transition-transform duration-300 ease-in-out transform hover:scale-125
+             hover:text-yellow-500
+             "/></li></Link>:null}
+             
+
+             
       </ul>
     </div>
 
