@@ -1,8 +1,8 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Swal from 'sweetalert2';
-import { ValidateLogin } from './validateLogin'; 
-import { LoginFormErrors, LoginForm } from './interfaces'; 
+import { ValidateLogin } from './validateLogin';
+import { LoginFormErrors, LoginForm } from './interfaces';
 import { useRouter } from 'next/navigation';
 import { loginUser } from './helpers';
 import Link from 'next/link';
@@ -22,7 +22,7 @@ const LoginFormClient: React.FC = () => {
         password: ""
     });
 
-    const [formError, setFormError] = useState<string>(""); 
+    const [formError, setFormError] = useState<string>("");
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setDataUser({
@@ -34,69 +34,71 @@ const LoginFormClient: React.FC = () => {
     const handleLogin = async () => {
         try {
             setFormError("");
-            const userData = await loginUser(dataUser.email, dataUser.password);
-            
-            setToken(userData.token)
+            if (!errorMessage.email && !errorMessage.password) {
+                const userData = await loginUser(dataUser.email, dataUser.password);
+                setToken(userData.token);
 
-            Swal.fire({
-                title: 'Login Successful',
-                text: 'You have successfully logged in!',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            }).then(() => {
-                router.push('/home');
-            });
+                Swal.fire({
+                    title: 'Login Successful',
+                    text: 'You have successfully logged in!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    router.push('/home');
+                });
+            }
         } catch (error) {
-            if (error instanceof Error) {
-                setFormError(error.message); 
+            if (!errorMessage.email && !errorMessage.password) {
+                if (error instanceof Error) {
+                    setFormError(error.message);
+                }
             }
         }
     };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        handleLogin();
-    };
-
-    useEffect(() => {
         const errors = ValidateLogin(dataUser);
         setErrorMessage(errors);
-    }, [dataUser]);
+        if (!errors.email && !errors.password) {
+            handleLogin();
+        }
+    };
 
     return (
         <div className="text-black flex items-center justify-center p-10 ml-6">
-            <div className="bg-white p-8 rounded-lg shadow-md w-96">
-                <h2 className="text-2xl font-bold mb-2 text-center text-black">Log In</h2>
+            <div className="rounded-lg max-w-md p-16 bg-slate-800 mt-2 mb-12 w-full">
+                <h2 className="text-3xl font-bold mb-2 text-center text-white">Log In</h2>
                 <div className="flex items-center justify-center space-x-2">
-                            <p>Not a member?</p>
-                            <Link href={"/User"} className="text-blue-500 underline-offset-4 underline">
-                                Register
-                            </Link>
-                        </div>
+                    <p className='text-white'>Not a member?</p>
+                    <Link href={"/register"} className="text-blue-500 underline-offset-4 underline">
+                        Register
+                    </Link>
+                </div>
                 <form onSubmit={handleSubmit}>
-                    <div className="mb-4 mt-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    <div className="mb-4 mt-4 text-white">
+                        <label className="block text-gray-700 text-sm font-bold mb-2 peer-focus:font-medium">Email</label>
                         <input
                             type="email"
                             name="email"
-                            className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-b-white appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer input:valid:border-blue-600 input-autofill"
                             onChange={handleChange}
                             value={dataUser.email}
                         />
                         {errorMessage.email && <p className="text-red-500 text-xs mt-2">{errorMessage.email}</p>}
                     </div>
-                    <div className="mb-6">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                    <div className="mb-6 text-white">
+                        <label className="block text-gray-700 text-sm font-bold mb-2 peer-focus:font-medium">Password</label>
                         <input
                             type="password"
                             name="password"
-                            className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-b-white appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer input:valid:border-blue-600 input-autofill"
                             onChange={handleChange}
                             value={dataUser.password}
                         />
                         {errorMessage.password && <p className="text-red-500 text-xs mt-2">{errorMessage.password}</p>}
                     </div>
-                    {formError && <p className="text-red-500 text-xs mt-2">{formError}</p>}
+                    {formError && !errorMessage.email && !errorMessage.password && <p className="text-red-500 text-xs mt-2">{formError}</p>}
                     <div className="flex items-center justify-center">
                         <button
                             type="submit"

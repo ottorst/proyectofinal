@@ -7,6 +7,7 @@ import { IRegisterProps } from "@/src/types/IRegisterProps";
 import { IRegisterErrorProps } from "@/src/types/IRegisterErrorProps";
 import { validateFormRegister } from "@/src/helpers/formValidation";
 import { register } from "../../helpers/authRegister";
+import Link from "next/link";
 
 const Register: React.FC = () => {
   const router = useRouter();
@@ -108,23 +109,30 @@ const Register: React.FC = () => {
 
   return (
     <div className="rounded-lg max-w-fit p-6 bg-slate-800 mt-2 mb-12">
-      <form  onSubmit={handleSubmit} className=" max-w-md mx-auto ">
+      <h2 className="text-3xl text-center justify-center sm:mt-10 sm:mb-4">Create new account</h2>
+      <div className="flex justify-center items-center mb-10 space-x-2">
+        <p>Already a member?</p>
+        <Link href={"/login"} className="text-blue-500 underline-offset-4 underline">
+          Log In
+        </Link>
+      </div>
+      <form onSubmit={handleSubmit} className=" max-w-md mx-auto ">
         <div className="relative z-0 w-full mb-5 group bg-transparent">
           <input
             className="block py-2.5  px-0 w-full text-sm text-gray-900  bg-transparent border-0 border-b-2 border-b-white appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500  focus:outline-none focus:ring-0 focus:border-blue-600 peer input:valid:border-blue-600 input-autofill"
- 
+
             id="email"
             type="email"
             name="email"
             value={dataUser.email}
             onChange={handleChange}
             placeholder=" "
-      
+
           />
           <label
             htmlFor="email"
             className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-1 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            
+
           >
             Email address
           </label>
@@ -146,16 +154,16 @@ const Register: React.FC = () => {
             placeholder=" "
           />
           <label
-             htmlFor="password"
+            htmlFor="password"
             className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >
             Password
           </label>
-         {errorUser.password && (
+          {errorUser.password && (
             <p className="text-red-500 text-xs absolute bottom-[-2.2rem] left-0">
               {errorUser.password}
             </p>
-          )} 
+          )}
           <p className={`text-xs mt-2 ${passwordConditions.hasLowercase ? "text-green-500" : "text-red-500"}`}>Una minuscula</p>
           <p className={`text-xs ${passwordConditions.hasUppercase ? "text-green-500" : "text-red-500"}`}>Una mayuscula</p>
           <p className={`text-xs ${passwordConditions.hasNumber ? "text-green-500" : "text-red-500"}`}>Un numero</p>
@@ -170,19 +178,19 @@ const Register: React.FC = () => {
             name="passwordConfirm"
             value={dataUser.passwordConfirm}
             onChange={handleChange}
-             placeholder=" "
+            placeholder=" "
           />
           <label
-             htmlFor="passwordConfirm"
+            htmlFor="passwordConfirm"
             className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >
             Confirm password
           </label>
-           {errorUser.passwordConfirm && (
+          {errorUser.passwordConfirm && (
             <p className="text-red-500 text-xs absolute bottom-[-1.5rem] left-0">
               {errorUser.passwordConfirm}
             </p>
-          )} 
+          )}
         </div>
         <div className="grid md:grid-cols-2 md:gap-6">
           <div className="relative z-0 w-full mb-5 group">
@@ -193,10 +201,10 @@ const Register: React.FC = () => {
               name="name"
               value={dataUser.name}
               onChange={handleChange}
-               placeholder=" "
+              placeholder=" "
             />
             <label
-               htmlFor="name"
+              htmlFor="name"
               className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-1 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Name
@@ -217,10 +225,10 @@ const Register: React.FC = () => {
               name="phone"
               value={dataUser.phone}
               onChange={handleChange}
-               placeholder=" "
+              placeholder=" "
             />
             <label
-               htmlFor="phone"
+              htmlFor="phone"
               className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-95 top-0 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
             >
               Phone number (011-4567-7890)
@@ -239,10 +247,10 @@ const Register: React.FC = () => {
               name="address"
               value={dataUser.address}
               onChange={handleChange}
-               placeholder=" "
+              placeholder=" "
             />
             <label
-               htmlFor="address"
+              htmlFor="address"
               className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-0 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4"
             >
               Address (Calle Siempre Viva N° 123)
@@ -263,10 +271,10 @@ const Register: React.FC = () => {
               name="country"
               value={dataUser.country}
               onChange={handleChange}
-               placeholder=" "
+              placeholder=" "
             />
             <label
-               htmlFor="country"
+              htmlFor="country"
               className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-1 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Country
@@ -285,10 +293,10 @@ const Register: React.FC = () => {
               name="city"
               value={dataUser.city}
               onChange={handleChange}
-               placeholder=" "
+              placeholder=" "
             />
             <label
-               htmlFor="city"
+              htmlFor="city"
               className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-1 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               City
@@ -310,10 +318,10 @@ const Register: React.FC = () => {
               name="birthday"
               value={dataUser.birthday}
               onChange={handleDateChange}
-               placeholder=" "
+              placeholder=" "
             />
             <label
-               htmlFor="birthday"
+              htmlFor="birthday"
               className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-1 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Birthday
@@ -332,10 +340,10 @@ const Register: React.FC = () => {
               name="allergies"
               value={dataUser.allergies}
               onChange={handleChange}
-               placeholder=" "
+              placeholder=" "
             />
             <label
-               htmlFor="allergies"
+              htmlFor="allergies"
               className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-1 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Allergies
