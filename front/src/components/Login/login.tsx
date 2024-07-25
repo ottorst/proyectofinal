@@ -67,8 +67,14 @@ const LoginFormClient: React.FC = () => {
 
     return (
         <div className="text-black flex items-center justify-center p-10 ml-6">
+<<<<<<< HEAD
             <div className="rounded-lg max-w-md p-16 bg-slate-800 mt-2 mb-12 w-full">
                 <h2 className="text-3xl font-bold mb-2 text-center text-white">Log In</h2>
+=======
+            <title>Login</title>
+            <div className="bg-white p-8 rounded-lg shadow-md w-96">
+                <h2 className="text-2xl font-bold mb-2 text-center text-black">Log In</h2>
+>>>>>>> 9f798986c6550cf753a3f0964dae81a74a88394c
                 <div className="flex items-center justify-center space-x-2">
                     <p className='text-white'>Not a member?</p>
                     <Link href={"/register"} className="text-blue-500 underline-offset-4 underline">
