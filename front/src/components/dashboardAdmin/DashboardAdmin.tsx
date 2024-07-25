@@ -1,24 +1,19 @@
 "use client"
-
-import { useState,useEffect } from "react";
+//vendors
 import { useRouter } from "next/navigation";
-
+//Contexts
+import { useAuth } from "../AuthContext";
 
 const DashboardAdmin:React.FC = () => {
-
-  const[token,setToken] = useState<string|null>(null);
+ 
   const router = useRouter();
+  const {token} = useAuth();
 
-  useEffect(() => {
-    
-    const storedToken = localStorage.getItem("token");
-    if(!storedToken){
-      router.push("/login") 
-      
-    } else{
-      setToken(storedToken);
-    }
-  }, [router])
+  if(token){
+    router.push("/dashboardadmin")
+  }else{
+    router.push("/login")
+  }
 
 
   

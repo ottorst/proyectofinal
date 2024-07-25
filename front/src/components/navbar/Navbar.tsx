@@ -1,24 +1,21 @@
 "use client"
-
 // Vendors
 import Link from "next/link";
 import Image from "next/image";
 import { useRef } from "react";
-import { FaUser } from 'react-icons/fa';
+import { FaUser} from 'react-icons/fa';
 import { useState,useEffect } from "react";
 import { useRouter } from "next/navigation";
+//Context
+import { useAuth} from "../AuthContext";
 
 
 const Navbar:React.FC = () => {
   const menuRef = useRef<HTMLInputElement>(null);
-  const [isLogin, setIsLogin] = useState(false);
-   const[token,setToken] = useState<string|null>(null);
+ const {token,setToken,setUser} = useAuth();
+   
    const router = useRouter();
 
-   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    setToken(storedToken);
-  }, [])
    
 
   const handleLinkClick = () => {
@@ -31,9 +28,11 @@ const Navbar:React.FC = () => {
     if (menuRef.current) {
       menuRef.current.checked = false;
     }
-    localStorage.removeItem("token");
+    localStorage.removeItem("userToken");
+    localStorage.removeItem("userData");
     setToken(null);
-  };
+    setUser(null);
+  }
 
   
 
