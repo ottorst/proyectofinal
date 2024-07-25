@@ -57,6 +57,69 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+Para documentar los guards y los casos de uso en tu proyecto, especialmente en el archivo `README.md`, aquí tienes una guía de cómo puedes estructurar la información:
+
+<hr>
+
+## Documentación de Guards y Casos de Uso
+
+### Guards Implementados
+
+1. **AuthGuard**
+   - **Descripción**: Este guardia valida la autenticidad del token JWT enviado en el encabezado de autorización de la solicitud.
+
+     - **Token no encontrado (`UnauthorizedException`)**:
+       - **Causa**: Cuando el token JWT no se encuentra en el encabezado de autorización de la solicitud.
+       - **Respuesta**: Devuelve un error `401 Unauthorized` con el mensaje "Token not found".
+
+     - **Token inválido (`UnauthorizedException`)**:
+       - **Causa**: Cuando el token JWT no es válido, por ejemplo, si está mal formado .
+       - **Respuesta**: Devuelve un error `401 Unauthorized` con el mensaje "Invalid token".
+
+     - **Error en la verificación del token (`UnauthorizedException`)**:
+       - **Causa**: Cualquier error durante la verificación del token JWT, como un error interno del servidor al verificar la firma del token.
+       - **Respuesta**: Devuelve un error `401 Unauthorized` con el mensaje "Invalid token".
+
+     - **Éxito**:
+       - Si todas las validaciones son exitosas, el guardia establece el objeto `user` en la solicitud, que contiene la información del usuario autenticado.
+       - **Requisitos**:
+         - El token debe estar presente en el encabezado de autorización.
+         - El token debe ser válido y verificado utilizando la clave secreta JWT configurada.
+       - **Cómo utilizar**:
+         - Enviar el token JWT en el encabezado de autorización de la forma: `Authorization: Bearer <token>`
+         - Ejemplo de uso en Thunder Client o Insomnia:
+           ```
+           GET /api/ruta-protegida
+           Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+           ```
+
+2. **RolesGuards**
+   - **Descripción**: Este guardia valida los roles de usuario para determinadas rutas.
+
+     - **Permiso denegado (`ForbiddenException`)**:
+       - **Causa**: Cuando el usuario autenticado no tiene los roles requeridos para acceder a la ruta protegida.
+       - **Respuesta**: Devuelve un error `403 Forbidden` con el mensaje "You do not have permissions to access this information".
+
+     - **Éxito**:
+       - Si el usuario tiene los roles requeridos, el guardia permite el acceso a la ruta protegida.
+       - **Requisitos**:
+         - El usuario debe estar autenticado (previamente validado por `AuthGuard`).
+         - El usuario debe tener el rol de administrador si así se requiere para la ruta específica.
+
+### Ejemplo de Uso en Thunder Client o Insomnia
+
+Para enviar solicitudes a las rutas protegidas, sigue estos pasos:
+
+1. **Obtener un Token JWT**:
+   - Realiza una solicitud de inicio de sesión que devuelva un token JWT válido.
+
+2. **Enviar Solicitudes a Rutas Protegidas**:
+   - Incluye el token JWT en el encabezado de autorización de la siguiente manera:
+     ```
+     Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+     ```
+   - Asegúrate de enviar el token en cada solicitud a las rutas que requieren autenticación y roles específicos.
+<hr>
 
 ## Support
 
