@@ -23,4 +23,10 @@ body{
     text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 12px #ffffff, 0 0 15px #ffffff;
     color: #fff; /* Asegúrate de que el texto siga siendo blanco */
   }
+  .red-filter:hover {
+    filter: invert(33%) sepia(89%) saturate(5067%) hue-rotate(357deg) brightness(99%) contrast(102%);
+  }
+  .green-filter:hover {
+    filter: invert(47%) sepia(98%) saturate(750%) hue-rotate(80deg) brightness(102%) contrast(101%);
+}
 }

@@ -40,6 +40,7 @@ const config: Config = {
       colors:{
         'red2': '#ef4444',
          'gray-500-50': 'rgba(107, 114, 128, 0.1)',
+         'white-500-50': 'rgba(255, 255, 255, 0.1)',
          'black-smoked':'#0b0909f0',
          'gray':'#0b0909f0',
          'softGray':'#e6e6e680',
