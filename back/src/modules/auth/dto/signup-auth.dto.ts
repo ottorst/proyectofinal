@@ -1,77 +1,139 @@
 import {
   IsEmail,
   IsNotEmpty,
-  IsOptional,
   IsString,
-  Matches,
-  MaxLength,
   MinLength,
+  MaxLength,
+  Matches,
+  IsDateString,
+  IsOptional,
+  IsBoolean,
 } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class SignUpAuthDto {
-  @MaxLength(80)
-  @MinLength(3)
-  @IsNotEmpty()
-  @IsString()
-  name: string;
-
+  @ApiProperty({
+    description: 'User email',
+    example: 'pedro.gonzalez@myMail.com',
+  })
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
+  @ApiProperty({
+    description: 'User name',
+    example: 'Pedro González',
+  })
+  @IsString()
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(3)
+  @MaxLength(80)
+  name: string;
+
+  @ApiProperty({
+    description:
+      'The Password must have at least: one lowercase letter, one uppercase letter, one number, one special character, between 6 and 15 characters long.',
+    example: 'MyPassw0rd!',
+  })
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(6)
+  @MaxLength(15)
   @Matches(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[=!@#$%^&*])[A-Za-z\d=!@#$%^&*]{8,15}$/,
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[=!@#$%^&*])[A-Za-z\d=!@#$%^&*]{6,15}$/,
     {
-      message:
-        'La contraseña debe contener al menos una minúscula, una mayúscula, un número, un caracter especial (= !@#$%^&*) y tener entre 8 y 15 caracteres',
+      message: 'La contraseña debe cumplir con los requisitos.',
     },
   )
-  @IsString()
   password: string;
 
-  @IsNotEmpty()
+  @ApiProperty({
+    description:
+      'The Password confirm value for creation must match the Password value.',
+    nullable: true,
+    example: 'MyPassw0rd!',
+  })
+  @IsOptional()
   @IsString()
-  passwordConfirm: string;
+  passwordConfirm?: string;
 
-  @IsString()
-  address: string;
-
-  @IsNotEmpty()
-  @IsString()
-  phone: string;
-
+  @IsOptional()
+  @ApiProperty({
+    description: 'User phone. Optional.',
+    nullable: true,
+    example: '+34 (91) 123 456789',
+  })
   @IsString()
   @IsOptional()
-  country?: string;
+  phone?: string;
 
-  @IsString()
+  @ApiProperty({
+    description:
+      'Birthday in DateString, example: 2020-01-01. Optional and default: is current date',
+    example: '2020-01-01T00:00:00.000Z',
+  })
+  @IsDateString()
+  birthday?: string;
+
   @IsOptional()
+  @IsString()
+  allergies?: string;
+
+  @IsOptional()
+  @ApiProperty({
+    description: 'User city. Optional.',
+    nullable: true,
+    example: 'Madrid',
+  })
+  @IsString()
+  address?: string;
+
+  @IsOptional()
+  @IsString()
   city?: string;
 
+  @ApiProperty({
+    description: 'User country. Optional.',
+    nullable: true,
+    example: 'Spain',
+  })
   @IsString()
+  @MinLength(5)
+  @MaxLength(20)
   @IsOptional()
-  createdAt: string;
-
   @IsString()
-  @IsOptional()
-  birthday?: string; // Nueva propiedad
+  country?: string;
 
+  @IsOptional()
+  @ApiProperty({
+    description: 'User profile picture, as URL of Cloudinary. Optional..',
+    nullable: true,
+    example:
+      'https://res.cloudinary.com/dxkqy4os7/image/upload/v1720008542/uploads/nasa_cohete_luna.jpg.jpg',
+    default: false,
+  })
   @IsString()
-  @IsOptional()
-  allergies?: string; // Nueva propiedad
+  picture?: string;
 
+  @IsOptional()
+  @ApiProperty({
+    description:
+      'Integration with auth0 integration. Optional. Default value: email.',
+    nullable: true,
+    example: 'pedro.gonzalez@myMail.com',
+    default: false,
+  })
   @IsString()
-  @IsOptional()
-  picture?: string; // Nueva propiedad
-
-  @IsString()
-  @IsOptional()
-  authOId?: string; // Nueva propiedad
+  auth0Id?: string;
 
   @IsOptional()
-  admin?: boolean; // Nueva propiedad
-
-  constructor(partial: Partial<SignUpAuthDto>) {
-    Object.assign(this, partial);
-  }
+  @ApiProperty({
+    description: 'User role for administrators, as bool. Default value: false.',
+    nullable: true,
+    example: true,
+    default: false,
+  })
+  @IsBoolean()
+  admin?: boolean;
 }
