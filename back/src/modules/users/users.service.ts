@@ -41,7 +41,7 @@ export class UsersService {
         city: createUserDto.city,
         country: createUserDto.country,
         picture: createUserDto.picture,
-        auth0Id: createUserDto.authOId,
+        auth0Id: createUserDto.auth0Id,
         admin: createUserDto.admin,
         password: createUserDto.password
       },
