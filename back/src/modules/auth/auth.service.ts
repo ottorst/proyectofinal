@@ -6,6 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+import { validateOrReject, ValidationError } from 'class-validator';
 
 @Injectable()
 export class AuthService {
@@ -15,32 +16,49 @@ export class AuthService {
   ) {}
 
   async signIn(signInUser: SignInAuthDto) {
+    if (!signInUser.email || !signInUser.password) {
+      throw new HttpException('Missing email or password', HttpStatus.BAD_REQUEST);
+    }
+
     const user = await this.userService.findByEmail(signInUser.email);
     if (!user) {
       console.log('User not found');
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-  
-    console.log(`Comparing passwords: plain - ${signInUser.password}, hashed - ${user.password}`);
+
     const isPasswordMatching = await compare(signInUser.password, user.password);
-  
     if (!isPasswordMatching) {
       console.log('Passwords do not match');
       throw new HttpException('Wrong credentials provided', HttpStatus.UNAUTHORIZED);
     }
-  
-    console.log('User authenticated successfully');
+
     const token = await this.createToken(user);
     return { token };
   }
-  
+
   async signUp(signUpUser: SignUpAuthDto) {
+    try {
+      await validateOrReject(signUpUser);
+    } catch (errors) {
+      // Generar un mensaje de error adecuado a partir de los errores de validación
+      const validationErrors = errors
+        .flatMap(error => 
+          error.constraints ? Object.values(error.constraints) : []
+        )
+        .join(', ');
+      throw new HttpException(`Validation failed: ${validationErrors}`, HttpStatus.BAD_REQUEST);
+    }
+
     if (signUpUser.password !== signUpUser.passwordConfirm) {
       throw new HttpException('Passwords do not match', HttpStatus.BAD_REQUEST);
     }
 
+    const existingUser = await this.userService.findByEmail(signUpUser.email);
+    if (existingUser) {
+      throw new HttpException('User with this email already exists', HttpStatus.CONFLICT);
+    }
+
     const hashedPassword = await hash(signUpUser.password, 10);
-    console.log('Hashed password during signup:', hashedPassword);
 
     const createUserDto: CreateUserDto = {
       email: signUpUser.email,
@@ -54,7 +72,7 @@ export class AuthService {
       birthday: signUpUser.birthday || '',
       allergies: signUpUser.allergies || '',
       picture: signUpUser.picture || '',
-      authOId: signUpUser.authOId || '',
+      auth0Id: signUpUser.auth0Id || '',
       admin: signUpUser.admin || false,
     };
 

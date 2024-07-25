@@ -125,7 +125,7 @@ export class CreateUserDto {
     default: false,
   })
   @IsString()
-  authOId?: string;
+  auth0Id?: string;
 
   @IsOptional()
   @ApiProperty({
