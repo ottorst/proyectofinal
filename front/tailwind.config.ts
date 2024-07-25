@@ -38,6 +38,7 @@ const config: Config = {
         '50': '50%',
       },
       colors:{
+        'red2': '#ef4444',
          'gray-500-50': 'rgba(107, 114, 128, 0.1)',
          'white-500-50': 'rgba(255, 255, 255, 0.1)',
          'black-smoked':'#0b0909f0',
@@ -70,6 +71,7 @@ const config: Config = {
         filter: {
           'blur-30': 'blur(30px)',
         },
+       
     },
   },
   plugins: [
@@ -91,6 +93,13 @@ const config: Config = {
           content: 'var(--tw-content)',
           position: 'absolute',
           bottom: '0px', 
+        },
+        '.input-autofill:-webkit-autofill': {
+          backgroundColor: 'rgba(255, 0, 0, 0)!important', 
+          '-webkit-box-shadow': '0 0 0 30px #1e293b inset !important', 
+          '-webkit-text-fill-color': '#E8f0fe  !important',
+         
+  
         },
       });
     }),
