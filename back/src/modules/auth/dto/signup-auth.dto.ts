@@ -26,7 +26,6 @@ export class SignUpAuthDto {
   })
   @IsString()
   @IsNotEmpty()
-  @IsString()
   @MinLength(3)
   @MaxLength(80)
   name: string;

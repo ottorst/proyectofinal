@@ -16,8 +16,8 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
   name      String
   password  String
   phone     String?
@@ -28,6 +28,28 @@ model User {
   country   String?
   picture   String?
   auth0Id   String
-  admin     Boolean  @default(false)
+  admin     Boolean   @default(false)
 }
 
+model Events {
+  id          Int      @id @default(autoincrement())
+  title       String
+  subtitle    String
+  description String
+  date        DateTime
+  location    String
+  document    String
+  maxseats    Int      @default(8)
+  picture     String
+}
+
+model Booking {
+  id                Int      @id @default(autoincrement())
+  UserId            Int
+  EventsId          Int
+  TransactionNumber String
+  Quantity          Int
+  Paid              Float
+  Date              DateTime @default(now())
+  // unique([UserId, EventsId])
+}
