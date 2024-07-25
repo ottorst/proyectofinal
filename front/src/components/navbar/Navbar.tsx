@@ -6,14 +6,15 @@ import Image from "next/image";
 import { useRef } from "react";
 import { FaUser } from 'react-icons/fa';
 import { useState,useEffect } from "react";
-
+import { useRouter } from "next/navigation";
 
 
 const Navbar:React.FC = () => {
   const menuRef = useRef<HTMLInputElement>(null);
   const [isLogin, setIsLogin] = useState(false);
    const[token,setToken] = useState<string|null>(null);
-   
+   const router = useRouter();
+
    useEffect(() => {
     const storedToken = localStorage.getItem("token");
     setToken(storedToken);
@@ -85,6 +86,8 @@ const Navbar:React.FC = () => {
              className=" transition-transform duration-300 ease-in-out transform hover:scale-125
              hover:text-yellow-500
              "/></li></Link>:null}
+
+
              
 
              
