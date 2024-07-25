@@ -69,6 +69,7 @@ const config: Config = {
         filter: {
           'blur-30': 'blur(30px)',
         },
+       
     },
   },
   plugins: [
@@ -91,6 +92,7 @@ const config: Config = {
           position: 'absolute',
           bottom: '0px', 
         },
+        
       });
     }),
  
