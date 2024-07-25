@@ -8,7 +8,6 @@ import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
-import { Rol } from "src/guards/role/roles.enum";
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
@@ -35,7 +34,7 @@ export class AuthGuard implements CanActivate {
       const userPayload = {
         id: payload.id,
         email: payload.email,
-        roles: payload.admin ? Rol.Admin :Rol.User,
+        isAdmin: payload.admin
       };
       request['user'] = userPayload;
       console.log('Payload', userPayload);
