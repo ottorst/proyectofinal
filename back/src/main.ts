@@ -17,7 +17,7 @@ async function bootstrap() {
     .setTitle('Invitación Gourmet API')
     .setDescription('Documentación de la API de Invitación Gourmet')
     .setVersion('0.1')
-    // .addBearerAuth()
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('apidoc', app, document);

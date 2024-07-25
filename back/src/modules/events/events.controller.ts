@@ -9,13 +9,12 @@ import {
   UseGuards
 } from '@nestjs/common';
 import {AuthGuard} from "src/guards/auth/auth.guard" 
-import { Rol } from "src/guards/role/roles.enum";
-import {Roles} from "src/decorators/roles/rol.decorator"
+import {IsAdmin} from "src/decorators/rol/IsAdmin.decorator"
 import {RolesGuards} from "src/guards/role/roles.guard";
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags,ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('events')
 @Controller('events')
@@ -26,7 +25,8 @@ export class EventsController {
   create(@Body() createEventDto: CreateEventDto) {
     return this.eventsService.create(createEventDto);
   }
-  @Roles(Rol.Admin)
+  @ApiBearerAuth()
+  @IsAdmin(true)
   @UseGuards(AuthGuard,RolesGuards)
   @Get()
   findAll() {
