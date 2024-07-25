@@ -6,9 +6,11 @@ import { LoginFormErrors, LoginForm } from './interfaces';
 import { useRouter } from 'next/navigation';
 import { loginUser } from './helpers';
 import Link from 'next/link';
+import { useAuth } from '../AuthContext';
 
 const LoginFormClient: React.FC = () => {
     const router = useRouter();
+    const { setToken } = useAuth();
 
     const [dataUser, setDataUser] = useState<LoginForm>({
         email: "",
@@ -34,7 +36,7 @@ const LoginFormClient: React.FC = () => {
             setFormError("");
             const userData = await loginUser(dataUser.email, dataUser.password);
             
-            localStorage.setItem('token', userData.token);
+            setToken(userData.token)
 
             Swal.fire({
                 title: 'Login Successful',
@@ -42,7 +44,7 @@ const LoginFormClient: React.FC = () => {
                 icon: 'success',
                 confirmButtonText: 'OK'
             }).then(() => {
-                router.push('/');
+                router.push('/home');
             });
         } catch (error) {
             if (error instanceof Error) {
