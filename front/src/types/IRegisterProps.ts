@@ -1,7 +1,7 @@
 export interface IRegisterProps{
     email: string;
     password: string;
-    confirmPassword: string;
+    passwordConfirm: string;
     name: string;
     phone: string;
     address: string;

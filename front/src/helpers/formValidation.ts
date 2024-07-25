@@ -34,9 +34,9 @@ export function validateFormRegister (dataUser: IRegisterProps) {
     } else if (!isBirthdayValid(dataUser.birthday)) {
         errors.birthday = "La fecha de cumpleaños debe ser anterior a la fecha actual.";
 
-    } else if (dataUser.confirmPassword !== dataUser.password){
-        errors.confirmPassword = "Las contraseñas no coinciden.";
-    }
+    }  else if (dataUser.passwordConfirm !== dataUser.password){
+        errors.passwordConfirm = "Las contraseñas no coinciden.";
+    } 
     
         return errors;
 }

@@ -12,8 +12,9 @@ export async function register(userData: IRegisterProps) {
         if (res.ok){
             return res.json()
         } else { 
-            alert ("Error al registrarse")
-            throw new Error ("Error al registrarse")
+            const errorData = await res.json();
+          /*   alert ("Error al registrarse") */
+            throw new Error(errorData.message || "Error al registrarse");
         }
 
     } catch (error: any) {
