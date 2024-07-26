@@ -7,10 +7,12 @@ import { useRouter } from 'next/navigation';
 import { loginUser } from './helpers';
 import Link from 'next/link';
 import { useAuth } from '../AuthContext';
+import { jwtDecode } from 'jwt-decode';
+import { fetchUserById } from '../helpers/Helpers';
 
 const LoginFormClient: React.FC = () => {
     const router = useRouter();
-    const { setToken } = useAuth();
+    const { setToken, setUser } = useAuth();
 
     const [dataUser, setDataUser] = useState<LoginForm>({
         email: "",
@@ -35,16 +37,26 @@ const LoginFormClient: React.FC = () => {
         try {
             setFormError("");
             if (!errorMessage.email && !errorMessage.password) {
-                const userData = await loginUser(dataUser.email, dataUser.password);
-                setToken(userData.token);
+                const response = await loginUser(dataUser.email, dataUser.password);
+                setToken(response.token);
 
-               Swal.fire({
+                Swal.fire({
                     title: 'Login Successful',
                     text: 'You have successfully logged in!',
                     icon: 'success',
                     confirmButtonText: 'OK'
                 }).then(() => {
-                    router.push('/dashboard/{user.id}');
+                    const decodedToken = jwtDecode<{ id: string }>(response.token);
+                    fetchUserById(decodedToken.id, response.token).then((user) => {
+                        setUser(user);
+                        console.log("User ID:", user.id); // Verifica el ID del usuario
+                        console.log("Is Admin:", user.admin); // Verifica si es admin
+                        if (user.admin) {
+                            router.push(`/account/admin/${user.id}/dashboard`);
+                        } else {
+                            router.push(`/account/user/${user.id}/dashboard`);
+                        }
+                    });
                 });
             }
         } catch (error) {
