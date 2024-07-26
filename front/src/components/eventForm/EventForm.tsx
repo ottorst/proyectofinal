@@ -15,10 +15,10 @@ export const EventForm: React.FC = () => {
       onClick={toggleModal}
         data-modal-target="crud-modal"
         data-modal-toggle="crud-modal"
-        className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        className="block text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         type="button"
       >
-        Toggle modal
+        Create Event
       </button>
 
       {/* <!-- Main modal --> */}
