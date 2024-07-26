@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Modal } from "flowbite";
-import type { ModalOptions, ModalInterface } from "flowbite";
+import React, { useState } from "react";
+
 
 export const EventForm: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
