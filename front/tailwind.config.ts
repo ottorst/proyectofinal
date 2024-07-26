@@ -1,12 +1,13 @@
 import type { Config } from "tailwindcss";
 import plugin from "tailwindcss/plugin";
-
+const flowbite = require("flowbite-react/tailwind");
 
 const config: Config = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    flowbite.content(),
   ],
   theme: {
     extend: {
@@ -57,6 +58,7 @@ const config: Config = {
         73:"73%",
         50:"50vw",
         300:"300px",
+        500:"500px",
       },
       perspective: {
           '500': '500px',
@@ -97,12 +99,11 @@ const config: Config = {
           backgroundColor: 'rgba(255, 0, 0, 0)!important', 
           '-webkit-box-shadow': '0 0 0 30px #1e293b inset !important', 
           '-webkit-text-fill-color': '#E8f0fe  !important',
+          },
          
-  
-        },
       });
     }),
- 
+    require("flowbite/plugin"), flowbite.plugin()
   ],
 };
 export default config;
