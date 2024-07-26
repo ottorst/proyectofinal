@@ -49,8 +49,8 @@ const LoginFormClient: React.FC = () => {
                     const decodedToken = jwtDecode<{ id: string }>(response.token);
                     fetchUserById(decodedToken.id, response.token).then((user) => {
                         setUser(user);
-                        console.log("User ID:", user.id); // Verifica el ID del usuario
-                        console.log("Is Admin:", user.admin); // Verifica si es admin
+                        console.log("User ID:", user.id);
+                        console.log("Is Admin:", user.admin); 
                         if (user.admin) {
                             router.push(`/account/admin/${user.id}/dashboard`);
                         } else {
