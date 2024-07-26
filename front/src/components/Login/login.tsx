@@ -44,7 +44,7 @@ const LoginFormClient: React.FC = () => {
                 icon: 'success',
                 confirmButtonText: 'OK'
             }).then(() => {
-                router.push('/home');
+                router.push('/dashboard');
             });
         } catch (error) {
             if (error instanceof Error) {

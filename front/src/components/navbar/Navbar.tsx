@@ -62,26 +62,26 @@ const Navbar:React.FC = () => {
       text-xl mr-6
       ">
              <Link href={"/home"} onClick={handleLinkClick}> <li className="hover:underline 
-             decoration-4 underline-offset-8 ">Home</li></Link> 
+             decoration-4 underline-offset-8 neon-shadow ">Home</li></Link> 
 
              <Link href={"/about"} onClick={handleLinkClick}> <li className="hover:underline 
-             decoration-4 underline-offset-8  decoration-yellow-500">About</li></Link>
+             decoration-4 underline-offset-8 neon-shadow ">About</li></Link>
 
              <Link href={"/experience"} onClick={handleLinkClick}> <li className="hover:underline 
-             decoration-4 underline-offset-8  ">Experiences</li></Link>
+             decoration-4 underline-offset-8 neon-shadow ">Experiences</li></Link>
 
              {token ?<Link href={"/login"} onClick={handleLogOut}><li className="hover:underline
              offset-8 decoration-yellow-500">
-              <Image src={"/assets/signout-icon.svg"} alt="" width={45} height={50} className="red-filter shadow-xl"/>
+              <Image src={"/assets/signin-icon.svg"} alt="" width={45} height={50} className="red-filter shadow-xl"/>
               </li></Link>:
 
             <Link href={"/login"} onClick={handleLinkClick}><li className="hover:underline 
-              decoration-4 underline-offset-8 decoration-yellow-500">
-                <Image src={"/assets/signin-icon.svg"} alt="" width={45} height={50} className="green-filter shadow-xl"/>
+              decoration-4 underline-offset-8 ">
+                <Image src={"/assets/signout-icon.svg"} alt="" width={45} height={50} className="green-filter shadow-xl"/>
                 </li></Link>}
 
-             {token ? <Link href={"/dashboardadmin"} onClick={handleLinkClick}><li className="hover:underline 
-             decoration-4 underline-offset-8 decoration-yellow-500 "><FaUser size={45}
+             {token ? <Link href={"/dashboard"} onClick={handleLinkClick}><li className="hover:underline 
+             decoration-4 underline-offset-8 "><FaUser size={45}
              className=" transition-transform duration-300 ease-in-out transform hover:scale-125
              hover:text-yellow-500
              "/></li></Link>:null}

@@ -2,7 +2,7 @@
 import DashboardAdmin from "@/src/components/dashboardAdmin/DashboardAdmin";
 
 
-const DashboardAdminView = () => {
+const Dashboard = () => {
 
   return (
     <div>
@@ -11,4 +11,4 @@ const DashboardAdminView = () => {
   )
 }
 
-export default DashboardAdminView;
+export default Dashboard;
