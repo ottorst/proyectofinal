@@ -2,6 +2,7 @@
   {
     "email": "otto.st@gmail.com",
     "name": "Otto Schmilinsky",
+    "birthday": "1969-05-06",
     "password": "Admin1234.",
     "passwordConfirm": "Admin1234.",
     "phone": "ABC123DoReMi",
@@ -14,6 +15,7 @@
   {
     "email": "correo@electronico.com",
     "name": "Javier",
+    "birthday": "1969-05-06",
     "password": "Admin1234.",
     "passwordConfirm": "Admin1234.",
     "phone": "123123123",
@@ -26,6 +28,7 @@
   {
     "email": "correo2@electronico.com",
     "name": "Pedro Pérez",
+    "birthday": "1969-05-06",
     "password": "Admin1234.",
     "passwordConfirm": "Admin1234.",
     "phone": "423123123",
@@ -38,6 +41,7 @@
   {
     "email": "correo3@electronico.com",
     "name": "Fulanito de Tal",
+    "birthday": "1969-05-06",
     "password": "Admin1234.",
     "passwordConfirm": "Admin1234.",
     "phone": "723123123",
@@ -50,6 +54,7 @@
   {
     "email": "Sincere@april.biz",
     "name": "Leanne Graham",
+    "birthday": "1969-05-06",
     "password": "Admin1234.",
     "passwordConfirm": "Admin1234.",
     "phone": "56442",
@@ -62,6 +67,7 @@
   {
     "email": "Shanna@melissa.tv",
     "name": "Ervin Howell",
+    "birthday": "1969-05-06",
     "password": "Admin1234.",
     "passwordConfirm": "Admin1234.",
     "phone": "106926593",
@@ -74,6 +80,7 @@
   {
     "email": "Nathan@yesenia.net",
     "name": "Clementine Bauch",
+    "birthday": "1969-05-06",
     "password": "Admin1234.",
     "passwordConfirm": "Admin1234.",
     "phone": "1234447",
@@ -86,6 +93,7 @@
   {
     "email": "Julianne.OConner@kory.org",
     "name": "Patricia Lebsack",
+    "birthday": "1969-05-06",
     "password": "Admin1234.",
     "passwordConfirm": "Admin1234.",
     "phone": "9623156",
@@ -98,6 +106,7 @@
   {
     "email": "Lucio_Hettinger@annie.ca",
     "name": "Chelsey Dietrich",
+    "birthday": "1969-05-06",
     "password": "Admin1234.",
     "passwordConfirm": "Admin1234.",
     "phone": "9541289",
@@ -110,6 +119,7 @@
   {
     "email": "Karley_Dach@jasper.info",
     "name": "Mrs. Dennis Schulist",
+    "birthday": "1969-05-06",
     "password": "Admin1234.",
     "passwordConfirm": "Admin1234.",
     "phone": "9541289",
@@ -122,6 +132,7 @@
   {
     "email": "Telly.Hoeger@billy.biz",
     "name": "Kurtis Weissnat",
+    "birthday": "1969-05-06",
     "password": "Admin1234.",
     "passwordConfirm": "Admin1234.",
     "phone": "9541289",
@@ -134,6 +145,7 @@
   {
     "email": "Sherwood@rosamond.me",
     "name": "Nicholas Runolfsdottir V",
+    "birthday": "1969-05-06",
     "password": "Admin1234.",
     "passwordConfirm": "Admin1234.",
     "phone": "9541289",
@@ -146,6 +158,7 @@
   {
     "email": "Chaim_McDermott@dana.io",
     "name": "Glenna Reichert",
+    "birthday": "1969-05-06",
     "password": "Admin1234.",
     "passwordConfirm": "Admin1234.",
     "phone": "9541289",
@@ -158,6 +171,7 @@
   {
     "email": "Rey.Padberg@karina.biz",
     "name": "Clementina DuBuque",
+    "birthday": "1969-05-06",
     "password": "Admin1234.",
     "passwordConfirm": "Admin1234.",
     "phone": "9541289",
@@ -170,6 +184,7 @@
   {
     "email": "Rey.Leon.Padberg@karina.biz",
     "name": "Rey Clementina DuBuque",
+    "birthday": "1969-05-06",
     "password": "Admin1234.",
     "passwordConfirm": "Admin1234.",
     "phone": "9541289",
