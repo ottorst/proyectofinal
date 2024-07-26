@@ -30,12 +30,14 @@ export class UsersService {
       throw new Error(`Can't create the user.`);
     }
 
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+
     const user = await this.prisma.user.create({
       data: {
         name: createUserDto.name,
         email: createUserDto.email,
         phone: createUserDto.phone,
-        birthday: createUserDto.birthday,
+        birthday: new Date(createUserDto.birthday),
         allergies: createUserDto.allergies,
         address: createUserDto.address,
         city: createUserDto.city,
@@ -43,7 +45,7 @@ export class UsersService {
         picture: createUserDto.picture,
         auth0Id: createUserDto.auth0Id,
         admin: createUserDto.admin,
-        password: createUserDto.password
+        password: hashedPassword,
       },
     });
 

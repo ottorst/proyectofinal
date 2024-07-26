@@ -1,15 +1,14 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
-import { ValidateLogin } from './validateLogin';
-import { LoginFormErrors, LoginForm } from './interfaces';
+import { ValidateLogin } from './validateLogin'; 
+import { LoginFormErrors, LoginForm } from './interfaces'; 
 import { useRouter } from 'next/navigation';
 import { loginUser } from './helpers';
 import Link from 'next/link';
 import { useAuth } from '../AuthContext';
 import { jwtDecode } from 'jwt-decode';
 import { fetchUserById } from '../helpers/Helpers';
-
 const LoginFormClient: React.FC = () => {
     const router = useRouter();
     const { setToken, setUser } = useAuth();
@@ -36,6 +35,18 @@ const LoginFormClient: React.FC = () => {
     const handleLogin = async () => {
         try {
             setFormError("");
+            const userData = await loginUser(dataUser.email, dataUser.password);
+            
+            setToken(userData.token)
+
+            Swal.fire({
+                title: 'Login Successful',
+                text: 'You have successfully logged in!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                router.push('/home');
+            });
             if (!errorMessage.email && !errorMessage.password) {
                 const response = await loginUser(dataUser.email, dataUser.password);
                 setToken(response.token);

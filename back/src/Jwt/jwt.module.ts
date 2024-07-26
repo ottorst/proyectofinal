@@ -10,7 +10,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
-        const secret = configService.get<string>('JWT_SECRET');
+        const secret = 'mi_clave_secreta'; //configService.get<string>('JWT_SECRET');
         if (!secret) {
           throw new Error('JWT_SECRET no está definido');
         }
