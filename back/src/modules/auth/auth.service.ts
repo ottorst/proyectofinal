@@ -58,12 +58,12 @@ export class AuthService {
       throw new HttpException('User with this email already exists', HttpStatus.CONFLICT);
     }
 
-    const hashedPassword = await hash(signUpUser.password, 10);
+    //const hashedPassword = await hash(signUpUser.password, 10);
 
     const createUserDto: CreateUserDto = {
       email: signUpUser.email,
       name: signUpUser.name,
-      password: hashedPassword,
+      password: signUpUser.password,
       passwordConfirm: signUpUser.passwordConfirm,
       phone: signUpUser.phone,
       address: signUpUser.address,
