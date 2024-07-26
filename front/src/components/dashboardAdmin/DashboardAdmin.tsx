@@ -57,7 +57,7 @@ const DashboardAdmin:React.FC = () => {
     <p className="text-black text-xl">Control Users</p>
   </div>
 </section>
-<EventForm/>
+
 </div>
   )
 }
