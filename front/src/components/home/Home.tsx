@@ -1,17 +1,20 @@
+"use client"
+
 //Vendors
 import Image from "next/image"
 import Link from "next/link"
+//Contexts
+import { useAuth } from "../AuthContext"
 
 
 const Home:React.FC = () => {
-
+const {user} = useAuth();
 
   return (
 
-
     <div>
        <title>Home</title>
-       <header className="text-gray-100 text-4xl font-bold md:text-4xl text-center mb-28 mt-12">WELCOME</header>
+       <header className="text-gray-100 text-4xl font-bold md:text-4xl text-center mb-28 mt-12">{user?`Welcome ${user.name}`:"WELCOME"}</header>
 
         <section className="wrapper grid gap-8 items-center justify-center font-lora mx-auto
         md:grid-cols-2 mb-24 
