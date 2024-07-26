@@ -38,7 +38,7 @@ const LoginFormClient: React.FC = () => {
                 const userData = await loginUser(dataUser.email, dataUser.password);
                 setToken(userData.token);
 
-                Swal.fire({
+               Swal.fire({
                     title: 'Login Successful',
                     text: 'You have successfully logged in!',
                     icon: 'success',
