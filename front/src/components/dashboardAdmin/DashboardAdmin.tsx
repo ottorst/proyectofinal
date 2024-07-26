@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 //Contexts
 import { useAuth } from "../AuthContext";
+import { EventForm } from "../eventForm/EventForm";
 
 const DashboardAdmin:React.FC = () => {
  
@@ -42,6 +43,9 @@ const DashboardAdmin:React.FC = () => {
     <h1 className="text-gray-100 text-3xl font-bold md:text-4xl underline">🎟️Active Events</h1>
     <p className="text-black text-xl">Control active events</p>
   </div>
+    <div>
+    
+    </div>
 
   <div className=" bg-white bg-opacity-30 w-full md:w-96 flex flex-col text-center h-auto md:h-screen rounded-md mx-auto space-y-6 p-6">
     <h1 className="text-gray-100 text-3xl font-bold md:text-4xl underline">📖Event History</h1>
@@ -53,7 +57,7 @@ const DashboardAdmin:React.FC = () => {
     <p className="text-black text-xl">Control Users</p>
   </div>
 </section>
-
+<EventForm/>
 </div>
   )
 }
