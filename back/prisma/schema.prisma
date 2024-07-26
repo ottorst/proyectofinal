@@ -51,5 +51,4 @@ model Booking {
   Quantity          Int
   Paid              Float
   Date              DateTime @default(now())
-  // unique([UserId, EventsId])
 }
