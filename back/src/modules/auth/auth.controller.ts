@@ -1,11 +1,13 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpException,
   HttpStatus,
   Post,
   Req,
+  Res,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -14,6 +16,8 @@ import { SignInAuthDto } from './dto/signin-auth.dto';
 import { UserResponseDto } from '../users/dto/response.user.dto';
 import { DateAdderInterceptor } from 'src/interceptor/date-adder.interceptor';
 import { ApiTags, ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
+import { Request, Response } from "express";
+
 
 @ApiTags('auth')
 @Controller('auth')
@@ -85,4 +89,25 @@ export class AuthController {
       throw new HttpException('Unexpected error occurred during sign-up.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+  
+  @Get('auth0')
+  async Auth0(@Req() req: Request, @Res() res: Response) {
+    try {
+      // Asegúrate de que el usuario esté autenticado
+      if (req.oidc?.isAuthenticated()) {
+        // Imprimir el token en la consola
+        console.log('Access Token:', req.oidc.accessToken?.access_token);
+        console.log('ID Token:', req.oidc.idToken);
+
+        // Devolver la información del usuario
+        res.status(HttpStatus.OK).json(req.oidc.user);
+      } else {
+        res.status(HttpStatus.UNAUTHORIZED).json({ message: 'User not authenticated' });
+      }
+    } catch (error) {
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error auth0 user', error });
+    }
+  }
 }
+
+
