@@ -1,17 +1,22 @@
-// main.ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { auth0Config } from './config/auth0-config';
+import { auth } from 'express-openid-connect';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  // Cors
+  
+  // CORS
   app.enableCors();
+  
+  // Auth0 con express-openid-connect
+  app.use(auth(auth0Config));
 
-  //pipes
-  app.useGlobalPipes(new ValidationPipe())
+  // Pipes
+  app.useGlobalPipes(new ValidationPipe());
+
   // Swagger
   const config = new DocumentBuilder()
     .setTitle('Invitación Gourmet API')

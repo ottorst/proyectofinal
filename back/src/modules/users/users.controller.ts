@@ -12,6 +12,7 @@ import {
   Put,
   BadRequestException,
   HttpException,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -26,6 +27,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { AuthorizationGuard } from 'src/guards/auth/auth0.guard';
 
 @ApiTags('users')
 @Controller('users')
@@ -54,6 +56,7 @@ export class UsersController {
   }
 
   @Get()
+  //@UseGuards(AuthorizationGuard) // Aplica el guardia a esta ruta
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
     status: HttpStatus.OK,
