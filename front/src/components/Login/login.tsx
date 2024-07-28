@@ -10,10 +10,7 @@ import { useAuth } from '../AuthContext';
 import { jwtDecode } from 'jwt-decode';
 import { fetchUserById } from '../helpers/Helpers';
 
-
 const LoginFormClient: React.FC = () => {
-
-
     const router = useRouter();
     const { setToken, setUser } = useAuth();
 
@@ -36,31 +33,38 @@ const LoginFormClient: React.FC = () => {
         });
     };
 
-    const handleLogin = async () => {
+    const handleLogin = async (useAuth0: boolean) => {
         try {
             setFormError("");
             if (!errorMessage.email && !errorMessage.password) {
-                const response = await loginUser(dataUser.email, dataUser.password);
-                setToken(response.token);
+                const response = await loginUser(dataUser.email, dataUser.password, useAuth0);
+                
+                if (!useAuth0) {
+                    // Handling for custom authentication
+                    setToken(response.token);
 
-                Swal.fire({
-                    title: 'Login Successful',
-                    text: 'You have successfully logged in!',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    const decodedToken = jwtDecode<{ id: string }>(response.token);
-                    fetchUserById(decodedToken.id, response.token).then((user) => {
-                        setUser(user);
-                        console.log("User ID:", user.id); 
-                        console.log("Is Admin:", user.admin); 
-                        if (user.admin) {
-                            router.push(`/account/admin/${user.id}/dashboard`);
-                        } else {
-                            router.push(`/account/user/${user.id}/dashboard`);
-                        }
+                    Swal.fire({
+                        title: 'Login Successful',
+                        text: 'You have successfully logged in!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        const decodedToken = jwtDecode<{ id: string }>(response.token);
+                        fetchUserById(decodedToken.id, response.token).then((user) => {
+                            setUser(user);
+                            console.log("User ID:", user.id); 
+                            console.log("Is Admin:", user.admin); 
+                            if (user.admin) {
+                                router.push(`/account/admin/${user.id}/dashboard`);
+                            } else {
+                                router.push(`/account/user/${user.id}/dashboard`);
+                            }
+                        });
                     });
-                });
+                } else {
+                    // Handling for Auth0 - redirection should be handled automatically by Auth0
+                    router.push('/'); // Redirecting back to home or another page after Auth0 login
+                }
             }
         } catch (error) {
             if (!errorMessage.email && !errorMessage.password) {
@@ -76,8 +80,12 @@ const LoginFormClient: React.FC = () => {
         const errors = ValidateLogin(dataUser);
         setErrorMessage(errors);
         if (!errors.email && !errors.password) {
-            handleLogin();
+            handleLogin(false); // Pass false for custom authentication
         }
+    };
+
+    const handleAuth0Login = () => {
+        handleLogin(true); // Pass true for Auth0 login
     };
 
     return (

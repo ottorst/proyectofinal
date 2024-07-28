@@ -1,10 +1,12 @@
-'use client'
-import Link from 'next/link';
-import Image from 'next/image';
-import { useRef } from 'react';
-import { FaUser } from 'react-icons/fa';
+'use client';
+
+import { useEffect, useRef } from 'react';
+import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../AuthContext';
+import Link from 'next/link';
+import Image from 'next/image';
+import { FaUser } from 'react-icons/fa';
 
 const Navbar: React.FC = () => {
     const menuRef = useRef<HTMLInputElement>(null);
@@ -22,10 +24,10 @@ const Navbar: React.FC = () => {
             menuRef.current.checked = false;
         }
         localStorage.removeItem("userToken");
-        localStorage.removeItem("userData");
+        Cookies.remove("userToken");
         setToken(null);
         setUser(null);
-       
+        router.push('/login');
     };
 
     const handleDashboardRedirect = () => {
@@ -60,9 +62,8 @@ const Navbar: React.FC = () => {
                             <li className="hover:underline decoration-4 underline-offset-8 neon-shadow">Experiences</li>
                         </Link>
 
-                        {token ? (
+                        {token || user ? (
                             <>
-                            
                                 <Link href="/login" onClick={handleLogOut}>
                                     <li className="hover:underline offset-8 decoration-yellow-500">
                                         <Image src="/assets/signin-icon.svg" alt="Sign Out" width={45} height={50} className="red-filter shadow-xl" />
@@ -73,7 +74,6 @@ const Navbar: React.FC = () => {
                                 </li>
                             </>
                         ) : (
-                            
                             <Link href="/login" onClick={handleLinkClick}>
                                 <li className="hover:underline decoration-4 underline-offset-8">
                                     <Image src="/assets/signout-icon.svg" alt="Sign In" width={45} height={50} className="green-filter shadow-xl" />
