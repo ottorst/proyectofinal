@@ -16,8 +16,7 @@ import { SignInAuthDto } from './dto/signin-auth.dto';
 import { UserResponseDto } from '../users/dto/response.user.dto';
 import { DateAdderInterceptor } from 'src/interceptor/date-adder.interceptor';
 import { ApiTags, ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
-import { Request, Response } from "express";
-
+import { Request, Response } from 'express';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -27,16 +26,32 @@ export class AuthController {
   @Post('signin')
   @ApiOperation({ summary: 'Sign in an existing user' })
   @ApiBody({ type: SignInAuthDto })
-  @ApiResponse({ status: 200, description: 'Successfully signed in', type: UserResponseDto })
-  @ApiResponse({ status: 400, description: 'Bad request. Missing or invalid fields.' })
-  @ApiResponse({ status: 401, description: 'Unauthorized. Incorrect email or password.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully signed in',
+    type: UserResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request. Missing or invalid fields.',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized. Incorrect email or password.',
+  })
   @ApiResponse({ status: 404, description: 'User not found.' })
-  @ApiResponse({ status: 500, description: 'Internal server error. Unexpected error occurred.' })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error. Unexpected error occurred.',
+  })
   async signIn(@Body() credentials: SignInAuthDto) {
     try {
       // Asegúrate de que el DTO sea válido (opcional, dependiendo de cómo manejes la validación)
       if (!credentials.email || !credentials.password) {
-        throw new HttpException('Missing email or password', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          'Missing email or password',
+          HttpStatus.BAD_REQUEST,
+        );
       }
 
       return await this.authService.signIn(credentials);
@@ -49,7 +64,10 @@ export class AuthController {
       }
 
       // Maneja errores genéricos
-      throw new HttpException('Unexpected error occurred during sign-in.', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Unexpected error occurred during sign-in.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -58,17 +76,40 @@ export class AuthController {
   @UseInterceptors(DateAdderInterceptor)
   @ApiOperation({ summary: 'Register a new user' })
   @ApiBody({ type: SignUpAuthDto })
-  @ApiResponse({ status: 201, description: 'User successfully registered', type: UserResponseDto })
-  @ApiResponse({ status: 400, description: 'Bad request. Missing or invalid fields.' })
-  @ApiResponse({ status: 409, description: 'Conflict. User with this email already exists.' })
-  @ApiResponse({ status: 500, description: 'Internal server error. Unexpected error occurred.' })
+  @ApiResponse({
+    status: 201,
+    description: 'User successfully registered',
+    type: UserResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request. Missing or invalid fields.',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflict. User with this email already exists.',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error. Unexpected error occurred.',
+  })
   async signUp(@Body() signUpUser: SignUpAuthDto, @Req() request) {
     try {
-      if (!signUpUser.email || !signUpUser.password || !signUpUser.passwordConfirm) {
-        throw new HttpException('Missing required fields', HttpStatus.BAD_REQUEST);
+      if (
+        !signUpUser.email ||
+        !signUpUser.password ||
+        !signUpUser.passwordConfirm
+      ) {
+        throw new HttpException(
+          'Missing required fields',
+          HttpStatus.BAD_REQUEST,
+        );
       }
       if (signUpUser.password !== signUpUser.passwordConfirm) {
-        throw new HttpException('Passwords do not match', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          'Passwords do not match',
+          HttpStatus.BAD_REQUEST,
+        );
       }
 
       const user = { ...signUpUser, createdAt: request.date };
@@ -76,6 +117,7 @@ export class AuthController {
       return new UserResponseDto({
         ...newUser,
         id: newUser.id.toString(),
+        createdAt: newUser.createdAt.toISOString(),
       });
     } catch (error) {
       console.error('Sign-up error:', error.message);
@@ -86,10 +128,13 @@ export class AuthController {
       }
 
       // Maneja errores genéricos
-      throw new HttpException('Unexpected error occurred during sign-up.', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Unexpected error occurred during sign-up.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
-  
+
   @Get('auth0')
   async Auth0(@Req() req: Request, @Res() res: Response) {
     try {
@@ -102,12 +147,14 @@ export class AuthController {
         // Devolver la información del usuario
         res.status(HttpStatus.OK).json(req.oidc.user);
       } else {
-        res.status(HttpStatus.UNAUTHORIZED).json({ message: 'User not authenticated' });
+        res
+          .status(HttpStatus.UNAUTHORIZED)
+          .json({ message: 'User not authenticated' });
       }
     } catch (error) {
-      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error auth0 user', error });
+      res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ message: 'Error auth0 user', error });
     }
   }
 }
-
-
