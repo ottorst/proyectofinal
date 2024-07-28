@@ -1,10 +1,10 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 // For more info on Prisma, visit https://www.prisma.io/docs
+// For more info on Prisma Client, visit https://www.prisma.io/docs/orm/prisma-client
+// For more info on Prisma Explicit Relations, visit https://www.prisma.io/docs/orm/more/help-and-troubleshooting/help-articles/working-with-many-to-many-relations#explicit-relations
 
 generator client {
   provider = "prisma-client-js"
@@ -26,29 +26,50 @@ model User {
   address   String?
   city      String?
   country   String?
-  picture   String?
+  // picture   String?
   auth0Id   String
   admin     Boolean   @default(false)
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt // DateTime @default(now())
+  // +Info, implement soft deletes: https://www.basedash.com/blog/how-to-implement-soft-deletes-in-prisma
+  deletedAt DateTime? // Nullable field to track soft deletes
+
+  @@unique([email, auth0Id])
 }
 
 model Events {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String
   subtitle    String
   description String
   date        DateTime
   location    String
   document    String
-  maxseats    Int      @default(8)
+  maxseats    Int       @default(8)
   picture     String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt // DateTime @default(now())
+  deletedAt   DateTime? // Nullable field to track soft deletes
+  bookings    Booking[]
 }
 
 model Booking {
-  id                Int      @id @default(autoincrement())
+  // +Info, visit: https://www.prisma.io/docs/orm/more/help-and-troubleshooting/help-articles/working-with-many-to-many-relations#explicit-relations
+  id                Int       @id @default(autoincrement())
   UserId            Int
   EventsId          Int
   TransactionNumber String
   Quantity          Int
   Paid              Float
-  Date              DateTime @default(now())
+  Date              DateTime  @default(now())
+  user              User?     @relation(fields: [userId], references: [id])
+  userId            Int?
+  events            Events?   @relation(fields: [eventsId], references: [id])
+  eventsId          Int?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt // DateTime @default(now())
+  deletedAt         DateTime? // Nullable field to track soft deletes
+
+  @@index([userId, eventsId])
 }

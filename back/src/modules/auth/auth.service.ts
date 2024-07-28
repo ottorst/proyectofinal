@@ -17,7 +17,10 @@ export class AuthService {
 
   async signIn(signInUser: SignInAuthDto) {
     if (!signInUser.email || !signInUser.password) {
-      throw new HttpException('Missing email or password', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Missing email or password',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const user = await this.userService.findByEmail(signInUser.email);
@@ -26,10 +29,16 @@ export class AuthService {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
-    const isPasswordMatching = await compare(signInUser.password, user.password);
+    const isPasswordMatching = await compare(
+      signInUser.password,
+      user.password,
+    );
     if (!isPasswordMatching) {
       console.log('Passwords do not match');
-      throw new HttpException('Wrong credentials provided', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        'Wrong credentials provided',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     const token = await this.createToken(user);
@@ -42,11 +51,14 @@ export class AuthService {
     } catch (errors) {
       // Generar un mensaje de error adecuado a partir de los errores de validación
       const validationErrors = errors
-        .flatMap(error => 
-          error.constraints ? Object.values(error.constraints) : []
+        .flatMap((error) =>
+          error.constraints ? Object.values(error.constraints) : [],
         )
         .join(', ');
-      throw new HttpException(`Validation failed: ${validationErrors}`, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        `Validation failed: ${validationErrors}`,
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     if (signUpUser.password !== signUpUser.passwordConfirm) {
@@ -55,7 +67,10 @@ export class AuthService {
 
     const existingUser = await this.userService.findByEmail(signUpUser.email);
     if (existingUser) {
-      throw new HttpException('User with this email already exists', HttpStatus.CONFLICT);
+      throw new HttpException(
+        'User with this email already exists',
+        HttpStatus.CONFLICT,
+      );
     }
 
     //const hashedPassword = await hash(signUpUser.password, 10);
@@ -71,7 +86,7 @@ export class AuthService {
       country: signUpUser.country,
       birthday: signUpUser.birthday || '',
       allergies: signUpUser.allergies || '',
-      picture: signUpUser.picture || '',
+      // picture: signUpUser.picture || '',
       auth0Id: signUpUser.auth0Id || '',
       admin: signUpUser.admin || false,
     };

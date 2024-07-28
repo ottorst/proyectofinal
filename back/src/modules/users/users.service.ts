@@ -42,7 +42,7 @@ export class UsersService {
         address: createUserDto.address,
         city: createUserDto.city,
         country: createUserDto.country,
-        picture: createUserDto.picture,
+        // picture: createUserDto.picture,
         auth0Id: createUserDto.auth0Id,
         admin: createUserDto.admin,
         password: hashedPassword,
