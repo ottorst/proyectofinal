@@ -25,7 +25,7 @@ const Navbar: React.FC = () => {
         localStorage.removeItem("userData");
         setToken(null);
         setUser(null);
-        router.push('/login'); 
+       
     };
 
     const handleDashboardRedirect = () => {
@@ -62,6 +62,7 @@ const Navbar: React.FC = () => {
 
                         {token ? (
                             <>
+                            
                                 <Link href="/login" onClick={handleLogOut}>
                                     <li className="hover:underline offset-8 decoration-yellow-500">
                                         <Image src="/assets/signin-icon.svg" alt="Sign Out" width={45} height={50} className="red-filter shadow-xl" />
@@ -72,12 +73,14 @@ const Navbar: React.FC = () => {
                                 </li>
                             </>
                         ) : (
+                            
                             <Link href="/login" onClick={handleLinkClick}>
                                 <li className="hover:underline decoration-4 underline-offset-8">
                                     <Image src="/assets/signout-icon.svg" alt="Sign In" width={45} height={50} className="green-filter shadow-xl" />
                                 </li>
                             </Link>
                         )}
+                        <a href="/api/auth/logout">Logout</a>
                     </ul>
                 </div>
             </nav>

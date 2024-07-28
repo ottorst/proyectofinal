@@ -48,7 +48,10 @@ const config: Config = {
       },
       fontFamily: {
         'lora': ['Lora', 'serif'],
+       /*  inter: ['Inter', 'sans-serif'], */
+        sacramento: ['Sacramento', 'cursive'],
       },
+
       height:{
         43:"43%",
         230:"230px",
