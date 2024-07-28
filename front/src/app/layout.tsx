@@ -22,22 +22,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-     <head>
+      <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet" />
       </head>
-      <UserProvider
-      
-      >
       <body className={inter.className}>
-        <AuthProvider>
-        <RenderNavbarFooter>
-        {children}
-        </RenderNavbarFooter>
-        </AuthProvider>
-        </body>
+        <UserProvider>
+          <AuthProvider>
+            <RenderNavbarFooter>
+              {children}
+            </RenderNavbarFooter>
+          </AuthProvider>
         </UserProvider>
+      </body>
     </html>
   );
 }

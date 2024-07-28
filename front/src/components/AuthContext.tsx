@@ -1,7 +1,6 @@
 'use client'
-
 import { createContext, useState, useEffect, useContext, ReactNode, Dispatch, SetStateAction } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 import { IUser } from '../types/IUser';
 import { fetchUserById } from './helpers/Helpers';
 import { useUser as useAuth0User, UserProfile } from '@auth0/nextjs-auth0/client';
@@ -22,23 +21,29 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps | null>(null);
 
-// Función para obtener el token desde el almacenamiento local o las cookies
-const getToken = (): string | null => {
+const getToken = async (): Promise<string | null> => {
     if (typeof window !== 'undefined') {
         const tokenFromLocalStorage = localStorage.getItem("userToken");
         if (tokenFromLocalStorage) {
             return tokenFromLocalStorage;
         }
 
-        const tokenFromCookies = Cookies.get("userToken");
+        const tokenFromCookies = Cookies.get("appSession");
+        console.log('cookie', tokenFromCookies);
+
         return tokenFromCookies || null;
     }
     return null;
 };
 
 const mapAuth0UserToIUser = (auth0User: UserProfile): IUser => {
+    const auth0Id = auth0User.sub || '';
+    const userId = auth0Id.split('|')[1];
+    const idNumber = Number(userId);
+    const id = isNaN(idNumber) ? 0 : idNumber;
+
     return {
-        id: parseInt(auth0User.sub?.split('|')[1] || '0', 10),
+        id,
         email: auth0User.email || '',
         name: auth0User.name || '',
         password: '',
@@ -49,7 +54,7 @@ const mapAuth0UserToIUser = (auth0User: UserProfile): IUser => {
         city: typeof auth0User.city === 'string' ? auth0User.city : '',
         country: typeof auth0User.country === 'string' ? auth0User.country : '',
         picture: auth0User.picture || '',
-        auth0Id: auth0User.sub || '',
+        auth0Id,
         admin: false,
     };
 };
@@ -61,8 +66,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const { user: auth0User, isLoading } = useAuth0User();
 
     useEffect(() => {
-        const fetchedToken = getToken();
-        setToken(fetchedToken);
+        const fetchToken = async () => {
+            const fetchedToken = await getToken();
+            setToken(fetchedToken);
+        };
+
+        fetchToken();
     }, []);
 
     useEffect(() => {

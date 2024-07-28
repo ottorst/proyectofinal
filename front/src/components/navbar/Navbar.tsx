@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import jwt from 'jsonwebtoken'; 
 import { useAuth } from '../AuthContext';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,6 +13,9 @@ const Navbar: React.FC = () => {
     const menuRef = useRef<HTMLInputElement>(null);
     const { token, setToken, setUser, user } = useAuth();
     const router = useRouter();
+
+    useEffect(() => {
+    }, [token, user]);
 
     const handleLinkClick = () => {
         if (menuRef.current) {
@@ -24,11 +28,35 @@ const Navbar: React.FC = () => {
             menuRef.current.checked = false;
         }
         localStorage.removeItem("userToken");
-        Cookies.remove("userToken");
+        Cookies.remove("appSession"); 
         setToken(null);
         setUser(null);
         router.push('/login');
     };
+    
+    const extractUserIdFromToken = (token: string): string | null => {
+        try {
+            if (!token) {
+                console.error('Token is empty or null');
+                return null;
+            }
+    
+            const decoded: any = jwt.decode(token);
+            console.log('Decoded token:', decoded); 
+    
+            if (decoded && decoded.sub) {
+                const auth0Id = decoded.sub;
+                const userId = auth0Id.split('|')[1];
+                return userId || null;
+            }
+            return null;
+        } catch (error) {
+            console.error('Error decoding token:', error);
+            return null;
+        }
+    };
+    
+    
 
     const handleDashboardRedirect = () => {
         if (user) {
@@ -36,6 +64,11 @@ const Navbar: React.FC = () => {
                 router.push(`/account/admin/${user.id}/dashboard`);
             } else {
                 router.push(`/account/user/${user.id}/dashboard`);
+            }
+        } else if (token) {
+            const userId = extractUserIdFromToken(token);
+            if (userId) {
+                router.push(`/account/user/${userId}/dashboard`);
             }
         }
     };
