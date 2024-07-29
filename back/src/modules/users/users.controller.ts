@@ -114,9 +114,20 @@ export class UsersController {
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    // TODO: try/catch (handle errors)
-    return this.usersService.update(+id, updateUserDto);
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    try {
+      const user = await this.usersService.findOne(+id);
+      if (!user) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      } else {
+        return this.usersService.update(+id, updateUserDto);
+      }
+    } catch (error) {
+      throw new HttpException(
+        'User not found. ' + error.message,
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 
   @Delete(':id')

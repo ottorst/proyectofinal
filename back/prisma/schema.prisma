@@ -44,10 +44,11 @@ model Events {
   subtitle    String
   description String
   date        DateTime
-  location    String
-  document    String
+  location    String // GPS location, ex: Madrid, Spain, Sol
+  document    String?
   maxseats    Int       @default(8)
-  picture     String
+  price       Float     @default(250.0)
+  picture     String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt // DateTime @default(now())
   deletedAt   DateTime? // Nullable field to track soft deletes

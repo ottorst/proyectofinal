@@ -55,7 +55,8 @@ export class UsersService {
   }
 
   async findAll() {
-    return await this.prisma.user.findMany();
+    const users = await this.prisma.user.findMany();
+    return users;
   }
 
   async findOne(id: number) {
@@ -72,8 +73,16 @@ export class UsersService {
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    try {
+      const user = this.prisma.user.update({
+        where: { id },
+        data: updateUserDto,
+      });
+      return user;
+    } catch (error) {
+      console.log('User not found');
+    }
   }
 
   async remove(id: number) {
