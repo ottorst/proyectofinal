@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import Cookies from 'js-cookie';
+import { useEffect, useRef } from 'react'; 
+import Cookies from 'js-cookie'; 
 import { useRouter } from 'next/navigation';
 import jwt from 'jsonwebtoken'; 
 import { useAuth } from '../AuthContext';
@@ -14,6 +14,7 @@ const Navbar: React.FC = () => {
     const { token, setToken, setUser, user } = useAuth();
     const router = useRouter();
 
+   
     useEffect(() => {
     }, [token, user]);
 
@@ -27,13 +28,14 @@ const Navbar: React.FC = () => {
         if (menuRef.current) {
             menuRef.current.checked = false;
         }
-        localStorage.removeItem("userToken");
+        localStorage.removeItem("userToken"); 
         Cookies.remove("appSession"); 
         setToken(null);
         setUser(null);
-        router.push('/login');
+        router.push('/login'); 
     };
     
+   
     const extractUserIdFromToken = (token: string): string | null => {
         try {
             if (!token) {
@@ -56,8 +58,6 @@ const Navbar: React.FC = () => {
         }
     };
     
-    
-
     const handleDashboardRedirect = () => {
         if (user) {
             if (user.admin) {
@@ -65,7 +65,7 @@ const Navbar: React.FC = () => {
             } else {
                 router.push(`/account/user/${user.id}/dashboard`);
             }
-        } else if (token) {
+        } else if (token) { 
             const userId = extractUserIdFromToken(token);
             if (userId) {
                 router.push(`/account/user/${userId}/dashboard`);
@@ -95,13 +95,24 @@ const Navbar: React.FC = () => {
                             <li className="hover:underline decoration-4 underline-offset-8 neon-shadow">Experiences</li>
                         </Link>
 
-                        {token || user ? (
+                        {token || user ? ( 
                             <>
-                                <Link href="/login" onClick={handleLogOut}>
-                                    <li className="hover:underline offset-8 decoration-yellow-500">
-                                        <Image src="/assets/signin-icon.svg" alt="Sign Out" width={45} height={50} className="red-filter shadow-xl" />
-                                    </li>
-                                </Link>
+                                
+                                {/* Condicional para verificar si el usuario está autenticado con Auth0 */}
+                                {user?.auth0Id ? (
+                                    // Envolviendo el botón de logout en la etiqueta <a> de Auth0
+                                    <a href="/api/auth/logout" onClick={handleLogOut}>
+                                        <li className="hover:underline offset-8 decoration-yellow-500">
+                                            <Image src="/assets/signin-icon.svg" alt="Sign Out" width={45} height={50} className="red-filter shadow-xl" />
+                                        </li>
+                                    </a>
+                                ) : (
+                                    <Link href="/login" onClick={handleLogOut}>
+                                        <li className="hover:underline offset-8 decoration-yellow-500">
+                                            <Image src="/assets/signin-icon.svg" alt="Sign Out" width={45} height={50} className="red-filter shadow-xl" />
+                                        </li>
+                                    </Link>
+                                )}
                                 <li className="hover:underline decoration-4 underline-offset-8" onClick={handleDashboardRedirect}>
                                     <FaUser size={45} className="transition-transform duration-300 ease-in-out transform hover:scale-125 hover:text-yellow-500" />
                                 </li>
@@ -113,7 +124,7 @@ const Navbar: React.FC = () => {
                                 </li>
                             </Link>
                         )}
-                        <a href="/api/auth/logout">Logout</a>
+                     
                     </ul>
                 </div>
             </nav>

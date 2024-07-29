@@ -1,8 +1,7 @@
 'use client'
 import { createContext, useState, useEffect, useContext, ReactNode, Dispatch, SetStateAction } from 'react';
-import jwtDecode from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import { IUser } from '../types/IUser';
-import { fetchUserById } from './helpers/Helpers';
 import { useUser as useAuth0User, UserProfile } from '@auth0/nextjs-auth0/client';
 import Cookies from 'js-cookie';
 
@@ -68,7 +67,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     useEffect(() => {
         const fetchToken = async () => {
             const fetchedToken = await getToken();
-            setToken(fetchedToken);
+            if (fetchedToken) {
+                setToken(fetchedToken);
+                localStorage.setItem("userToken", fetchedToken); // Save token to localStorage
+            }
         };
 
         fetchToken();
@@ -97,6 +99,26 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             fetchUserProfile();
         }
     }, [auth0User, isLoading]);
+
+    useEffect(() => {
+        if (token) {
+            try {
+                const decoded: DecodedToken = jwtDecode(token);
+                setDecodedToken(decoded);
+            } catch (error) {
+                console.error('Error decoding token:', error);
+                setDecodedToken(null);
+            }
+        } else {
+            setDecodedToken(null);
+        }
+    }, [token]);
+
+    useEffect(() => {
+        if (token) {
+            localStorage.setItem("userToken", token); // Update token in localStorage when token changes
+        }
+    }, [token]);
 
     return (
         <AuthContext.Provider value={{ token, setToken, decodedToken, user, setUser }}>
