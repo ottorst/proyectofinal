@@ -1,15 +1,22 @@
-'use client'
+'use client';
+
+import { useEffect, useRef } from 'react'; 
+import Cookies from 'js-cookie'; 
+import { useRouter } from 'next/navigation';
+import jwt from 'jsonwebtoken'; 
+import { useAuth } from '../AuthContext';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRef } from 'react';
 import { FaUser } from 'react-icons/fa';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '../AuthContext';
 
 const Navbar: React.FC = () => {
     const menuRef = useRef<HTMLInputElement>(null);
     const { token, setToken, setUser, user } = useAuth();
     const router = useRouter();
+
+   
+    useEffect(() => {
+    }, [token, user]);
 
     const handleLinkClick = () => {
         if (menuRef.current) {
@@ -21,19 +28,47 @@ const Navbar: React.FC = () => {
         if (menuRef.current) {
             menuRef.current.checked = false;
         }
-        localStorage.removeItem("userToken");
-        localStorage.removeItem("userData");
+        localStorage.removeItem("userToken"); 
+        Cookies.remove("appSession"); 
         setToken(null);
         setUser(null);
-       
+        router.push('/login'); 
     };
-
+    
+   
+    const extractUserIdFromToken = (token: string): string | null => {
+        try {
+            if (!token) {
+                console.error('Token is empty or null');
+                return null;
+            }
+    
+            const decoded: any = jwt.decode(token);
+            console.log('Decoded token:', decoded); 
+    
+            if (decoded && decoded.sub) {
+                const auth0Id = decoded.sub;
+                const userId = auth0Id.split('|')[1];
+                return userId || null;
+            }
+            return null;
+        } catch (error) {
+            console.error('Error decoding token:', error);
+            return null;
+        }
+    };
+    
     const handleDashboardRedirect = () => {
         if (user) {
             if (user.admin) {
                 router.push(`/account/admin/${user.id}/dashboard`);
             } else {
                 router.push(`/account/user/${user.id}/dashboard`);
+            }
+        } else if (token) { 
+            const userId = extractUserIdFromToken(token);
+            if (userId) {
+                router.push(`/account/user/${userId}/dashboard`);
             }
         }
     };
@@ -60,27 +95,36 @@ const Navbar: React.FC = () => {
                             <li className="hover:underline decoration-4 underline-offset-8 neon-shadow">Experiences</li>
                         </Link>
 
-                        {token ? (
+                        {token || user ? ( 
                             <>
-                            
-                                <Link href="/login" onClick={handleLogOut}>
-                                    <li className="hover:underline offset-8 decoration-yellow-500">
-                                        <Image src="/assets/signin-icon.svg" alt="Sign Out" width={45} height={50} className="red-filter shadow-xl" />
-                                    </li>
-                                </Link>
+                                
+                                {/* Condicional para verificar si el usuario está autenticado con Auth0 */}
+                                {user?.auth0Id ? (
+                                    // Envolviendo el botón de logout en la etiqueta <a> de Auth0
+                                    <a href="/api/auth/logout" onClick={handleLogOut}>
+                                        <li className="hover:underline offset-8 decoration-yellow-500">
+                                            <Image src="/assets/signin-icon.svg" alt="Sign Out" width={45} height={50} className="red-filter shadow-xl" />
+                                        </li>
+                                    </a>
+                                ) : (
+                                    <Link href="/login" onClick={handleLogOut}>
+                                        <li className="hover:underline offset-8 decoration-yellow-500">
+                                            <Image src="/assets/signin-icon.svg" alt="Sign Out" width={45} height={50} className="red-filter shadow-xl" />
+                                        </li>
+                                    </Link>
+                                )}
                                 <li className="hover:underline decoration-4 underline-offset-8" onClick={handleDashboardRedirect}>
                                     <FaUser size={45} className="transition-transform duration-300 ease-in-out transform hover:scale-125 hover:text-yellow-500" />
                                 </li>
                             </>
                         ) : (
-                            
                             <Link href="/login" onClick={handleLinkClick}>
                                 <li className="hover:underline decoration-4 underline-offset-8">
                                     <Image src="/assets/signout-icon.svg" alt="Sign In" width={45} height={50} className="green-filter shadow-xl" />
                                 </li>
                             </Link>
                         )}
-                        <a href="/api/auth/logout">Logout</a>
+                     
                     </ul>
                 </div>
             </nav>
