@@ -34,7 +34,7 @@ export const getServerSideProps = withPageAuthRequired ({
 })
 export default ProfileClient */
 
-import { withPageAuthRequired, getSession } from '@auth0/nextjs-auth0';
+/* import { withPageAuthRequired, getSession } from '@auth0/nextjs-auth0';
 import { GetServerSidePropsContext } from 'next';
 
 export const getServerSideProps = withPageAuthRequired({
@@ -72,3 +72,5 @@ const ProfileClient = ({ data }: { data: any }) => {
 };
 
 export default ProfileClient;
+ */
+
