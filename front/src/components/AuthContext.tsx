@@ -1,10 +1,10 @@
 'use client'
 import { createContext, useState, useEffect, useContext, ReactNode, Dispatch, SetStateAction } from 'react';
-import jwtDecode from 'jwt-decode';  // Corrección en la importación
+import {jwtDecode} from 'jwt-decode';  
 import { IUser } from '../types/IUser';
 import { fetchUserById } from './helpers/Helpers';
 import { useUser as useAuth0User, UserProfile } from '@auth0/nextjs-auth0/client';
-import Cookies from 'js-cookie';  // Nueva importación
+import Cookies from 'js-cookie';  
 
 interface DecodedToken {
     id: string;
@@ -28,7 +28,7 @@ const getToken = async (): Promise<string | null> => {
             return tokenFromLocalStorage;
         }
 
-        const tokenFromCookies = Cookies.get("appSession");  // Nueva lógica para obtener el token de las cookies
+        const tokenFromCookies = Cookies.get("appSession");  
         console.log('cookie', tokenFromCookies);
 
         return tokenFromCookies || null;
@@ -67,7 +67,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     useEffect(() => {
         const fetchToken = async () => {
-            const fetchedToken = await getToken();  // Nueva llamada para obtener el token
+            const fetchedToken = await getToken();  
             setToken(fetchedToken);
         };
 
@@ -97,6 +97,26 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             fetchUserProfile();
         }
     }, [auth0User, isLoading]);
+
+    useEffect(() => {
+        if (token) {
+            try {
+                const decoded: DecodedToken = jwtDecode(token);
+                setDecodedToken(decoded);
+            } catch (error) {
+                console.error('Error decoding token:', error);
+                setDecodedToken(null);
+            }
+        } else {
+            setDecodedToken(null);
+        }
+    }, [token]);
+
+    useEffect(() => {
+        if (token) {
+            localStorage.setItem("userToken", token); // Update token in localStorage when token changes
+        }
+    }, [token]);
 
     return (
         <AuthContext.Provider value={{ token, setToken, decodedToken, user, setUser }}>
