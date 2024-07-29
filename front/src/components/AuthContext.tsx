@@ -76,7 +76,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     useEffect(() => {
         const fetchUserProfile = async () => {
-            const response = await fetch('/api/auth/me', {
+            const response = await fetch('http://localhost:3001/auth/auth0', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
