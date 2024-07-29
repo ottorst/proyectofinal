@@ -1,15 +1,10 @@
 import {
-  IsEmail,
   IsNotEmpty,
   IsString,
   MinLength,
   MaxLength,
-  Matches,
   IsDateString,
-  IsOptional,
-  IsBoolean,
   IsNumber,
-  IsDecimal,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -47,7 +42,7 @@ export class CreateEventDto {
 
   @ApiProperty({
     description:
-      'Event date, is a DateString in order to front easily data transfer, example: 2020-01-01. It must be a future date. Not Optional and default is now.',
+      'String compatible with .toISOString(). Event date, is a DateString in order to front easily data transfer, example: 2020-01-01. It must be a future date. Not Optional and default is now.',
     example: '2020-01-01T00:00:00.000Z',
   })
   @IsDateString()
@@ -71,7 +66,7 @@ export class CreateEventDto {
     default: false,
   })
   @IsString()
-  document: string;
+  document?: string;
 
   @ApiProperty({
     description: 'Event max seats. Default is 8',
@@ -81,11 +76,18 @@ export class CreateEventDto {
   maxseats: number;
 
   @ApiProperty({
+    description: 'Price per seat, default is 250 €.',
+    example: '250',
+  })
+  @IsNumber()
+  price: number;
+
+  @ApiProperty({
     description: 'Event picture, as URL of Cloudinary. Never Optional.',
-    nullable: false,
+    nullable: true,
     example:
       'https://res.cloudinary.com/dxkqy4os7/image/upload/v1720008542/uploads/nasa_cohete_luna.jpg.jpg',
   })
   @IsString()
-  picture: string;
+  picture?: string;
 }

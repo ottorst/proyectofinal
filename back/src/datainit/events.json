@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Primaveras de Madrid",
+    "subtitle": "Un homenaje a la vibrante estación en la capital española",
+    "description": "La primavera en Madrid es un espectáculo para los sentidos, donde los parques y jardines cobran vida con el colorido de las flores y el cálido sol acaricia las históricas plazas. 'Primaveras de Madrid' es una celebración de esta estación efervescente, una cena que captura la esencia de la alegría y la renovación que trae consigo.",
+    "date": "2024-08-05",
+    "location": "40.416729, -3.703339",
+    "document": "https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "maxseats": 8,
+    "picture": "https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  },
+  {
+    "title": "Recuerdos de Italia 1.996",
+    "subtitle": "Ambientado en la restauración y tradiciones del Sur de Italia",
+    "description": "Bienvenidos a una velada donde cada bocado y sorbo es un homenaje a la rica herencia culinaria del sur de Italia. Esta noche, no es solo una cena, es un viaje sensorial al corazón de la tradición y la innovación...",
+    "date": "2024-09-05",
+    "location": "37.127758, -7.649309",
+    "document": "https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "maxseats": 6,
+    "picture": "https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  },
+  {
+    "title": "Noches de París",
+    "subtitle": "Una celebración de la elegancia culinaria francesa",
+    "description": "Sumérjanse en el encanto de París, la ciudad de la luz, donde la gastronomía se convierte en arte y cada plato cuenta una historia. Esta noche, Noches de París, es un tributo a la sofisticación y el romance que solo Francia puede ofrecer....",
+    "date": "2024-10-05",
+    "location": "48.85889, 2.320041",
+    "document": "https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "maxseats": 8,
+    "picture": "https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  }
+]
