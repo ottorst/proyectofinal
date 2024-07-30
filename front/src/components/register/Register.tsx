@@ -8,7 +8,7 @@ import { IRegisterErrorProps } from "@/src/types/IRegisterErrorProps";
 import { validateFormRegister } from "@/src/helpers/formValidation";
 import { register } from "../../helpers/authRegister";
 import Link from "next/link";
-
+import Swal from "sweetalert2";
 const Register: React.FC = () => {
   const router = useRouter();
   const [dataUser, setDataUser] = useState<IRegisterProps>({
@@ -90,7 +90,12 @@ const Register: React.FC = () => {
     if (Object.values(errors).every((error) => error === "")) {
       try {
         await register(dataToSend);
-        alert("Registro exitoso!");
+        Swal.fire({
+          title: "Register Successful",
+          text: "You have successfully register!",
+          icon: "success",
+          confirmButtonText: "OK",
+        })
         router.push("/login");
       } catch (error: any) {
         alert(`Error during registration: ${error.message}`);
