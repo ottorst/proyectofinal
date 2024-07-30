@@ -1,10 +1,10 @@
-'use client'
+'use client';
 import { createContext, useState, useEffect, useContext, ReactNode, Dispatch, SetStateAction } from 'react';
-import {jwtDecode} from 'jwt-decode';  
+import {jwtDecode} from 'jwt-decode';
+import Cookies from 'js-cookie';
 import { IUser } from '../types/IUser';
-import { fetchUserById } from './helpers/Helpers';
+import { fetchUserById } from './helpers/Helpers'; 
 import { useUser as useAuth0User, UserProfile } from '@auth0/nextjs-auth0/client';
-import Cookies from 'js-cookie';  
 
 interface DecodedToken {
     id: string;
@@ -21,17 +21,9 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps | null>(null);
 
-const getToken = async (): Promise<string | null> => {
+const getToken = (): string | null => {
     if (typeof window !== 'undefined') {
-        const tokenFromLocalStorage = localStorage.getItem("userToken");
-        if (tokenFromLocalStorage) {
-            return tokenFromLocalStorage;
-        }
-
-        const tokenFromCookies = Cookies.get("appSession");  
-        console.log('cookie', tokenFromCookies);
-
-        return tokenFromCookies || null;
+        return localStorage.getItem("userToken") || Cookies.get("appSession") || null;
     }
     return null;
 };
@@ -66,34 +58,61 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const { user: auth0User, isLoading } = useAuth0User();
 
     useEffect(() => {
-        const fetchToken = async () => {
-            const fetchedToken = await getToken();  
-            setToken(fetchedToken);
-        };
+        const storedToken = localStorage.getItem('userToken');
+        const storedUser = localStorage.getItem('userData');
 
-        fetchToken();
+        if (storedToken) {
+            setToken(storedToken);
+            try {
+                const decoded = jwtDecode<DecodedToken>(storedToken);
+                setDecodedToken(decoded);
+                if (storedUser) {
+                    setUser(JSON.parse(storedUser));
+                } else {
+                    fetchUserById(decoded.id, storedToken)
+                        .then(userData => {
+                            setUser(userData);
+                            localStorage.setItem('userData', JSON.stringify(userData));
+                        })
+                        .catch(error => {
+                            console.error('Error fetching user data:', error);
+                            setUser(null);
+                        });
+                }
+            } catch (error) {
+                console.error('Error decoding token:', error);
+                setDecodedToken(null);
+            }
+        } else {
+            const fetchedToken = getToken();
+            console.log('Fetched token:', fetchedToken);
+            setToken(fetchedToken);
+        }
     }, []);
 
     useEffect(() => {
-        const fetchUserProfile = async () => {
-            const response = await fetch('http://localhost:3001/auth/auth0', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (response.ok) {
-                const userData = await response.json();
-                setUser(userData);
-            } else {
-                console.error('Failed to fetch user profile:', response.statusText);
-            }
-        };
-
         if (auth0User && !isLoading) {
             const mappedUser = mapAuth0UserToIUser(auth0User);
             setUser(mappedUser);
+            const fetchUserProfile = async () => {
+                try {
+                    const response = await fetch('http://localhost:3001/auth/auth0', {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' },
+                    });
+
+                    if (response.ok) {
+                        const userData = await response.json();
+                        console.log('Fetched user data:', userData);
+                        setUser(userData);
+                    } else {
+                        console.error('Failed to fetch user profile:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error fetching user profile:', error);
+                }
+            };
+
             fetchUserProfile();
         }
     }, [auth0User, isLoading]);
@@ -102,7 +121,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         if (token) {
             try {
                 const decoded: DecodedToken = jwtDecode(token);
+                console.log('Decoded token:', decoded);
                 setDecodedToken(decoded);
+                fetchUserById(decoded.id, token)
+                    .then(userData => {
+                        setUser(userData);
+                        localStorage.setItem('userData', JSON.stringify(userData));
+                    })
+                    .catch(error => {
+                        console.error('Error fetching user data:', error);
+                        setUser(null);
+                    });
             } catch (error) {
                 console.error('Error decoding token:', error);
                 setDecodedToken(null);
@@ -114,7 +143,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     useEffect(() => {
         if (token) {
-            localStorage.setItem("userToken", token); // Update token in localStorage when token changes
+            localStorage.setItem("userToken", token);
         }
     }, [token]);
 
