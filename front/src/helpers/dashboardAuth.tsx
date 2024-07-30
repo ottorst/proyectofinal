@@ -2,7 +2,7 @@
 
 
 // components/ProtectedRoute.js
-import { useEffect, ReactNode } from "react";
+import { useEffect, ReactNode, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/src/components/AuthContext";
 
@@ -14,7 +14,8 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute:React.FC<ProtectedRouteProps> = ({ children, adminOnly }) => {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user} = useAuth();
+
 
   useEffect(() => {
     if (!user) {
@@ -23,8 +24,9 @@ const ProtectedRoute:React.FC<ProtectedRouteProps> = ({ children, adminOnly }) =
       router.push(`/account/user/${user.id}/dashboard`); 
   }else if (!adminOnly && user.admin) {
     router.push(`/account/admin/${user.id}/dashboard`); 
-}
+} 
   }, [user,adminOnly,router]);
+  
 
   if (!user || (adminOnly && !user.admin)) {
     return <div>Loading...</div>;
