@@ -14,7 +14,7 @@ interface ClientProps{
 const RenderNavbarFooter:React.FC<ClientProps> = ({children}) => {
 
 const pathname = usePathname();
-const showNavbarAndFooter = pathname !== "/" && pathname !== "/404";;
+const showNavbarAndFooter = pathname !== "/" && pathname !== "/404" && pathname !== "/loading";
 
 return (
 
