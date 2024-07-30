@@ -1,9 +1,12 @@
-
+//Vendors
+import Contact from "@/src/components/contact/Contact"
 
 
 function ContactView() {
   return (
-    <div>Estamos en la view de contact</div>
+    <div>
+      <Contact/>
+    </div>
   )
 }
 

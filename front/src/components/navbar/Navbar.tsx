@@ -102,6 +102,9 @@ const Navbar: React.FC = () => {
                         <Link href="/experience" onClick={handleLinkClick}>
                             <li className="hover:underline decoration-4 underline-offset-8 neon-shadow">Experiences</li>
                         </Link>
+                        <Link href="/contact" onClick={handleLinkClick}>
+                            <li className="hover:underline decoration-4 underline-offset-8 neon-shadow">Contact</li>
+                        </Link>
 
                         {token || user ? ( 
                             <>
