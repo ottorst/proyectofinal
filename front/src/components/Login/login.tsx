@@ -38,26 +38,32 @@ const LoginFormClient: React.FC = () => {
       setFormError("");
       if (!errorMessage.email && !errorMessage.password) {
         const response = await loginUser(dataUser.email, dataUser.password);
-        setToken(response.token);
 
-        Swal.fire({
-          title: "Login Successful",
-          text: "You have successfully logged in!",
-          icon: "success",
-          confirmButtonText: "OK",
-        }).then(() => {
-          const decodedToken = jwtDecode<{ id: string }>(response.token);
-          fetchUserById(decodedToken.id, response.token).then((user) => {
-            setUser(user);
-            console.log("User ID:", user.id);
-            console.log("Is Admin:", user.admin);
-            if (user.admin) {
-              router.push(`/account/admin/${user.id}/dashboard`);
-            } else {
-              router.push(`/account/user/${user.id}/dashboard`);
-            }
+        if (response.token) {
+          setToken(response.token);
+          localStorage.setItem("userToken", response.token);
+
+          Swal.fire({
+            title: "Login Successful",
+            text: "You have successfully logged in!",
+            icon: "success",
+            confirmButtonText: "OK",
+          }).then(() => {
+            const decodedToken = jwtDecode<{ id: string }>(response.token);
+            fetchUserById(decodedToken.id, response.token).then((user) => {
+              setUser(user);
+              console.log("User ID:", user.id);
+              console.log("Is Admin:", user.admin);
+              if (user.admin) {
+                router.push(`/account/admin/${user.id}/dashboard`);
+              } else {
+                router.push(`/account/user/${user.id}/dashboard`);
+              }
+            });
           });
-        });
+        } else {
+          setFormError("Failed to retrieve token. Please try again.");
+        }
       }
     } catch (error) {
       if (!errorMessage.email && !errorMessage.password) {

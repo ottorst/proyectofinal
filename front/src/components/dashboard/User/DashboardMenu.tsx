@@ -5,6 +5,7 @@ import PaymentMethod from './PaymentDashboard';
 import { useAuth } from '../../AuthContext';
 import EventDashboard from './EventDashboard';
 import { useRouter } from 'next/navigation';
+import LoadingPage from '../../LoadingPage/loading';
 
 interface DashboardProps {
     userId: number;
@@ -15,20 +16,12 @@ const DashboardMenu: React.FC<DashboardProps> = ({ userId }) => {
     const { user } = useAuth();
     const router = useRouter();
 
-    useEffect(() => {
-        if (!user) {
-            router.push('/login');
-        } else if (userId !== user.id) {
-            router.push('/login');
-        }
-    }, [user, userId, router]);
-
     const handleOptionChange = (option: 'Profile' | 'Payment' | 'Events') => {
         setSelectedOption(option);
     };
 
-    if (!user || userId !== user.id) {
-        return null;
+    if (!user) {
+        return <LoadingPage/>
     }
 
     return (

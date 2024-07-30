@@ -14,10 +14,6 @@ const Navbar: React.FC = () => {
     const { token, setToken, setUser, user } = useAuth();
     const router = useRouter();
 
-   
-    useEffect(() => {
-    }, [token, user]);
-
     const handleLinkClick = () => {
         if (menuRef.current) {
             menuRef.current.checked = false;
@@ -28,14 +24,17 @@ const Navbar: React.FC = () => {
         if (menuRef.current) {
             menuRef.current.checked = false;
         }
-        localStorage.removeItem("userToken"); 
-        Cookies.remove("appSession"); 
-        setToken(null);
-        setUser(null);
-        router.push('/login'); 
+        try {
+            localStorage.removeItem("userToken"); 
+            Cookies.remove("appSession"); 
+            setToken(null);
+            setUser(null);
+            router.push('/login'); 
+        } catch (error) {
+            console.error('Error during logout:', error);
+        }
     };
-    
-   
+
     const extractUserIdFromToken = (token: string): string | null => {
         try {
             if (!token) {
@@ -57,7 +56,7 @@ const Navbar: React.FC = () => {
             return null;
         }
     };
-    
+
     const handleDashboardRedirect = () => {
         if (user) {
             if (user.admin) {
@@ -69,9 +68,18 @@ const Navbar: React.FC = () => {
             const userId = extractUserIdFromToken(token);
             if (userId) {
                 router.push(`/account/user/${userId}/dashboard`);
+            } else {
+                console.error('User ID could not be extracted from token');
             }
+        } else {
+            console.error('User or token is not available for redirection');
         }
     };
+
+    useEffect(() => {
+        console.log('Current token:', token);
+        console.log('Current user:', user);
+    }, [token, user]);
 
     return (
         <header>
@@ -97,10 +105,7 @@ const Navbar: React.FC = () => {
 
                         {token || user ? ( 
                             <>
-                                
-                                {/* Condicional para verificar si el usuario está autenticado con Auth0 */}
                                 {user?.auth0Id ? (
-                                    // Envolviendo el botón de logout en la etiqueta <a> de Auth0
                                     <a href="/api/auth/logout" onClick={handleLogOut}>
                                         <li className="hover:underline offset-8 decoration-yellow-500">
                                             <Image src="/assets/signin-icon.svg" alt="Sign Out" width={45} height={50} className="red-filter shadow-xl" />
