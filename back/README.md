@@ -58,14 +58,28 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 Para documentar los guards y los casos de uso en tu proyecto, especialmente en el archivo `README.md`, aquí tienes una guía de cómo puedes estructurar la información:
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
+## Stay in touch
+
+- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
+
+## License
+
+Nest is [MIT licensed](LICENSE).
 <hr>
+
+```markdown
 
 # Guía del Módulo de Autenticación con JWT en NestJS
 
 ## Descripción
 
 Este módulo de autenticación en NestJS utiliza JWT para autenticar a los usuarios. Incluye funcionalidad para registro (sign up), inicio de sesión (sign in) y protección de rutas mediante guards.
+
+```
 
 
 
@@ -196,16 +210,121 @@ Para enviar solicitudes a las rutas protegidas, sigue estos pasos:
    - Asegúrate de enviar el token en cada solicitud a las rutas que requieren autenticación y roles específicos.
 <hr>
 
-## Support
+```markdown
+# Documentación del Servicio de Cloudinary en NestJS
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Este documento describe cómo configurar y utilizar el servicio de **Cloudinary** en una aplicación NestJS.
 
-## Stay in touch
+## Requisitos
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Asegúrate de tener las siguientes dependencias instaladas en tu proyecto:
 
-## License
+```bash
+npm install @nestjs/common dotenv cloudinary
+```
 
-Nest is [MIT licensed](LICENSE).
+## Configuración
+
+1. **Configurar las Variables de Entorno**
+
+   Crea un archivo de configuración de entorno en la raíz de tu proyecto, por ejemplo, `.env.development.local`, con las siguientes variables:
+
+   ```env
+   CLOUDINARY_CLOUD_NAME=tu_cloud_name
+   CLOUDINARY_API_KEY=tu_api_key
+   CLOUDINARY_API_SECRET=tu_api_secret
+   ```
+
+   Estas variables son necesarias para la configuración del cliente de Cloudinary.
+
+2. **Implementar el Servicio de Cloudinary**
+
+   Implementa el servicio `CloudinaryService` para manejar las operaciones con Cloudinary. Aquí tienes un ejemplo:
+
+   ```typescript
+   import { Injectable } from '@nestjs/common';
+   import * as dotenv from 'dotenv';
+   import { UploadApiOptions, v2 as cloudinary } from 'cloudinary';
+
+   @Injectable()
+   export class CloudinaryService {
+     constructor() {
+       dotenv.config({
+         path: '.env.development.local',
+       });
+       cloudinary.config({
+         cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+         api_key: process.env.CLOUDINARY_API_KEY,
+         api_secret: process.env.CLOUDINARY_API_SECRET,
+       });
+     }
+
+     async uploadFile(buffer: Buffer, orignalName?: string) {
+       const options: UploadApiOptions = {
+         folder: 'uploads',
+         public_id: orignalName,
+         resource_type: 'auto',
+       };
+       return new Promise((resolve, reject) => {
+         const stream = cloudinary.uploader.upload_stream(
+           options,
+           (error, result) => {
+             if (error) {
+               reject(error);
+             } else {
+               resolve(result);
+             }
+           },
+         ); 
+         stream.write(buffer);
+         stream.end();
+       });
+     }
+   }
+   ```
+
+## Uso del Servicio
+
+1. **Inyectar el Servicio en un Controlador**
+
+   Puedes inyectar `CloudinaryService` en un controlador para manejar la subida de archivos. A continuación se muestra un ejemplo de cómo hacerlo:
+
+   ```typescript
+   import { Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+   import { FileInterceptor } from '@nestjs/platform-express';
+   import { CloudinaryService } from './cloudinary.service';
+
+   @Controller('files')
+   export class FilesController {
+     constructor(private readonly cloudinaryService: CloudinaryService) {}
+
+     @Post('upload')
+     @UseInterceptors(FileInterceptor('file'))
+     async uploadFile(@UploadedFile() file: Express.Multer.File) {
+       const { buffer, originalname } = file;
+       const result = await this.cloudinaryService.uploadFile(buffer, originalname);
+       return result;
+     }
+   }
+   ```
+
+   En este ejemplo, el archivo subido se maneja a través de `FileInterceptor` de NestJS, se obtiene el buffer del archivo y el nombre original, y luego se llama al método `uploadFile` del servicio `CloudinaryService`.
+
+2. **Probar la Subida de Archivos**
+
+   Para probar la subida de archivos, puedes utilizar herramientas como Postman o cURL para enviar una solicitud POST al endpoint `/files/upload` con un archivo adjunto.
+
+   Ejemplo con cURL:
+
+   ```bash
+   curl -X POST http://localhost:3000/files/upload \
+   -F "file=@path/to/your/file.jpg"
+   ```
+
+
+---
+
+Esta documentación debería proporcionarte una guía completa para configurar y utilizar el servicio de Cloudinary en tu proyecto NestJS. ¡Espero que te sea útil!
+
+
+
