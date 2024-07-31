@@ -26,6 +26,7 @@ const DashboardMenu: React.FC<DashboardProps> = ({ userId }) => {
 
     return (
         <div>
+            <title>Dashboard User</title>
             <h1 className="text-gray-100 text-4xl font-bold mb-7 underline flex justify-center items-center p-6">{`Welcome ${user?.name}`}</h1>
             <div className="flex flex-row mt-8 space-x-6 text-gray-100 pl-4">
                 <div className="bg-gray-800 w-1/4 h-80 p-4 rounded-lg flex flex-col">
