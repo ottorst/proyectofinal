@@ -25,15 +25,17 @@ const Navbar: React.FC = () => {
             menuRef.current.checked = false;
         }
         try {
-            localStorage.removeItem("userToken"); 
-            Cookies.remove("appSession"); 
+            localStorage.removeItem("userToken");
+            localStorage.removeItem("userData"); 
+            Cookies.remove("appSession");
             setToken(null);
             setUser(null);
-            router.push('/login'); 
+            router.push('/login');
         } catch (error) {
             console.error('Error during logout:', error);
         }
     };
+    
 
     const extractUserIdFromToken = (token: string): string | null => {
         try {

@@ -144,8 +144,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     useEffect(() => {
         if (token) {
             localStorage.setItem("userToken", token);
+        } else {
+            localStorage.removeItem("userToken");
         }
     }, [token]);
+    
 
     return (
         <AuthContext.Provider value={{ token, setToken, decodedToken, user, setUser }}>
