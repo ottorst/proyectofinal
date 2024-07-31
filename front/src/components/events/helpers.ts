@@ -1,17 +1,21 @@
-//Vendors
 
 const fetchEvents = async () => {
-try {
-    const response = await fetch("http://localhost:3001/events/seeder",{
-        method:"GET"
-    });
-    return response.json();
+    try {
+      const response = await fetch("http://localhost:3001/events/seeder");
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      return data;
+  
+    } catch (error) {
+      console.error("Error fetching events:", error);
+      throw error;
+    }
+  };
+  
+  export default fetchEvents;
+  
 
-
-} catch (error) {
-    console.error("Error fetching events",error)
-    throw error;
-};
-};
-
-export default fetchEvents;
