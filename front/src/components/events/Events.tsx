@@ -6,17 +6,20 @@ import { useState,useEffect } from "react"
 import Image from "next/image"
 //Helpers
 import fetchEvents from "./helpers"
+//Components
+import LoadingPage from "../LoadingPage/loading"
 
 
 
 const Events:React.FC = () => {
 
-
 const [events,setEvents] = useState<IEvent[]>([]);
-const [loading,setLoading] = useState(true);
 const [error,setErrors] = useState<Error|null>(null);
-   
+const [selectedEvent,setSelectedEvent] = useState<IEvent | null>(null);
+const [loading, setLoading] = useState(true);
+
 useEffect(() => {
+
     const loadEvents = async () => {
       try {
         const data = await fetchEvents();
@@ -26,42 +29,77 @@ useEffect(() => {
             setErrors(error)
         }else {
             setErrors(new Error("Unknown error occurred"));
-        }
-       } finally{
-      setLoading(false);
+        } 
+       } finally {
+        setLoading(false)
       }
 
     }
     loadEvents();
 
 },[]);
+
+const handleImageClick = (event:IEvent) => {
+  setSelectedEvent(event);
+  };
+
+  const handleCloseModal = () => {
+ setSelectedEvent(null);
+  };
+
+  if(loading){
+    return <LoadingPage/>
+  }
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 my-9">
-      {events.map((event)=>
-       <div key = {event.id} className="flex flex-col items-center bg-gray-800 bg-opacity-75 rounded-md p-4
-       text-center space-y-4 
-       ">
+    (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 my-9">
+        <title>Experiences</title>
+          {events.map((event) => (
+              <div key={event.id} className="flex flex-col h-full bg-gray-800 rounded-md p-4 text-center space-y-4 
+               border-2 border-transparent transform transition-colors duration-500 hover:border-white
+               
+              ">
+                  <div onClick={()=> handleImageClick(event)}>
+                      <Image src={event.picture} alt="Event Picture" width={500} height={500} className="rounded-lg cursor-pointer"/>
+                  </div>
+                  <div className="flex flex-col flex-grow justify-between">
+                      <div>
+                          <h1 className="text-xl font-bold text-white mb-4">{event.title}</h1>
+                          <h2 className="text-lg font-medium text-gray-300 mb-4">{event.subtitle}</h2>
+                          <p className="text-gray-200 mb-4">{event.description}</p>
+                        
+                      </div>
+                      <div className="mt-auto">
+                          <button className="bg-yellow-500 rounded-md hover:bg-yellow-700 px-8 py-4 mt-4 w-full">BookNow</button>
+                      </div>
+                  </div>
+              </div>
+          ))}
 
-        <div>
-          <Image src={event.picture} alt="Event Picture" width={200} height={300}/>
-        </div>
+{selectedEvent && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white bg-opacity-95 p-6 rounded-lg w-11/12 md:w-1/2 max-h-screen overflow-y-auto relative">
+                        <div className="flex justify-between items-center mb-4">
+                            <button onClick={handleCloseModal} className="text-black text-3xl">X</button>
+                        </div>
+                        <div className="flex flex-col justify-center items-center">
+                        <h2 className="text-2xl font-bold text-black">{selectedEvent.title}</h2>
+                        <Image src={selectedEvent.picture} alt="Event Picture" width={300} height={300} className="rounded-lg mb-4"/>
+                        <p className="text-gray-700 mb-2">{selectedEvent.description}</p>
+                        <p className="text-gray-700 mb-2"><span className="font-bold text-black">Date:</span> {new Date(selectedEvent.date).toLocaleDateString()}</p>
+                        <p className="text-gray-700 mb-2"><span className="font-bold text-black">Location:</span> {selectedEvent.location}</p>
+                        <p className="text-gray-700 mb-2"><span className="font-bold text-black">MaxSeats:</span> {selectedEvent.maxseats}</p>
+                        <p className="text-gray-700 mb-2"><span className="font-bold text-black">Price:</span> ${selectedEvent.price}</p>
+                        <button className="bg-yellow-500 rounded-md hover:bg-yellow-700 px-8 py-4 mt-4 w-full">BookNow</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+      </div>
 
-        
-         <h1 className="text-xl font-bold text-white">{event.title}</h1>
-       <h2 className="text-lg font-medium text-gray-300">{event.subtitle}</h2>
-       <p className="text-gray-200">{event.description}</p>
-       <p className="text-gray-400">{`Date: ${new Date(event.date).toLocaleDateString()}`}</p>
-       <p className="text-gray-400">{`Location: ${event.location}`}</p>
-       <p className="text-gray-400">{`MaxSeats: ${event.maxseats}`}</p>
-       <p className="text-gray-400">{`Price: $${event.price}`}</p>
-       <button className="bg-yellow-500 rounded-md hover:bg-yellow-700
-       px-8 py-4
-       ">BookNow</button>
-         </div>
-
-    
-      )}
-    </div>
+      
+  )
 
   
   );

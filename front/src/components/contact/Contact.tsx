@@ -35,6 +35,7 @@ const handleChange = (event:React.ChangeEvent<HTMLInputElement | HTMLTextAreaEle
 
 return (
     <div className="text-black flex items-center justify-center p-10 ml-6">
+        <title>Contact</title>
     <div className="rounded-lg max-w-md p-16 bg-slate-800 mt-2 mb-12 w-full">
         <h2 className="text-3xl font-bold mb-2 text-center text-white">Contact Us</h2>
         <div className="flex items-center justify-center space-x-2">
