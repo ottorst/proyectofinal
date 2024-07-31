@@ -38,8 +38,8 @@ useEffect(() => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 my-9">
       {events.map((event)=>
-       <div className="flex flex-col items-center bg-gray-800 bg-opacity-75 rounded-md p-4
-       text-center space-y-4
+       <div key = {event.id} className="flex flex-col items-center bg-gray-800 bg-opacity-75 rounded-md p-4
+       text-center space-y-4 
        ">
 
         <div>
