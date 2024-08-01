@@ -127,7 +127,11 @@ export class UsersService {
     const user = await this.prisma.user.findUnique({
       where: { id },
       include: {
-        bookings: true,
+        bookings: {
+          include: {
+            events: true,
+          },
+        },
       },
     });
     return user;
@@ -137,7 +141,11 @@ export class UsersService {
     const user = await this.prisma.user.findUnique({
       where: { email },
       include: {
-        bookings: true,
+        bookings: {
+          include: {
+            events: true,
+          },
+        },
       },
     });
     return user;
