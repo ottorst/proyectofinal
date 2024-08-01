@@ -17,6 +17,7 @@ import { UserResponseDto } from '../users/dto/response.user.dto';
 import { DateAdderInterceptor } from 'src/interceptor/date-adder.interceptor';
 import { ApiTags, ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { Request, Response } from 'express';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -46,7 +47,6 @@ export class AuthController {
   })
   async signIn(@Body() credentials: SignInAuthDto) {
     try {
-      // Asegúrate de que el DTO sea válido (opcional, dependiendo de cómo manejes la validación)
       if (!credentials.email || !credentials.password) {
         throw new HttpException(
           'Missing email or password',
@@ -58,12 +58,10 @@ export class AuthController {
     } catch (error) {
       console.error('Sign-in error:', error.message);
 
-      // Identifica el tipo de error
       if (error instanceof HttpException) {
-        throw error; // Re-lanza errores específicos que ya tienen un HttpException
+        throw error;
       }
 
-      // Maneja errores genéricos
       throw new HttpException(
         'Unexpected error occurred during sign-in.',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -122,12 +120,10 @@ export class AuthController {
     } catch (error) {
       console.error('Sign-up error:', error.message);
 
-      // Identifica el tipo de error
       if (error instanceof HttpException) {
-        throw error; // Re-lanza errores específicos que ya tienen un HttpException
+        throw error;
       }
 
-      // Maneja errores genéricos
       throw new HttpException(
         'Unexpected error occurred during sign-up.',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -138,23 +134,36 @@ export class AuthController {
   @Get('auth0')
   async Auth0(@Req() req: Request, @Res() res: Response) {
     try {
-      // Asegúrate de que el usuario esté autenticado
       if (req.oidc?.isAuthenticated()) {
-        // Imprimir el token en la consola
-        console.log('Access Token:', req.oidc.accessToken?.access_token);
-        console.log('ID Token:', req.oidc.idToken);
+        const email = req.oidc.user?.email;
+        const auth0Id = req.oidc.user?.sub;
 
-        // Devolver la información del usuario
-        res.status(HttpStatus.OK).json(req.oidc.user);
+        if (!email || !auth0Id) {
+          return res.status(HttpStatus.BAD_REQUEST).json({ message: 'No email or auth0Id found' });
+        }
+
+        let user = await this.authService.findUserByAuth0IdOrEmail(auth0Id, email);
+
+        if (!user) {
+          const newUser: SignUpAuthDto = {
+            email: email,
+            name: req.oidc.user.name || 'Nombre por defecto',
+            password: '', // No se almacena una contraseña si el usuario usa Auth0
+            passwordConfirm: '',
+            auth0Id: auth0Id,
+          };
+
+          user = await this.authService.registerUserWithAuth0(newUser);
+        }
+
+        const token = await this.authService.createToken(user);
+
+        return res.status(HttpStatus.OK).json({ token });
       } else {
-        res
-          .status(HttpStatus.UNAUTHORIZED)
-          .json({ message: 'User not authenticated' });
+        res.status(HttpStatus.UNAUTHORIZED).json({ message: 'User not authenticated' });
       }
     } catch (error) {
-      res
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ message: 'Error auth0 user', error });
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error auth0 user', error });
     }
   }
 }
