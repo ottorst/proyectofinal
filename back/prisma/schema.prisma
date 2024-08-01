@@ -27,7 +27,7 @@ model User {
   city      String?
   country   String?
   // picture   String?
-  auth0Id   String
+  auth0Id   String?
   admin     Boolean   @default(false)
   bookings  Booking[]
   createdAt DateTime  @default(now())
