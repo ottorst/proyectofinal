@@ -6,6 +6,7 @@ const About:React.FC = () => {
     return (
       
       <div>
+        <title>About</title>
       <section className="wrapper grid gap-8 justify-items-center 
       items-center pb-12 md:py-24 bg-gray-500-50 rounded-md mb-24 mt-12">
 
