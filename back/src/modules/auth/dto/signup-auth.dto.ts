@@ -26,6 +26,7 @@ export class SignUpAuthDto {
   })
   @IsString()
   @IsNotEmpty()
+  @IsString()
   @MinLength(3)
   @MaxLength(80)
   name: string;
@@ -104,16 +105,16 @@ export class SignUpAuthDto {
   @IsString()
   country?: string;
 
-  @IsOptional()
-  @ApiProperty({
-    description: 'User profile picture, as URL of Cloudinary. Optional..',
-    nullable: true,
-    example:
-      'https://res.cloudinary.com/dxkqy4os7/image/upload/v1720008542/uploads/nasa_cohete_luna.jpg.jpg',
-    default: false,
-  })
-  @IsString()
-  picture?: string;
+  // @IsOptional()
+  // @ApiProperty({
+  //   description: 'User profile picture, as URL of Cloudinary. Optional..',
+  //   nullable: true,
+  //   example:
+  //     'https://res.cloudinary.com/dxkqy4os7/image/upload/v1720008542/uploads/nasa_cohete_luna.jpg.jpg',
+  //   default: false,
+  // })
+  // @IsString()
+  // picture?: string;
 
   @IsOptional()
   @ApiProperty({
