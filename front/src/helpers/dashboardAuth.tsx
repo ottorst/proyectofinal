@@ -2,6 +2,7 @@
 import { useEffect, ReactNode, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/src/components/AuthContext";
+import LoadingPage from "../components/LoadingPage/loading";
 
 
 interface ProtectedRouteProps {
@@ -26,7 +27,7 @@ const ProtectedRoute:React.FC<ProtectedRouteProps> = ({ children, adminOnly }) =
   
 
   if (!user || (adminOnly && !user.admin)) {
-    return <div>Loading...</div>;
+    return <LoadingPage />;
   }
 
   return <>{children}</>;

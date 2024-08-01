@@ -3,7 +3,7 @@ import { createContext, useState, useEffect, useContext, ReactNode, Dispatch, Se
 import {jwtDecode} from 'jwt-decode';
 import Cookies from 'js-cookie';
 import { IUser } from '../types/IUser';
-import { fetchUserById } from './helpers/Helpers'; 
+import { fetchUserById } from './helpers/Helpers';
 import { useUser as useAuth0User, UserProfile } from '@auth0/nextjs-auth0/client';
 
 interface DecodedToken {
@@ -86,7 +86,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         } else {
             const fetchedToken = getToken();
             console.log('Fetched token:', fetchedToken);
-            setToken(fetchedToken);
+            if (fetchedToken) {
+                setToken(fetchedToken);
+                localStorage.setItem('userToken', fetchedToken);
+            }
         }
     }, []);
 
@@ -148,7 +151,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             localStorage.removeItem("userToken");
         }
     }, [token]);
-    
 
     return (
         <AuthContext.Provider value={{ token, setToken, decodedToken, user, setUser }}>
