@@ -64,9 +64,9 @@ export class UsersController {
     type: CreateUserDto,
     isArray: true,
   })
-  @ApiQuery({ name: 'name', required: false, type: String })
-  @ApiQuery({ name: 'page', required: true, type: Number })
-  @ApiQuery({ name: 'limit', required: true, type: Number })
+  // @ApiQuery({ name: 'name', required: false, type: String })
+  // @ApiQuery({ name: 'page', required: true, type: Number })
+  // @ApiQuery({ name: 'limit', required: true, type: Number })
   @ApiUnauthorizedResponse({
     description: 'Unauthorized. Role: ADMIN, AuthGuard.',
   })

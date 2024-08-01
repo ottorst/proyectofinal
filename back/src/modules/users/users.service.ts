@@ -62,6 +62,9 @@ export class UsersService {
   async findOne(id: number) {
     const user = await this.prisma.user.findUnique({
       where: { id },
+      include: {
+        bookings: true,
+      },
     });
     return user;
   }
@@ -69,6 +72,9 @@ export class UsersService {
   async findByEmail(email: string) {
     const user = await this.prisma.user.findUnique({
       where: { email },
+      include: {
+        bookings: true,
+      },
     });
     return user;
   }

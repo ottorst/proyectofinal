@@ -57,20 +57,21 @@ model Events {
 
 model Booking {
   // +Info, visit: https://www.prisma.io/docs/orm/more/help-and-troubleshooting/help-articles/working-with-many-to-many-relations#explicit-relations
-  id                Int       @id @default(autoincrement())
-  UserId            Int
-  EventsId          Int
-  TransactionNumber String
+  // id                Int       @id @default(autoincrement())
+  // UserId            Int
+  // EventsId          Int
+  TransactionNumber String    @unique
   Quantity          Int
   Paid              Float
   Date              DateTime  @default(now())
-  user              User?     @relation(fields: [userId], references: [id])
-  userId            Int?
-  events            Events?   @relation(fields: [eventsId], references: [id])
-  eventsId          Int?
+  user              User      @relation(fields: [userId], references: [id])
+  userId            Int
+  events            Events    @relation(fields: [eventsId], references: [id])
+  eventsId          Int
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt // DateTime @default(now())
   deletedAt         DateTime? // Nullable field to track soft deletes
 
+  @@id([userId, eventsId])
   @@index([userId, eventsId])
 }

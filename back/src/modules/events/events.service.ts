@@ -23,8 +23,6 @@ export class EventsService {
 
   async create(createEventDto: CreateEventDto) {
     console.log('CreateEventDto received in create method:', createEventDto);
-    // TODO: agregar los campos que se subiran por Cloudinary
-    // TODO: evaluar si sólo se subirá la imagen.
     const event = await this.prisma.events.create({
       // data: createEventDto,
       data: {
@@ -48,10 +46,10 @@ export class EventsService {
   }
 
   async findOne(id: number) {
-    console.log('Id received in findOne method:', id);
     try {
       const event = await this.prisma.events.findUnique({
         where: { id },
+        include: { bookings: true },
       });
       return event;
     } catch (error) {
@@ -61,7 +59,6 @@ export class EventsService {
 
   @HttpCode(HttpStatus.OK)
   async update(id: number, updateEventDto: UpdateEventDto) {
-    console.log('UpdateEventDto received in update method:', updateEventDto);
     try {
       const event = await this.prisma.events.update({
         where: { id },
@@ -88,6 +85,7 @@ export class EventsService {
     const events = await this.prisma.events.findMany({
       where: { deletedAt: { not: null } },
       orderBy: { createdAt: 'desc' },
+      include: { bookings: true },
     });
     return events;
   }
@@ -96,6 +94,7 @@ export class EventsService {
     const events = await this.prisma.events.findMany({
       where: { deletedAt: null },
       orderBy: { createdAt: 'desc' },
+      include: { bookings: true },
     });
     return events;
   }
