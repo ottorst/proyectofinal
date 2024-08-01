@@ -73,21 +73,11 @@ export class EventsController {
   // @IsAdmin(true)
   // @UseGuards(AuthGuard, RolesGuards)
   findAll() {
-    return this.eventsService.findAll();
-  }
-
-  @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  findOne(@Param('id') id: string) {
     try {
-      const event = this.eventsService.findOne(+id);
-      if (!event) {
-        throw new Error('Event not found');
-      }
-      return event;
+      return this.eventsService.findAll();
     } catch (error) {
       throw new HttpException(
-        'Event not found. ' + error.message,
+        `All events error. ${error.message}`,
         HttpStatus.NOT_FOUND,
       );
     }
@@ -97,7 +87,7 @@ export class EventsController {
   @HttpCode(HttpStatus.OK)
   async update(
     @Param('id') id: string,
-    @Body() updateEventDto: UpdateEventDto,
+    @Body() updateEventDto: CreateEventDto,
   ) {
     try {
       const event = this.eventsService.findOne(+id);
@@ -115,7 +105,74 @@ export class EventsController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.ACCEPTED)
   remove(@Param('id') id: string) {
-    return this.eventsService.remove(+id);
+    try {
+      return this.eventsService.remove(+id);
+    } catch (error) {
+      throw new HttpException(
+        `Event not found. ${error.message}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
+  // @Get('actives')
+  // async findActiveEvents() {
+  //   try {
+  //     return await this.eventsService.findActive();
+  //   } catch (error) {
+  //     throw new HttpException(
+  //       `Events not found. ${error.message}`,
+  //       HttpStatus.BAD_REQUEST,
+  //     );
+  //   }
+  // }
+
+  @Get('deleteds')
+  @HttpCode(HttpStatus.OK)
+  async deletedEvents() {
+    try {
+      return await this.eventsService.deleteds();
+    } catch (error) {
+      throw new HttpException(
+        `Events not found. ${error.message}`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Get('eventsWithBookingsAndUsers')
+  @HttpCode(HttpStatus.OK)
+  async findEventsWithBookingsAndUsers() {
+    try {
+      const events = await this.eventsService.findEventsWithBookingsAndUsers();
+      if (!events) {
+        throw new Error('Events not found');
+      }
+      return events;
+    } catch (error) {
+      throw new HttpException(
+        `Events not found. ${error.message}`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  findOne(@Param('id') id: string) {
+    try {
+      const event = this.eventsService.findOne(+id);
+      if (!event) {
+        throw new Error('Event not found');
+      }
+      return event;
+    } catch (error) {
+      throw new HttpException(
+        'Event not found. ' + error.message,
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 }

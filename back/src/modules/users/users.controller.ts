@@ -71,7 +71,14 @@ export class UsersController {
     description: 'Unauthorized. Role: ADMIN, AuthGuard.',
   })
   async findAll() {
-    return await this.usersService.findAll();
+    try {
+      return await this.usersService.findAll();
+    } catch (error) {
+      throw new HttpException(
+        'All users error. ' + error.message,
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 
   @Get('email/:email')
@@ -92,29 +99,9 @@ export class UsersController {
     }
   }
 
-  @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  async findOne(@Param('id') id: string) {
-    try {
-      const user = await this.usersService.findOne(+id);
-      console.log(`findOne(@Param('id') ${id}: string)`, user);
-
-      if (!user) {
-        throw new Error('User not found');
-      }
-      user.password = null;
-      return user;
-    } catch (err: any) {
-      throw new HttpException(
-        'Error finding a user. ' + err.message,
-        HttpStatus.NOT_FOUND,
-      );
-    }
-  }
-
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(@Param('id') id: string, @Body() updateUserDto: CreateUserDto) {
     try {
       const user = await this.usersService.findOne(+id);
       if (!user) {
@@ -154,6 +141,56 @@ export class UsersController {
     } catch (err: any) {
       throw new HttpException(
         `Error deleting a user. ${err.message}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
+  @Get('deleteds')
+  @HttpCode(HttpStatus.OK)
+  async deletedUsers() {
+    try {
+      return await this.usersService.deleteds();
+    } catch (error) {
+      throw new HttpException(
+        'All deleted users error. ' + error.message,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
+  @Get('usersWithBookingsAndEvents')
+  @HttpCode(HttpStatus.OK)
+  async usersWithBookingsAndEvents() {
+    try {
+      const users = await this.usersService.usersWithBookingsAndEvents();
+      if (!users) {
+        throw new Error('Users with bookings and events not found');
+      }
+      return users;
+    } catch (error) {
+      throw new HttpException(
+        'All users with bookings and events error. ' + error.message,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  async findOne(@Param('id') id: string) {
+    try {
+      const user = await this.usersService.findOne(+id);
+      console.log(`findOne(@Param('id') ${id}: string)`, user);
+
+      if (!user) {
+        throw new Error('User not found');
+      }
+      user.password = null;
+      return user;
+    } catch (err: any) {
+      throw new HttpException(
+        'Error finding a user. ' + err.message,
         HttpStatus.NOT_FOUND,
       );
     }
