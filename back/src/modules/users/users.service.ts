@@ -55,8 +55,72 @@ export class UsersService {
   }
 
   async findAll() {
-    const users = await this.prisma.user.findMany();
-    return users;
+    try {
+      const users = await this.prisma.user.findMany({
+        where: { deletedAt: null },
+        orderBy: { name: 'asc' },
+      });
+      return users;
+    } catch (error) {
+      throw new Error('Error en el servicio de listado de usuarios.');
+    }
+  }
+
+  async usersWithBookingsAndEvents() {
+    try {
+      const users = await this.prisma.user.findMany({
+        include: {
+          bookings: {
+            include: {
+              events: true,
+            },
+          },
+        },
+      });
+      return users;
+    } catch (error) {
+      throw new Error(
+        'Error en el servicio de búsqueda de usuarios con eventos y reservas.',
+      );
+    }
+  }
+
+  async update(id: number, updateUserDto: CreateUserDto) {
+    try {
+      const user = this.prisma.user.update({
+        where: { id },
+        data: updateUserDto,
+      });
+      return user;
+    } catch (error) {
+      console.log('User not found');
+    }
+  }
+
+  async remove(id: number) {
+    try {
+      const user = await this.prisma.user.update({
+        where: { id },
+        data: { deletedAt: new Date() },
+      });
+      return user;
+    } catch (error) {
+      console.log('User not found');
+    }
+  }
+
+  async deleteds() {
+    try {
+      const users = await this.prisma.user.findMany({
+        where: { deletedAt: { not: null } },
+        orderBy: { name: 'asc' },
+      });
+      return users;
+    } catch (error) {
+      throw new Error(
+        'Error en el servicio de búsqueda de usuarios eliminados.',
+      );
+    }
   }
 
   async findOne(id: number) {
@@ -77,28 +141,5 @@ export class UsersService {
       },
     });
     return user;
-  }
-
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    try {
-      const user = this.prisma.user.update({
-        where: { id },
-        data: updateUserDto,
-      });
-      return user;
-    } catch (error) {
-      console.log('User not found');
-    }
-  }
-
-  async remove(id: number) {
-    try {
-      const user = await this.prisma.user.delete({
-        where: { id },
-      });
-      return user;
-    } catch (error) {
-      console.log('User not found');
-    }
   }
 }
