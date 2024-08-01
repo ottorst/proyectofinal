@@ -1,11 +1,16 @@
 'use client';
 //Vendors
 import { useRouter } from 'next/navigation';
-import { useAuth } from '../../AuthContext';
 import { EventForm } from '../../eventForm/EventForm';
+import { useEffect, useState } from 'react';
+//Contexts
+import { useAuth } from '../../AuthContext';
+import { useCrud } from '../../CrudContext';
+
 //Components
 import LoadingPage from '../../LoadingPage/loading';
-
+import DataRender from './EventDashboardRender';
+import UsersDashboardRender from './UsersDashboardRender';
 
 interface DashboardAdminProps {
     userId: number;
@@ -13,11 +18,21 @@ interface DashboardAdminProps {
 
 const DashboardAdmin: React.FC<DashboardAdminProps> = ({ userId }) => {
     const router = useRouter();
-    const { user } = useAuth();
+    const { user} = useAuth();
+    const {events, loading, users} = useCrud();
+    const [errors,setErrors] = useState<Error | null>(null);
+    
 
     if (!user) {
         return <LoadingPage/>
     }
+    
+    if (loading) {
+        return <LoadingPage/>
+    }
+
+
+    
 
     return (
        
@@ -33,20 +48,53 @@ const DashboardAdmin: React.FC<DashboardAdminProps> = ({ userId }) => {
             <div className='flex justify-center items-center mt-6 '>
                 <EventForm />
             </div>
+
+
             <section className="flex flex-col md:flex-row justify-center items-center bg-gray-500-50 rounded-md w-[90%] mx-auto space-y-6 md:space-y-0 md:space-x-9 p-5 my-12">
-                <div className="bg-gray-800 w-full md:w-96 flex flex-col text-center h-auto md:h-screen rounded-md mx-auto space-y-6 p-6">
+                <div className="bg-gray-800 w-full md:w-full flex flex-col text-center rounded-md mx-auto space-y-6 p-6">
                     <h1 className="text-gray-100 text-3xl font-bold md:text-4xl underline">🎟️Active Events</h1>
-                    <p className="text-white text-xl">Control active events</p>
-                </div>
-                <div className="bg-gray-800 w-full md:w-96 flex flex-col text-center h-auto md:h-screen rounded-md mx-auto space-y-6 p-6">
-                    <h1 className="text-gray-100 text-3xl font-bold md:text-4xl underline">📖Event History</h1>
-                    <p className="text-white text-xl">View All the booking events</p>
-                </div>
-                <div className="bg-gray-800 w-full md:w-96 flex flex-col text-center h-auto md:h-screen rounded-md mx-auto space-y-6 p-6">
+                  
+                        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4'>
+                        {events.map((event)=>
+                        <DataRender key={event.id} id={event.id} title={event.title} price={event.price} date={event.date} 
+                        picture={event.picture}/>
+                        )}
+                        </div>
+                <hr />
+               
+
+                <div className="bg-gray-800 w-full md:w-full  flex flex-col text-center rounded-md mx-auto space-y-6 p-6 ">
                     <h1 className="text-gray-100 text-3xl font-bold md:text-4xl underline">👤Manage Users</h1>
-                    <p className="text-white text-xl">Control Users</p>
+
+                    <div className='grid grid-cols-1 md:grid-cols-3 gap-4 m-auto'>
+                        {users.map((user)=>
+                        <UsersDashboardRender 
+                        key={user.id} name={user.name} email={user.email} id={user.id}
+                        password={user.password}
+                        phone={user.phone}
+                        allergies={user.allergies}
+                        address={user.address}
+                        birthday={user.birthday}    
+                        city={user.city}
+                        country={user.country}
+                        admin
+                        />
+                        )}
+                        </div>
+                </div> 
+
+                  <hr />
+                <div className="bg-gray-800 w-full md:w-full flex flex-col text-center rounded-md mx-auto space-y-6 p-6">
+                    <h1 className="text-gray-100 text-3xl font-bold md:text-4xl underline">📖Event History</h1>
+                    <div>
+                        
+                    </div>
                 </div>
+                   
+                </div>
+                
             </section>
+
         </div>
     );
 };
