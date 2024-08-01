@@ -131,7 +131,13 @@ export class EventsService {
     try {
       const event = await this.prisma.events.findUnique({
         where: { id },
-        include: { bookings: true },
+        include: {
+          bookings: {
+            include: {
+              user: true,
+            },
+          },
+        },
       });
       return event;
     } catch (error) {
