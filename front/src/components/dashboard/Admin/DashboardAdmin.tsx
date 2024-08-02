@@ -58,7 +58,7 @@ const DashboardAdmin: React.FC<DashboardAdminProps> = ({ userId }) => {
                         {Array.isArray(events) && events.map(event => (
   
                      <DataRender key={event.id} id={event.id} title={event.title} price={event.price} date={event.date} 
-                    picture={event.picture} document={event.document} description={event.description} location={event.location}
+                    picture={event.picture} description={event.description} location={event.location}
                     maxseats={event.maxseats} subtitle={event.subtitle}
                         />
                         ))}

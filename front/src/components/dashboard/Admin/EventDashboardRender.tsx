@@ -14,7 +14,7 @@ import Swal from "sweetalert2"
 
 
 
-const DataRender:React.FC<IEvent> = ({picture,title,price,date,id,location,document,maxseats,description,subtitle}) =>  {
+const DataRender:React.FC<IEvent> = ({picture,title,price,date,id,location,maxseats,description,subtitle}) =>  {
 const {handleEventDelete,setEvents} = useCrud();
 const [editMode,setEditMode] = useState(false);
 const [formData, setFormData] = useState<IEvent>({
@@ -27,7 +27,7 @@ const [formData, setFormData] = useState<IEvent>({
     maxseats: maxseats || 0,
     price,
     picture: picture || "",
-    document: document || "",
+  
 });
 const router = useRouter();
 const {user} = useAuth();
@@ -59,7 +59,6 @@ const handleSubmit = async (event:React.FormEvent) => {
           description:formData.description,
           date:String(formData.date),
           location:formData.location,
-          document:formData.document,
           maxseats:Number(formData.maxseats),
           price:Number(formData.price),
           picture:formData.picture
@@ -184,17 +183,7 @@ setEditMode(false);
               />
             </div>
       
-            <div className="mb-2">
-              <label className="block text-gray-800">Document:</label>
-              <input
-                type="text"
-                name="document"
-                value={formData.document}
-                onChange={handleChange}
-                className="w-full px-2 py-1 rounded text-black border"
-              />
-            </div>
-          
+        
             <div className="mb-2">
               <label className="block text-gray-800">maxseats:</label>
               <input

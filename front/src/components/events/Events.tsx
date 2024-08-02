@@ -44,7 +44,7 @@ const handleImageClick = (event:IEvent) => {
                
               ">
                   <div onClick={()=> handleImageClick(event)}>
-                      <Image src={event.picture} alt="Event Picture" width={500} height={500} className="rounded-lg cursor-pointer"/>
+                    <Image src={event.picture} alt="Event Image" width={500} height={500} className="rounded-lg cursor-pointer"/>
                   </div>
                   <div className="flex flex-col flex-grow justify-between">
                       <div>
