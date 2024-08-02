@@ -127,6 +127,56 @@ export class EventsService {
     }
   }
 
+  async eventsCountingBookingsAndPersons() {
+    try {
+      const eventsWithBookings = await this.prisma.events.findMany({
+        where: { deletedAt: null },
+        orderBy: { date: 'desc' },
+        include: {
+          bookings: true,
+          //  {
+          //   include: {
+          //     user: true,
+          //   },
+          // }, // Incluye todas las reservas relacionadas
+        },
+      });
+
+      // Calcula la suma de las cantidades de reservas para cada evento
+      const eventsWithCounts = eventsWithBookings.map((event) => {
+        const totalPersons = event.bookings.reduce(
+          (sum, booking) => sum + booking.Quantity,
+          0,
+        );
+        const totalBookings = event.bookings.length;
+        event.bookings = null; // elimina los bookings para mostrar a clientes
+        return { ...event, totalPersons, totalBookings };
+      });
+
+      return eventsWithCounts;
+    } catch (error) {
+      throw new Error('Error en el servicio de búsqueda de eventos.');
+    }
+  }
+
+  async findOneByTitle(title: string) {
+    try {
+      const event = await this.prisma.events.findMany({
+        where: { title },
+        include: {
+          bookings: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+      return event;
+    } catch (error) {
+      throw new Error('Error in service findOne by title');
+    }
+  }
+
   async findOne(id: number) {
     try {
       const event = await this.prisma.events.findUnique({
@@ -141,7 +191,7 @@ export class EventsService {
       });
       return event;
     } catch (error) {
-      throw new Error('Event not found');
+      throw new Error('Error in service findOne by id');
     }
   }
 }
