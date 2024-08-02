@@ -131,19 +131,19 @@ export class AuthController {
     }
   }
 
-  @Get('auth0')
+  @Get('auth0/callback')
   async Auth0(@Req() req: Request, @Res() res: Response) {
     try {
       if (req.oidc?.isAuthenticated()) {
         const email = req.oidc.user?.email;
         const auth0Id = req.oidc.user?.sub;
-
+  
         if (!email || !auth0Id) {
           return res.status(HttpStatus.BAD_REQUEST).json({ message: 'No email or auth0Id found' });
         }
-
+  
         let user = await this.authService.findUserByAuth0IdOrEmail(auth0Id, email);
-
+  
         if (!user) {
           const newUser: SignUpAuthDto = {
             email: email,
@@ -152,13 +152,14 @@ export class AuthController {
             passwordConfirm: '',
             auth0Id: auth0Id,
           };
-
+  
           user = await this.authService.registerUserWithAuth0(newUser);
         }
-
+  
         const token = await this.authService.createToken(user);
-
-        return res.status(HttpStatus.OK).json({ token });
+  
+        // Redirige al frontend con el token en la URL
+        return res.redirect(`http://localhost:3000/home?token=${token}`);
       } else {
         res.status(HttpStatus.UNAUTHORIZED).json({ message: 'User not authenticated' });
       }
