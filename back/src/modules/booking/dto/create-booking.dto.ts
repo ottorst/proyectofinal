@@ -13,7 +13,7 @@ import {
 export class CreateBookingDto {
   @ApiProperty({
     description: 'Transaction Number',
-    example: '123456789',
+    example: '123456785',
   })
   @IsString()
   @IsNotEmpty()
@@ -53,7 +53,7 @@ export class CreateBookingDto {
 
   @ApiProperty({
     description: 'User Id',
-    example: 1,
+    example: 4,
   })
   @IsNotEmpty()
   userId: number;

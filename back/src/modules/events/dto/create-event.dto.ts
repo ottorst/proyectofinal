@@ -58,15 +58,15 @@ export class CreateEventDto {
   @IsNotEmpty()
   location: string;
 
-  @ApiProperty({
-    description: 'User profile picture, as URL of Cloudinary. Optional..',
-    nullable: true,
-    example:
-      'https://res.cloudinary.com/dxkqy4os7/image/upload/v1720008542/uploads/nasa_cohete_luna.jpg.jpg',
-    default: false,
-  })
-  @IsString()
-  document?: string;
+  // @ApiProperty({
+  //   description: 'User profile picture, as URL of Cloudinary. Optional..',
+  //   nullable: true,
+  //   example:
+  //     'https://res.cloudinary.com/dxkqy4os7/image/upload/v1720008542/uploads/nasa_cohete_luna.jpg.jpg',
+  //   default: false,
+  // })
+  // @IsString()
+  // document?: string;
 
   @ApiProperty({
     description: 'Event max seats. Default is 8',

@@ -45,7 +45,7 @@ model Events {
   description String
   date        DateTime
   location    String // GPS location, ex: Madrid, Spain, Sol
-  document    String?
+  // document    String?
   maxseats    Int       @default(8)
   price       Float     @default(250.0)
   picture     String?

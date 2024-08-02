@@ -5,7 +5,7 @@
     "paid": 350,
     "date": "2024-08-10T20:00:00",
     "eventsId": 1,
-    "userId": 6
+    "userId": 4
   },
   {
     "transactionNumber": "123456780",
@@ -13,7 +13,7 @@
     "paid": 350,
     "date": "2024-08-10T20:00:00",
     "eventsId": 3,
-    "userId": 6
+    "userId": 4
   },
   {
     "transactionNumber": "123456782",
@@ -21,6 +21,6 @@
     "paid": 350,
     "date": "2024-08-10T20:00:00",
     "eventsId": 2,
-    "userId": 6
+    "userId": 4
   }
 ]
