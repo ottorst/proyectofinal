@@ -25,16 +25,21 @@ const Navbar: React.FC = () => {
             menuRef.current.checked = false;
         }
         try {
+            // Remove user data from localStorage
             localStorage.removeItem("userToken");
             localStorage.removeItem("userData"); 
             Cookies.remove("appSession");
             setToken(null);
             setUser(null);
-            router.push('/login');
+    
+            // Redirect to Auth0 logout URL
+            const auth0LogoutUrl = `http://localhost:3000/login`;
+            window.location.href = auth0LogoutUrl;
         } catch (error) {
             console.error('Error during logout:', error);
         }
     };
+    
     
 
     const extractUserIdFromToken = (token: string): string | null => {
@@ -110,19 +115,9 @@ const Navbar: React.FC = () => {
 
                         {token || user ? ( 
                             <>
-                                {user?.auth0Id ? (
-                                    <a href="/api/auth/logout" onClick={handleLogOut}>
-                                        <li className="hover:underline offset-8 decoration-yellow-500">
-                                            <Image src="/assets/signin-icon.svg" alt="Sign Out" width={45} height={50} className="red-filter shadow-xl" />
-                                        </li>
-                                    </a>
-                                ) : (
-                                    <Link href="/login" onClick={handleLogOut}>
-                                        <li className="hover:underline offset-8 decoration-yellow-500">
-                                            <Image src="/assets/signin-icon.svg" alt="Sign Out" width={45} height={50} className="red-filter shadow-xl" />
-                                        </li>
-                                    </Link>
-                                )}
+                                <button onClick={handleLogOut} className="hover:underline offset-8 decoration-yellow-500">
+                                    <Image src="/assets/signin-icon.svg" alt="Sign Out" width={45} height={50} className="red-filter shadow-xl" />
+                                </button>
                                 <li className="hover:underline decoration-4 underline-offset-8" onClick={handleDashboardRedirect}>
                                     <FaUser size={45} className="transition-transform duration-300 ease-in-out transform hover:scale-125 hover:text-yellow-500 cursor-pointer" />
                                 </li>
