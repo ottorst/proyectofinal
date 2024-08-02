@@ -37,7 +37,7 @@ export class EventsService {
         description: createEventDto.description,
         date: new Date(createEventDto.date),
         location: createEventDto.location,
-        document: createEventDto.document,
+        // document: createEventDto.document,
         maxseats: createEventDto.maxseats,
         price: createEventDto.price,
         picture: createEventDto.picture,
