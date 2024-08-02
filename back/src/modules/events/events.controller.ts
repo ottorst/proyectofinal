@@ -159,11 +159,34 @@ export class EventsController {
     }
   }
 
+  @Get('eventsCountingBookings')
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: `${HttpStatus.OK}: Event list retrieved successfully. Include events, totalPersons, totalBookings, bookings array is null for security reasons.`,
+    isArray: true,
+  })
+  async eventsCountingBookings() {
+    try {
+      const events =
+        await this.eventsService.eventsCountingBookingsAndPersons();
+      if (!events) {
+        throw new Error('Events not found');
+      }
+      return events;
+    } catch (error) {
+      throw new HttpException(
+        `eventsCountingBookings. ${error.message}`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     try {
-      const event = this.eventsService.findOne(+id);
+      const event = await this.eventsService.findOne(+id);
       if (!event) {
         throw new Error('Event not found');
       }
