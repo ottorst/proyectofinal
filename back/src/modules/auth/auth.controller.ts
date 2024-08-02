@@ -15,7 +15,7 @@ import { SignUpAuthDto } from './dto/signup-auth.dto';
 import { SignInAuthDto } from './dto/signin-auth.dto';
 import { UserResponseDto } from '../users/dto/response.user.dto';
 import { DateAdderInterceptor } from 'src/interceptor/date-adder.interceptor';
-import { ApiTags, ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBody, ApiResponse, ApiExcludeEndpoint } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 
@@ -132,6 +132,24 @@ export class AuthController {
   }
 
   @Get('auth0/callback')
+  //@ApiExcludeEndpoint()
+  @ApiOperation({ summary: 'Handle Auth0 callback and authenticate the user' })
+  @ApiResponse({
+    status: 302,
+    description: 'Redirects the user to the frontend with a token',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request. No email or Auth0 ID found.',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized. User not authenticated.',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error. Error authenticating the user.',
+  })
   async Auth0(@Req() req: Request, @Res() res: Response) {
     try {
       if (req.oidc?.isAuthenticated()) {
