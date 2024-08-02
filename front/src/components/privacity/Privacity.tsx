@@ -5,6 +5,7 @@ import Image from "next/image"
 const Privacity:React.FC = () => {
   return (
     <div>
+        <title>Privacity</title>
         <section className="wrapper pb-20 flex items-center
          justify-center flex-col font-lora text-xl
         ">

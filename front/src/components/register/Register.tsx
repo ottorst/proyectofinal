@@ -8,9 +8,11 @@ import { IRegisterErrorProps } from "@/src/types/IRegisterErrorProps";
 import { validateFormRegister } from "@/src/helpers/formValidation";
 import { register } from "../../helpers/authRegister";
 import Link from "next/link";
+import Swal from "sweetalert2";
 
 const Register: React.FC = () => {
   const router = useRouter();
+
   const [dataUser, setDataUser] = useState<IRegisterProps>({
     email: "",
     password: "",
@@ -61,7 +63,6 @@ const Register: React.FC = () => {
         hasValidLength: value.length >= 8 && value.length <= 15,
       });
     }
-
   };
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,7 +71,6 @@ const Register: React.FC = () => {
       [event.target.name]: event.target.value,
     });
   };
-
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -90,7 +90,12 @@ const Register: React.FC = () => {
     if (Object.values(errors).every((error) => error === "")) {
       try {
         await register(dataToSend);
-        alert("Registro exitoso!");
+        Swal.fire({
+          title: "Register Successful",
+          text: "You have successfully register!",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
         router.push("/login");
       } catch (error: any) {
         alert(`Error during registration: ${error.message}`);
@@ -101,7 +106,6 @@ const Register: React.FC = () => {
     }
   };
 
-
   useEffect(() => {
     const errors = validateFormRegister(dataUser);
     setErrorUser(errors);
@@ -109,10 +113,43 @@ const Register: React.FC = () => {
 
   return (
     <div className="rounded-lg max-w-fit p-6 bg-slate-800 mt-2 mb-12">
-      <h2 className="text-3xl text-center justify-center sm:mt-10 sm:mb-4">Create new account</h2>
+      <Link href={"/login"}>
+        <div className="flex ">
+          <button
+            id="cerrarButton"
+            type="button"
+            className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+          >
+            <svg
+              className="w-3 h-3"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 14"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+              />
+            </svg>
+            <span className="sr-only">Close modal</span>
+          </button>
+        </div>
+      </Link>
+
+      <h2 className="text-3xl text-center justify-center sm:mt-10 sm:mb-4">
+        Create new account
+      </h2>
+
       <div className="flex justify-center items-center mb-10 space-x-2">
         <p>Already a member?</p>
-        <Link href={"/login"} className="text-blue-500 underline-offset-4 underline">
+        <Link
+          href={"/login"}
+          className="text-blue-500 underline-offset-4 underline"
+        >
           Log In
         </Link>
       </div>
@@ -120,19 +157,16 @@ const Register: React.FC = () => {
         <div className="relative z-0 w-full mb-5 group bg-transparent">
           <input
             className="block py-2.5  px-0 w-full text-sm text-white  bg-transparent border-0 border-b-2 border-b-white appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500  focus:outline-none focus:ring-0 focus:border-blue-600 peer input:valid:border-blue-600 input-autofill"
-
             id="email"
             type="email"
             name="email"
             value={dataUser.email}
             onChange={handleChange}
             placeholder=" "
-
           />
           <label
             htmlFor="email"
             className="peer-focus:font-medium absolute text-sm text-gray-400 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-1 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-
           >
             Email address
           </label>
@@ -164,11 +198,49 @@ const Register: React.FC = () => {
               {errorUser.password}
             </p>
           )}
-          <p className={`text-xs mt-2 ${passwordConditions.hasLowercase ? "text-green-500" : "text-red-500"}`}>Una minuscula</p>
-          <p className={`text-xs ${passwordConditions.hasUppercase ? "text-green-500" : "text-red-500"}`}>Una mayuscula</p>
-          <p className={`text-xs ${passwordConditions.hasNumber ? "text-green-500" : "text-red-500"}`}>Un numero</p>
-          <p className={`text-xs ${passwordConditions.hasSpecialChar ? "text-green-500" : "text-red-500"}`}>Un caracter especial</p>
-          <p className={`text-xs mb-6 ${passwordConditions.hasValidLength ? "text-green-500" : "text-red-500"}`}>Longitud entre 8 y 15 caracteres</p>
+          <p
+            className={`text-xs mt-2 ${
+              passwordConditions.hasLowercase
+                ? "text-green-500"
+                : "text-red-500"
+            }`}
+          >
+            Una minuscula
+          </p>
+          <p
+            className={`text-xs ${
+              passwordConditions.hasUppercase
+                ? "text-green-500"
+                : "text-red-500"
+            }`}
+          >
+            Una mayuscula
+          </p>
+          <p
+            className={`text-xs ${
+              passwordConditions.hasNumber ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            Un numero
+          </p>
+          <p
+            className={`text-xs ${
+              passwordConditions.hasSpecialChar
+                ? "text-green-500"
+                : "text-red-500"
+            }`}
+          >
+            Un caracter especial
+          </p>
+          <p
+            className={`text-xs mb-6 ${
+              passwordConditions.hasValidLength
+                ? "text-green-500"
+                : "text-red-500"
+            }`}
+          >
+            Longitud entre 8 y 15 caracteres
+          </p>
         </div>
         <div className="relative z-0 w-full mb-5 group">
           <input
@@ -187,13 +259,13 @@ const Register: React.FC = () => {
             Confirm password
           </label>
           {errorUser.passwordConfirm && (
-            <p className="text-red-500 text-xs absolute bottom-[-1.5rem] left-0">
+            <p className="text-red-500 text-xs absolute bottom-[0rem] left-0">
               {errorUser.passwordConfirm}
             </p>
           )}
         </div>
         <div className="grid md:grid-cols-2 md:gap-6">
-          <div className="relative z-0 w-full mb-5 group">
+          <div className="relative z-0 w-full mb-12 group">
             <input
               className="block py-3 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-b-white  appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer input-autofill"
               id="name"
@@ -280,12 +352,12 @@ const Register: React.FC = () => {
               Country
             </label>
             {errorUser.country && (
-              <p className="text-red-500 text-xs absolute bottom-[-1.5rem] left-0">
+              <p className="text-red-500 text-xs absolute bottom-[0rem] left-0">
                 {errorUser.country}
               </p>
             )}
           </div>
-          <div className="relative z-0 w-full mb-5 group">
+          <div className="relative z-0 w-full mb-12 group">
             <input
               className="block py-3  px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-b-white  appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer input-autofill"
               id="city"

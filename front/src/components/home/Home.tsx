@@ -39,15 +39,15 @@ const {user} = useAuth();
         </section>
 
         <section className="wrapper grid gap-8 items-center justify-center font-lora mx-auto
-        md:grid-cols-2 mb-24  bg-gray-500-50 rounded-md
+         mb-24  bg-gray-500-50 rounded-md
         ">
                 <div className="space-y-8 text-slate-100 leading-loose text-center md:text-center text-xl">
 
                 <Image src={"/assets/events.jpg"} alt="enplatado chef tony" width={400} height={400}
-                className="rounded-md w-full max-w-lg mx-auto"
+                className="rounded-md w-full max-w-lg mx-auto mt-4"
                 />
 
-                <h1 className="text-gray-100 text-3xl font-bold md:text-4xl underline">Events</h1>
+                <h1 className="text-gray-100 text-3xl font-bold md:text-4xl underline"><Link href={"/experience"} className="hover:text-yellow-500">Events</Link></h1>
 
                 <p> Chef Tony Stephen provides an exceptional and immersive culinary experience for all types of special events. 
                     From intimate private dinners to grand corporate gatherings and elegant weddings, 
@@ -60,24 +60,7 @@ const {user} = useAuth();
 
                 </div>
 
-                <div className="space-y-4 text-slate-100 leading-loose text-center md:text-center text-xl ">
-
-                <Image src={"/assets/menu.jpg"} alt="enplatado chef tony" width={400} height={400}
-                className="rounded-md w-full max-w-lg mx-auto"
-                />
-
-                <h1 className="text-gray-100 text-3xl font-bold md:text-4xl underline">Menu</h1>
-
-                <p> Chef Tony Stephen's menu is a dynamic and ever-evolving showcase of culinary creativity. Each event features a unique menu, 
-                    carefully crafted to match the theme and occasion. As Chef Tony continues to innovate and explore new flavors, 
-                    the menu changes to reflect the freshest seasonal ingredients and the latest culinary trends. 
-                    This ensures that every event offers a distinct and memorable dining experience, 
-                    making each gathering with Chef Tony truly one-of-a-kind.
-                     Whether you're attending a recurring event or a new celebration, 
-                    you can always expect a fresh and exciting menu tailored to delight your taste buds.</p>
-
-
-                </div>
+                
                 
         </section>
 

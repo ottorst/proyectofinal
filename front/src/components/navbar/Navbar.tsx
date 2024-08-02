@@ -25,15 +25,17 @@ const Navbar: React.FC = () => {
             menuRef.current.checked = false;
         }
         try {
-            localStorage.removeItem("userToken"); 
-            Cookies.remove("appSession"); 
+            localStorage.removeItem("userToken");
+            localStorage.removeItem("userData"); 
+            Cookies.remove("appSession");
             setToken(null);
             setUser(null);
-            router.push('/login'); 
+            router.push('/login');
         } catch (error) {
             console.error('Error during logout:', error);
         }
     };
+    
 
     const extractUserIdFromToken = (token: string): string | null => {
         try {
@@ -101,6 +103,9 @@ const Navbar: React.FC = () => {
                         </Link>
                         <Link href="/experience" onClick={handleLinkClick}>
                             <li className="hover:underline decoration-4 underline-offset-8 neon-shadow">Experiences</li>
+                        </Link>
+                        <Link href="/contact" onClick={handleLinkClick}>
+                            <li className="hover:underline decoration-4 underline-offset-8 neon-shadow">Contact</li>
                         </Link>
 
                         {token || user ? ( 

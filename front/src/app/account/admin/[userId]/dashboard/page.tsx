@@ -1,4 +1,6 @@
+//Components
 import DashboardAdmin from "@/src/components/dashboard/Admin/DashboardAdmin";
+import ProtectedRoute from "@/src/helpers/dashboardAuth";
 
 const AdminDashboard = ({ params }: { params: { userId: string } }) =>{
     const { userId: userId } = params;
@@ -6,7 +8,11 @@ const AdminDashboard = ({ params }: { params: { userId: string } }) =>{
 
     console.log("User ID Number:", userIdNumber);
     
-    return <DashboardAdmin userId={userIdNumber} />;
+    return (
+        <ProtectedRoute adminOnly = {true}>
+            <DashboardAdmin userId={userIdNumber} />;
+        </ProtectedRoute>
+    )
 };
 
 export default AdminDashboard;

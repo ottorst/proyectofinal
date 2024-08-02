@@ -1,8 +1,13 @@
+//Components
+import Events from "@/src/components/events/Events";
+
+const ExperienceView = () => {
 
 
-function ExperienceView() {
   return (
-    <div>Estamos en la vista de Experience</div>
+    <div>
+      <Events/>
+    </div>
   )
 }
 

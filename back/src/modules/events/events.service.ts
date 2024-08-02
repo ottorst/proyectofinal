@@ -1,8 +1,14 @@
-import { HttpCode, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import * as fs from 'fs';
 import { PrismaService } from '../prisma/prisma.service';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 
 @Injectable()
 export class EventsService {
@@ -23,8 +29,6 @@ export class EventsService {
 
   async create(createEventDto: CreateEventDto) {
     console.log('CreateEventDto received in create method:', createEventDto);
-    // TODO: agregar los campos que se subiran por Cloudinary
-    // TODO: evaluar si sólo se subirá la imagen.
     const event = await this.prisma.events.create({
       // data: createEventDto,
       data: {
@@ -43,25 +47,18 @@ export class EventsService {
   }
 
   async findAll() {
-    const events = await this.prisma.events.findMany();
-    return events;
-  }
-
-  async findOne(id: number) {
-    console.log('Id received in findOne method:', id);
     try {
-      const event = await this.prisma.events.findUnique({
-        where: { id },
+      const events = await this.prisma.events.findMany({
+        where: { deletedAt: null },
+        orderBy: { date: 'desc' },
       });
-      return event;
+      return events;
     } catch (error) {
-      throw new Error('Event not found');
+      throw new Error('Error en el servicio de búsqueda de eventos.');
     }
   }
 
-  @HttpCode(HttpStatus.OK)
-  async update(id: number, updateEventDto: UpdateEventDto) {
-    console.log('UpdateEventDto received in update method:', updateEventDto);
+  async update(id: number, updateEventDto: CreateEventDto) {
     try {
       const event = await this.prisma.events.update({
         where: { id },
@@ -75,8 +72,9 @@ export class EventsService {
 
   async remove(id: number) {
     try {
-      const event = await this.prisma.events.delete({
+      const event = await this.prisma.events.update({
         where: { id },
+        data: { deletedAt: new Date() },
       });
       return event;
     } catch (error) {
@@ -84,19 +82,66 @@ export class EventsService {
     }
   }
 
-  async findDeleted() {
-    const events = await this.prisma.events.findMany({
-      where: { deletedAt: { not: null } },
-      orderBy: { createdAt: 'desc' },
-    });
-    return events;
+  async deleteds() {
+    try {
+      const events = await this.prisma.events.findMany({
+        where: { deletedAt: { not: null } },
+        orderBy: { date: 'desc' },
+      });
+      return events;
+    } catch (error) {
+      throw new Error(
+        'Error en el servicio de búsqueda de eventos eliminados.',
+      );
+    }
   }
 
   async findActive() {
-    const events = await this.prisma.events.findMany({
-      where: { deletedAt: null },
-      orderBy: { createdAt: 'desc' },
-    });
-    return events;
+    try {
+      const events = await this.prisma.events.findMany({
+        where: { deletedAt: null },
+        orderBy: { date: 'desc' },
+      });
+      return events;
+    } catch (error) {
+      console.log(error);
+      throw new Error('Error en el servicio de búsqueda de eventos.');
+    }
+  }
+
+  async findEventsWithBookingsAndUsers() {
+    try {
+      const events = await this.prisma.events.findMany({
+        orderBy: { date: 'desc' },
+        include: {
+          bookings: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+      return events;
+    } catch (error) {
+      throw new Error('Error en el servicio de búsqueda de eventos.');
+    }
+  }
+
+  async findOne(id: number) {
+    try {
+      const event = await this.prisma.events.findUnique({
+        where: { id },
+        include: {
+          bookings: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+      return event;
+    } catch (error) {
+      throw new Error('Event not found');
+    }
   }
 }

@@ -26,8 +26,6 @@ const Footer:React.FC = () => {
             decoration-4 underline-offset-8 decoration-yellow-500">Home</Link></li>
             <li><Link href={"/about"} className="hover:underline 
             decoration-4 underline-offset-8 decoration-yellow-500">About</Link></li>
-            <li><Link href={"/contact"} className="hover:underline 
-            decoration-4 underline-offset-8 decoration-yellow-500">Contact</Link></li>
             <li><Link href={"/privacity"} className="hover:underline 
             decoration-4 underline-offset-8 decoration-yellow-500">Privacity</Link></li>
 

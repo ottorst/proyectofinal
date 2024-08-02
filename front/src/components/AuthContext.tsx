@@ -3,7 +3,7 @@ import { createContext, useState, useEffect, useContext, ReactNode, Dispatch, Se
 import {jwtDecode} from 'jwt-decode';
 import Cookies from 'js-cookie';
 import { IUser } from '../types/IUser';
-import { fetchUserById } from './helpers/Helpers'; 
+import { fetchUserById } from './helpers/Helpers';
 import { useUser as useAuth0User, UserProfile } from '@auth0/nextjs-auth0/client';
 
 interface DecodedToken {
@@ -86,7 +86,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         } else {
             const fetchedToken = getToken();
             console.log('Fetched token:', fetchedToken);
-            setToken(fetchedToken);
+            if (fetchedToken) {
+                setToken(fetchedToken);
+                localStorage.setItem('userToken', fetchedToken);
+            }
         }
     }, []);
 
@@ -96,7 +99,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             setUser(mappedUser);
             const fetchUserProfile = async () => {
                 try {
-                    const response = await fetch('http://localhost:3001/auth/auth0', {
+                    const response = await fetch('http://localhost:3000/auth/me', {
                         method: 'GET',
                         headers: { 'Content-Type': 'application/json' },
                     });
@@ -144,6 +147,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     useEffect(() => {
         if (token) {
             localStorage.setItem("userToken", token);
+        } else {
+            localStorage.removeItem("userToken");
         }
     }, [token]);
 
