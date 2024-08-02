@@ -12,7 +12,10 @@ import {
   BadRequestException,
   HttpException,
   UseGuards,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import {CloudinaryService} from "src/clouinary/cloudinary.service"
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { IsAdmin } from 'src/decorators/rol/IsAdmin.decorator';
 import { RolesGuards } from 'src/guards/role/roles.guard';
@@ -28,6 +31,7 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { error } from 'console';
+import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors';
 
 @ApiTags('events')
 @Controller('events')
@@ -51,9 +55,21 @@ export class EventsController {
     status: 201,
     description: 'The record has been successfully created.',
   })
-  @ApiResponse({ status: 403, description: 'Forbidden.' }) // @ApiBody({
-  async create(@Body() createEventDto: CreateEventDto) {
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @UseInterceptors(FileInterceptor('file'))  
+  async create(
+    @Body() createEventDto: CreateEventDto,
+    @UploadedFile() file: Express.Multer.File
+  ) {
     try {
+      let pictureUrl = null;
+      if (file) {
+        const { buffer, originalname } = file;
+        const result = await CloudinaryService.uploadFile(buffer, originalname);
+        pictureUrl = result;  // Obtén la URL segura del archivo cargado
+      }
+      createEventDto['picture'] = pictureUrl;
+      // Crea el evento
       const eventCreated = await this.eventsService.create(createEventDto);
       return eventCreated;
     } catch (err: any) {
