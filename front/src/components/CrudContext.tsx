@@ -6,6 +6,7 @@ import { useContext,createContext, Dispatch, SetStateAction, ReactNode, useState
 //Types
 import { IEvent } from "../types/IEvent";
 import { IUser } from "../types/IUser";
+import { IBooking } from "../types/IBooking";
 //Helpes
 import fetchEvents from "./events/helpers";
 import { useAuth } from "./AuthContext";
@@ -18,6 +19,7 @@ interface CrudContextProps {
     handleEventDelete:(id:number) =>void;
     handleUserDelete:(id:number) => void;
     users:IUser[];
+    bookings:IBooking[];
 }
 
 const CrudContext = createContext<CrudContextProps | null>(null)
@@ -29,7 +31,7 @@ export const CrudProvider:React.FC<{children:ReactNode}> = ({children}) =>{
 const [events,setEvents] = useState<IEvent[]>([]);
 const [loading, setLoading] = useState(true);
 const [users, setUsers] = useState<IUser[]>([]);
-
+const [bookings,setBookings] = useState<IBooking[]>([]);
 
 const handleEventDelete = async (id:number) => {
     const result = await Swal.fire({
@@ -109,6 +111,27 @@ useEffect(() => {
 },[]);
 
 
+useEffect(() => {
+  const fetchAllBookings = async () => {
+      try {
+          const response = await fetch("http://localhost:3001/booking")
+
+          if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            } 
+            const data = await response.json();
+            setBookings(data);
+      } catch (error) {
+          console.error("Failed to fetch Users:", error);
+      }finally {
+         setLoading(false); 
+      }
+
+  }
+  fetchAllBookings();
+},[]);
+
+
 
 useEffect(() => {
     const fetchAllUsers = async () => {
@@ -133,7 +156,7 @@ useEffect(() => {
 
 
     return (
-        <CrudContext.Provider value={{ setEvents, events, loading, handleEventDelete,handleUserDelete,users}}>
+        <CrudContext.Provider value={{ setEvents, events, loading, handleEventDelete,handleUserDelete,users,bookings}}>
             {children}
         </CrudContext.Provider>
     );

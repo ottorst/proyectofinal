@@ -5,8 +5,9 @@ export interface IEvent {
     description?:string,
     date:string,
     location?:string,
-    maxseats?:number,
+    maxseats:number,
     price:number,
     picture:string,
+    document:string
 
 }

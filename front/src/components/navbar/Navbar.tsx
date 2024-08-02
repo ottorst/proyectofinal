@@ -124,7 +124,7 @@ const Navbar: React.FC = () => {
                                     </Link>
                                 )}
                                 <li className="hover:underline decoration-4 underline-offset-8" onClick={handleDashboardRedirect}>
-                                    <FaUser size={45} className="transition-transform duration-300 ease-in-out transform hover:scale-125 hover:text-yellow-500" />
+                                    <FaUser size={45} className="transition-transform duration-300 ease-in-out transform hover:scale-125 hover:text-yellow-500 cursor-pointer" />
                                 </li>
                             </>
                         ) : (
