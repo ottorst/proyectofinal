@@ -15,18 +15,3 @@ export interface IUser {
 }
 
 
-export interface IUpdateUser {
-    id: number;
-    email: string;
-    name: string;
-    password?: string;
-    passwordConfirm?: string;
-    phone?: string;
-    birthday?: Date;
-    allergies?: string;
-    address?: string;
-    city?: string;
-    country?: string;
-    auth0Id?: string;
-    admin?: boolean;
-}
