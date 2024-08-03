@@ -8,5 +8,4 @@ export interface IEvent {
     maxseats:number,
     price:number,
     picture:string,
-
 }

@@ -17,6 +17,7 @@ interface AuthContextProps {
     decodedToken: DecodedToken | null;
     user: IUser | null;
     setUser: Dispatch<SetStateAction<IUser | null>>;
+    handleLogout: () => void;  
 }
 
 const AuthContext = createContext<AuthContextProps | null>(null);
@@ -163,8 +164,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     }, [token]);
 
+    const handleLogout = () => {
+        localStorage.removeItem("userToken");
+        localStorage.removeItem("userData");
+        Cookies.remove("appSession", { path: '/' });
+        setToken(null);
+        setUser(null);
+    };
+
     return (
-        <AuthContext.Provider value={{ token, setToken, decodedToken, user, setUser }}>
+        <AuthContext.Provider value={{ token, setToken, decodedToken, user, setUser, handleLogout }}>
             {children}
         </AuthContext.Provider>
     );

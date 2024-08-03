@@ -14,7 +14,6 @@ const DashboardUser: React.FC<DashboardUserProps> = ({ userId }) => {
     const { user, setUser, token } = useAuth();
     const [formData, setFormData] = useState<IUser | null>(null);
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
     const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
@@ -47,16 +46,10 @@ const DashboardUser: React.FC<DashboardUserProps> = ({ userId }) => {
         setPassword(value);
     };
 
-    const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { value } = e.target;
-        setConfirmPassword(value);
-    };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!formData) return;
 
-        // Ensure password and confirmPassword are included
         const updateData: Partial<IUser> = {
             name: formData.name,
             email: formData.email,
