@@ -29,7 +29,7 @@ const Navbar: React.FC = () => {
             setToken(null);
             setUser(null);
 
-            router.push('/login');
+            window.location.href = 'http://localhost:3001/auth/logout'
         } catch (error) {
             console.error('Error during logout:', error);
         }

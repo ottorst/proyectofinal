@@ -185,4 +185,25 @@ export class AuthController {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error auth0 user', error });
     }
   }
+  @Get('logout')
+  @ApiOperation({ summary: 'Logout user from Auth0 and redirect to frontend' })
+  @ApiResponse({
+    status: 302,
+    description: 'Redirects the user to the Auth0 logout URL and then to the frontend',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error.',
+  })
+  async logout(@Res() res: Response) {
+    try {
+      // URL de logout de Auth0 con redirección al frontend
+      const auth0LogoutUrl = `https://dev-fn7ponuffmtdsgxd.us.auth0.com/v2/logout?client_id=uHDJXNkx12Blk0w3PgCUTvfdIS384YAA&returnTo=${encodeURIComponent('http://localhost:3000/home')}`;
+
+      // Redirige a la URL de logout de Auth0 que luego redirige al frontend
+      return res.redirect(auth0LogoutUrl);
+    } catch (error) {
+      return res.status(500).json({ message: 'Error logging out', error });
+    }
+  }
 }
