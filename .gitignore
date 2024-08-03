@@ -1,6 +1,7 @@
 # HENRY LEGACY
 node_modules
 .env
+uploads/
 
 # compiled output
 **/dist
