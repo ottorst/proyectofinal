@@ -5,14 +5,15 @@ import { useAuth } from "../../AuthContext";
 import { IUser } from "@/src/types/IUser";
 import Swal from "sweetalert2";
 
-interface DashboardAdminProps {
+interface DashboardUserProps {
     userId: number;
 }
 
-const DashboardUser: React.FC<DashboardAdminProps> = ({ userId }) => {
+const DashboardUser: React.FC<DashboardUserProps> = ({ userId }) => {
     const router = useRouter();
     const { user, setUser, token } = useAuth();
     const [formData, setFormData] = useState<IUser | null>(null);
+    const [password, setPassword] = useState('');
     const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
@@ -21,18 +22,13 @@ const DashboardUser: React.FC<DashboardAdminProps> = ({ userId }) => {
         }
     }, [user]);
 
-    if (user && userId !== user.id) {
-        router.push("/login");
-        return null;
-    }
-
-    if (user && user.admin) {
-        router.push("/login");
-        return null;
-    }
-
     if (!user) {
         return <div>Error loading user data.</div>;
+    }
+
+    if (userId !== user.id || user.admin) {
+        router.push("/login");
+        return null;
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,9 +41,26 @@ const DashboardUser: React.FC<DashboardAdminProps> = ({ userId }) => {
         }
     };
 
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { value } = e.target;
+        setPassword(value);
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!formData) return;
+
+        const updateData: Partial<IUser> = {
+            name: formData.name,
+            email: formData.email,
+            password: password,
+            ...(formData.phone && { phone: formData.phone }),
+            ...(formData.birthday && { birthday: formData.birthday }),
+            ...(formData.allergies && { allergies: formData.allergies }),
+            ...(formData.address && { address: formData.address }),
+            ...(formData.city && { city: formData.city }),
+            ...(formData.country && { country: formData.country }),
+        };
 
         try {
             const response = await fetch(`http://localhost:3001/users/${user.id}`, {
@@ -56,19 +69,9 @@ const DashboardUser: React.FC<DashboardAdminProps> = ({ userId }) => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({
-                    email: formData.email,
-                    name: formData.name,
-                    phone: formData.phone,
-                    birthday: formData.birthday,
-                    allergies: formData.allergies,
-                    address: formData.address,
-                    city: formData.city,
-                    country: formData.country,
-                    auth0Id: formData.auth0Id,
-                    admin: formData.admin,
-                }),
+                body: JSON.stringify(updateData),
             });
+
             if (response.ok) {
                 const updatedUser = await response.json();
                 setUser(updatedUser);
@@ -82,10 +85,23 @@ const DashboardUser: React.FC<DashboardAdminProps> = ({ userId }) => {
                     router.push(`/account/user/${userId}/dashboard`);
                 });
             } else {
-                console.error('Failed to update user data:', response.statusText);
+                const errorResponse = await response.json();
+                console.error('Failed to update user data:', errorResponse);
+                Swal.fire({
+                    title: 'Update Failed',
+                    text: 'There was an issue updating your profile.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
             }
         } catch (error) {
             console.error('Error updating user data:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'There was an error updating your profile.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
         }
     };
 
@@ -105,7 +121,7 @@ const DashboardUser: React.FC<DashboardAdminProps> = ({ userId }) => {
                             <div className="pt-6 flex">
                                 <button
                                     onClick={() => setIsEditing(true)}
-                                    className="bg-blue-500 text-white px-2 py-2 rounded w-32 ">
+                                    className="bg-blue-500 text-white px-2 py-2 rounded w-32">
                                     Edit Profile
                                 </button>
                             </div>
@@ -120,14 +136,15 @@ const DashboardUser: React.FC<DashboardAdminProps> = ({ userId }) => {
                                     value={formData?.name || ''}
                                     onChange={handleChange}
                                     className="block w-full p-2 mt-1 rounded bg-gray-700 text-white"
+                                    required
                                 />
                             </label>
                             <label>
                                 Birth:
                                 <input
-                                    type="text"
+                                    type="date"
                                     name="birthday"
-                                    value={formData?.birthday || ''}
+                                    value={formData?.birthday ? new Date(formData.birthday).toISOString().split('T')[0] : ''}
                                     onChange={handleChange}
                                     className="block w-full p-2 mt-1 rounded bg-gray-700 text-white"
                                 />
@@ -135,11 +152,12 @@ const DashboardUser: React.FC<DashboardAdminProps> = ({ userId }) => {
                             <label>
                                 Email:
                                 <input
-                                    type="text"
+                                    type="email"
                                     name="email"
                                     value={formData?.email || ''}
                                     onChange={handleChange}
                                     className="block w-full p-2 mt-1 rounded bg-gray-700 text-white"
+                                    required
                                 />
                             </label>
                             <label>
@@ -182,6 +200,19 @@ const DashboardUser: React.FC<DashboardAdminProps> = ({ userId }) => {
                                     className="block w-full p-2 mt-1 rounded bg-gray-700 text-white"
                                 />
                             </label>
+                            <label>
+                                Password:
+                                <input
+                                    type="password"
+                                    name="password"
+                                    value={password}
+                                    onChange={handlePasswordChange}
+                                    className="block w-full p-2 mt-1 rounded bg-gray-700 text-white"
+                                    placeholder="Leave blank to keep current password"
+
+                                />
+                            </label>
+                           
                             <button
                                 type="submit"
                                 className="mt-4 bg-green-500 text-white px-4 py-2 rounded">

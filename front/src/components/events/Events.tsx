@@ -1,22 +1,14 @@
 "use client"
-//Types
 import { IEvent } from "@/src/types/IEvent"
-//Vendors
 import { useState } from "react"
 import Image from "next/image"
-//Contexts
 import { useCrud } from "../CrudContext"
-//Components
 import LoadingPage from "../LoadingPage/loading"
-
-
 
 const Events:React.FC = () => {
 
 const [selectedEvent,setSelectedEvent] = useState<IEvent | null>(null);
 const {events, loading} = useCrud();
-
-
 
 const handleImageClick = (event:IEvent) => {
   setSelectedEvent(event);
@@ -40,9 +32,7 @@ const handleImageClick = (event:IEvent) => {
           ">No hay eventos disponibles</div>:
           events.map((event) => (
               <div key={event.id} className="flex flex-col h-full bg-gray-800 rounded-md p-4 text-center space-y-4 
-               border-2 border-transparent transform transition-colors duration-500 hover:border-white
-               
-              ">
+               border-2 border-transparent transform transition-colors duration-500 hover:border-white">
                   <div onClick={()=> handleImageClick(event)}>
                     <Image src={event.picture} alt="Event Image" width={500} height={500} className="rounded-lg cursor-pointer"/>
                   </div>
