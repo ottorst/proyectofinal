@@ -182,6 +182,27 @@ export class EventsController {
     }
   }
 
+  @Get('eventDetailCountingBookingsAndPersons/:id')
+  @HttpCode(HttpStatus.OK)
+  async eventDetailCountingBookingsAndPersons(@Param('id') id: number) {
+    console.log('Controller:eventDetailCountingBookingsAndPersons', id);
+
+    try {
+      const eventWithBookings =
+        await this.eventsService.eventDetailCountingBookingsAndPersons(+id);
+      if (!eventWithBookings) {
+        throw new Error('Event not found');
+      }
+      return eventWithBookings;
+    } catch (error) {
+      throw new HttpException(
+        `Controller event detail counting bookings and persons (id: ${id}). ` +
+          error.message,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id') id: string) {
