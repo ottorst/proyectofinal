@@ -85,15 +85,71 @@ export class UsersService {
     }
   }
 
-  async update(id: number, updateUserDto: CreateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    console.log('CreateUserDto received in create method:', updateUserDto);
+    const updatedData: Partial<CreateUserDto> = {};
     try {
-      const user = this.prisma.user.update({
-        where: { id },
-        data: updateUserDto,
+      // if (updateUserDto.email) {
+      //   updatedData.email = updateUserDto.email;
+      // }
+      let somethingChanged = false;
+      if (updateUserDto.name) {
+        updatedData.name = updateUserDto.name;
+        somethingChanged = true;
+      }
+      if (updateUserDto.password) {
+        if (updateUserDto.password !== updateUserDto.passwordConfirm) {
+          throw new Error('Services. Passwords do not match');
+        }
+        updatedData.password = await bcrypt.hash(updateUserDto.password, 10);
+        somethingChanged = true;
+      }
+      if (updateUserDto.phone) {
+        updatedData.phone = updateUserDto.phone;
+        somethingChanged = true;
+      }
+      if (updateUserDto.birthday) {
+        updatedData.birthday = new Date(updateUserDto.birthday).toISOString();
+        somethingChanged = true;
+      }
+      if (updateUserDto.allergies) {
+        updatedData.allergies = updateUserDto.allergies;
+        somethingChanged = true;
+      }
+      if (updateUserDto.address) {
+        updatedData.address = updateUserDto.address;
+        somethingChanged = true;
+      }
+      if (updateUserDto.city) {
+        updatedData.city = updateUserDto.city;
+        somethingChanged = true;
+      }
+      if (updateUserDto.country) {
+        updatedData.country = updateUserDto.country;
+        somethingChanged = true;
+      }
+      // if (updateUserDto.auth0Id) {
+      //   updatedData.auth0Id = updateUserDto.auth0Id;
+      // }
+
+      if (updateUserDto.admin !== undefined) {
+        updatedData.admin = updateUserDto.admin;
+        somethingChanged = true;
+      }
+
+      if (!somethingChanged) {
+        throw new Error('Nothing to update');
+      }
+
+      const updatedUser = await this.prisma.user.update({
+        where: { id: id },
+        data: updatedData,
       });
-      return user;
+
+      return updatedUser;
     } catch (error) {
-      console.log('User not found');
+      console.error('Error al actualizar el usuario:', error);
+      throw new Error('Error en el servicio de actualización de usuario.');
     }
   }
 

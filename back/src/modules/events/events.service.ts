@@ -127,6 +127,57 @@ export class EventsService {
     }
   }
 
+  //
+
+  async eventDetailCountingBookingsAndPersons(id: number) {
+    console.log('Service: eventDetailCountingBookingsAndPersons', id);
+
+    try {
+      const eventWithBookings = await this.prisma.events.findUnique({
+        where: { id },
+        include: {
+          bookings: true,
+        },
+      });
+
+      console.log('eventWithBookings', eventWithBookings);
+
+      if (!eventWithBookings) {
+        throw new Error('Service. Event not found.');
+      }
+
+      const totalPersons = eventWithBookings.bookings.reduce(
+        (sum, booking) => sum + booking.Quantity,
+        0,
+      );
+      const totalBookings = eventWithBookings.bookings.length;
+
+      // Creamos un nuevo objeto sin modificar el original
+      const eventWithCounts = {
+        ...eventWithBookings,
+        // bookings:
+        //   eventWithBookings.bookings.length > 0
+        //     ? eventWithBookings.bookings
+        //     : [],
+        totalPersons,
+        totalBookings,
+      };
+
+      // Eliminamos la propiedad bookings si no queremos retornarla
+      // if (eventWithCounts.bookings.length === 0) {
+      //   delete eventWithCounts.bookings;
+      // }
+
+      return eventWithCounts;
+    } catch (error) {
+      console.log('Service General Error: ', error);
+
+      throw new Error(
+        'Service General Error, in the event detail counting bookings and persons.',
+      );
+    }
+  }
+
   async eventsCountingBookingsAndPersons() {
     try {
       const eventsWithBookings = await this.prisma.events.findMany({
@@ -134,11 +185,6 @@ export class EventsService {
         orderBy: { date: 'desc' },
         include: {
           bookings: true,
-          //  {
-          //   include: {
-          //     user: true,
-          //   },
-          // }, // Incluye todas las reservas relacionadas
         },
       });
 

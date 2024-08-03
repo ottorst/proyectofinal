@@ -13,6 +13,7 @@ import {
   BadRequestException,
   HttpException,
   UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -48,6 +49,9 @@ export class UsersController {
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createUserDto: CreateUserDto) {
     try {
+      if (createUserDto.password !== createUserDto.passwordConfirm) {
+        throw new BadRequestException('Controller. Passwords do not match.');
+      }
       const userCreated = await this.usersService.create(createUserDto);
       return userCreated;
     } catch (err: any) {
@@ -99,13 +103,18 @@ export class UsersController {
     }
   }
 
-  @Put(':id')
+  @Patch(':id')
   @HttpCode(HttpStatus.OK)
-  async update(@Param('id') id: string, @Body() updateUserDto: CreateUserDto) {
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    console.log('CreateUserDto received in create method:', id, updateUserDto);
+
     try {
       const user = await this.usersService.findOne(+id);
       if (!user) {
-        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        throw new HttpException(
+          'User not found, send the right ID.',
+          HttpStatus.NOT_FOUND,
+        );
       } else {
         return this.usersService.update(+id, updateUserDto);
       }

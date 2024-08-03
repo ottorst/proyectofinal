@@ -26,7 +26,6 @@ model User {
   address   String?
   city      String?
   country   String?
-  // picture   String?
   auth0Id   String?
   admin     Boolean   @default(false)
   bookings  Booking[]
@@ -45,7 +44,6 @@ model Events {
   description String
   date        DateTime
   location    String // GPS location, ex: Madrid, Spain, Sol
-  // document    String?
   maxseats    Int       @default(8)
   price       Float     @default(250.0)
   picture     String?
