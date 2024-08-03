@@ -12,17 +12,18 @@ import {
   BadRequestException,
   HttpException,
   UseGuards,
-  UploadedFile,
   UseInterceptors,
+  UploadedFile
 } from '@nestjs/common';
+import { FileValidationPipe } from 'src/pipes/image-upload.pipe';
+
 import {CloudinaryService} from "src/clouinary/cloudinary.service"
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { IsAdmin } from 'src/decorators/rol/IsAdmin.decorator';
 import { RolesGuards } from 'src/guards/role/roles.guard';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
-import { UpdateEventDto } from './dto/update-event.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
+
 
 import {
   ApiTags,
@@ -32,11 +33,11 @@ import {
   ApiConsumes,
   ApiBody,
 } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 @ApiTags('events')
 @Controller('events')
 export class EventsController {
-  constructor(private readonly eventsService: EventsService,
-              private readonly cloudinaryService: CloudinaryService
+  constructor(private readonly eventsService: EventsService
   ) {}
 
   @Get('seeder')
@@ -52,25 +53,18 @@ export class EventsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('file')) 
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  @UseInterceptors(FileInterceptor('file'))  
   async create(
-    @Body() createEventDto: CreateEventDto,
-    @UploadedFile() file: Express.Multer.File) {
+    @Body() createEventDto: CreateEventDto, @UploadedFile(new FileValidationPipe()) file: Express.Multer.File,) {
     try {
-      let pictureUrl = null;
       if (!file) {
-        throw new BadRequestException('File is not uploaded');
+        throw new BadRequestException('No file uploaded');
       }
-        const { buffer, originalname } = file;
-      const result = await this.cloudinaryService.uploadFile(buffer, originalname);
-        pictureUrl = result;  // Obtén la URL segura del archivo cargado
-        createEventDto['picture'] = pictureUrl;
-        // Crea el evento
         const eventCreated = await this.eventsService.create(createEventDto);
         return eventCreated;
       
