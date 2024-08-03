@@ -22,6 +22,8 @@ import { RolesGuards } from 'src/guards/role/roles.guard';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+
 import {
   ApiTags,
   ApiBearerAuth,
@@ -30,13 +32,12 @@ import {
   ApiConsumes,
   ApiBody,
 } from '@nestjs/swagger';
-import { error } from 'console';
-import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors';
-
 @ApiTags('events')
 @Controller('events')
 export class EventsController {
-  constructor(private readonly eventsService: EventsService) {}
+  constructor(private readonly eventsService: EventsService,
+              private readonly cloudinaryService: CloudinaryService
+  ) {}
 
   @Get('seeder')
   @HttpCode(HttpStatus.CREATED)
@@ -59,19 +60,21 @@ export class EventsController {
   @UseInterceptors(FileInterceptor('file'))  
   async create(
     @Body() createEventDto: CreateEventDto,
-    @UploadedFile() file: Express.Multer.File
-  ) {
+    @UploadedFile() file: Express.Multer.File) {
     try {
       let pictureUrl = null;
-      if (file) {
-        const { buffer, originalname } = file;
-        const result = await CloudinaryService.uploadFile(buffer, originalname);
-        pictureUrl = result;  // Obtén la URL segura del archivo cargado
+      if (!file) {
+        throw new BadRequestException('File is not uploaded');
       }
-      createEventDto['picture'] = pictureUrl;
-      // Crea el evento
-      const eventCreated = await this.eventsService.create(createEventDto);
-      return eventCreated;
+        const { buffer, originalname } = file;
+      const result = await this.cloudinaryService.uploadFile(buffer, originalname);
+        pictureUrl = result;  // Obtén la URL segura del archivo cargado
+        createEventDto['picture'] = pictureUrl;
+        // Crea el evento
+        const eventCreated = await this.eventsService.create(createEventDto);
+        return eventCreated;
+      
+     
     } catch (err: any) {
       throw new BadRequestException('Error creating an event. ' + err.message);
     }

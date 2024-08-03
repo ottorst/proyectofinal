@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import * as dotenv from 'dotenv';
-import { UploadApiOptions, v2 as cloudinary } from 'cloudinary';
-import { Readable } from 'stream';  // Importa Readable stream
+import { UploadApiErrorResponse, UploadApiResponse, v2 as cloudinary } from 'cloudinary';
 
 @Injectable()
 export class CloudinaryService {
   constructor() {
     dotenv.config({
-      path: '.env.development.local',
+      path: '.env',
     });
     cloudinary.config({
       cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -16,28 +15,20 @@ export class CloudinaryService {
     });
   }
 
-  static async uploadFile(buffer: Buffer, originalName?: string) {
-    const options: UploadApiOptions = {
-      folder: 'uploads',
-      public_id: originalName,
-      resource_type: 'auto',
-    };
-
-    // Convierte el buffer en un readable stream
-    const stream = new Readable();
-    stream.push(buffer);
-    stream.push(null);  // Señala el final del flujo de datos
-
+  async uploadFile(fileBuffer: Buffer, originalname: string): Promise<UploadApiResponse | UploadApiErrorResponse> {
     return new Promise((resolve, reject) => {
-      stream.pipe(
-        cloudinary.uploader.upload_stream(options, (error, result) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(result);
-          }
-        })
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: 'experiencias culinarias' },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        }
       );
+      // Convirtiendo el buffer en un stream
+      const stream = require('stream');
+      const bufferStream = new stream.PassThrough();
+      bufferStream.end(fileBuffer);
+      bufferStream.pipe(uploadStream);
     });
   }
 }
