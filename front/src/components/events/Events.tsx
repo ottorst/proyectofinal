@@ -1,43 +1,14 @@
 "use client"
-//Types
 import { IEvent } from "@/src/types/IEvent"
-//Vendors
-import { useState,useEffect } from "react"
+import { useState } from "react"
 import Image from "next/image"
-//Helpers
-import fetchEvents from "./helpers"
-//Components
+import { useCrud } from "../CrudContext"
 import LoadingPage from "../LoadingPage/loading"
-
-
 
 const Events:React.FC = () => {
 
-const [events,setEvents] = useState<IEvent[]>([]);
-const [error,setErrors] = useState<Error|null>(null);
 const [selectedEvent,setSelectedEvent] = useState<IEvent | null>(null);
-const [loading, setLoading] = useState(true);
-
-useEffect(() => {
-
-    const loadEvents = async () => {
-      try {
-        const data = await fetchEvents();
-        setEvents(data);
-      } catch (error:unknown) {
-        if(error instanceof Error){
-            setErrors(error)
-        }else {
-            setErrors(new Error("Unknown error occurred"));
-        } 
-       } finally {
-        setLoading(false)
-      }
-
-    }
-    loadEvents();
-
-},[]);
+const {events, loading} = useCrud();
 
 const handleImageClick = (event:IEvent) => {
   setSelectedEvent(event);
@@ -55,13 +26,15 @@ const handleImageClick = (event:IEvent) => {
     (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 my-9">
         <title>Experiences</title>
-          {events.map((event) => (
+       
+          {events.length ===0 ? <div className="lg:flex flex-col justify-center items-center
+          text-2xl text-red-800 cursor-not-allowed
+          ">No hay eventos disponibles</div>:
+          events.map((event) => (
               <div key={event.id} className="flex flex-col h-full bg-gray-800 rounded-md p-4 text-center space-y-4 
-               border-2 border-transparent transform transition-colors duration-500 hover:border-white
-               
-              ">
+               border-2 border-transparent transform transition-colors duration-500 hover:border-white">
                   <div onClick={()=> handleImageClick(event)}>
-                      <Image src={event.picture} alt="Event Picture" width={500} height={500} className="rounded-lg cursor-pointer"/>
+                    <Image src={event.picture} alt="Event Image" width={500} height={500} className="rounded-lg cursor-pointer"/>
                   </div>
                   <div className="flex flex-col flex-grow justify-between">
                       <div>

@@ -1,26 +1,42 @@
 [
   {
-    "transactionNumber": "123456789",
+    "transactionNumber": "123456781",
     "quantity": 1,
     "paid": 350,
     "date": "2024-08-10T20:00:00",
-    "eventsId": 1,
-    "userId": 6
-  },
-  {
-    "transactionNumber": "123456780",
-    "quantity": 1,
-    "paid": 350,
-    "date": "2024-08-10T20:00:00",
-    "eventsId": 3,
-    "userId": 6
+    "userId": 4,
+    "eventsId": 1
   },
   {
     "transactionNumber": "123456782",
+    "quantity": 3,
+    "paid": 350,
+    "date": "2024-08-10T20:00:00",
+    "userId": 3,
+    "eventsId": 1
+  },
+  {
+    "transactionNumber": "123456783",
     "quantity": 1,
     "paid": 350,
     "date": "2024-08-10T20:00:00",
-    "eventsId": 2,
-    "userId": 6
+    "userId": 4,
+    "eventsId": 3
+  },
+  {
+    "transactionNumber": "123456784",
+    "quantity": 2,
+    "paid": 350,
+    "date": "2024-08-10T20:00:00",
+    "userId": 3,
+    "eventsId": 3
+  },
+  {
+    "transactionNumber": "123456785",
+    "quantity": 1,
+    "paid": 350,
+    "date": "2024-08-10T20:00:00",
+    "userId": 4,
+    "eventsId": 2
   }
 ]

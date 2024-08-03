@@ -1,6 +1,3 @@
-// EventDashboard.tsx
-import React from 'react';
-
 const EventDashboard: React.FC = () => {
   return (
     <section className="flex flex-col justify-center items-center bg-gray-500-50 rounded-md w-[90%] mx-auto space-y-6 p-5 my-20">

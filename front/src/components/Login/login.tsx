@@ -143,9 +143,14 @@ const LoginFormClient: React.FC = () => {
             >
               Log In
             </button>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-              <a href="/api/auth/login"> Conectarse con google</a>
+            <button
+              type="button"
+              onClick={() => window.location.href = 'http://localhost:3001/auth/auth0/callback'}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            >
+              Conectarse con Google
             </button>
+
           </div>
         </form>
       </div>

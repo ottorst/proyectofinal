@@ -6,7 +6,7 @@ import { UserProvider } from '@auth0/nextjs-auth0/client';
 //Components
 import RenderNavbarFooter from "../components/renderNavbarFooter/RenderNavbarFooter";
 import { AuthProvider } from "../components/AuthContext";
-
+import { CrudProvider } from "../components/CrudContext";
 const inter = Inter({ subsets: ["latin"] });
 
 
@@ -29,11 +29,13 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <UserProvider>
+          <CrudProvider>
           <AuthProvider>
             <RenderNavbarFooter>
               {children}
             </RenderNavbarFooter>
           </AuthProvider>
+          </CrudProvider>
         </UserProvider>
       </body>
     </html>

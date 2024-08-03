@@ -150,6 +150,109 @@ token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
    - status: 409, description: 'Conflicto. Usuario con este correo electrónico ya existe.' 
    - status: 500, description: 'Error interno del servidor. Ocurrió un error inesperado.'
 
+## Integración de Auth0 en el Backend de NestJS
+### Introducción
+En este backend de NestJS, se ha integrado Auth0 para gestionar la autenticación de usuarios. Auth0 permite a los usuarios autenticarse utilizando cuentas de redes sociales, cuentas corporativas, o incluso registrarse utilizando sus direcciones de correo electrónico y contraseñas. A continuación, se detalla cómo se ha realizado esta integración y cómo funciona el flujo de autenticación.
+
+### Configuración de Auth0
+
+#### Instalar dependencias
+Su aplicación necesitará el paquete `express-openid-connect` , que es una biblioteca compatible con OIDC mantenida por Auth0 para Express.
+Primero, es necesario crear una aplicación en el panel de control de Auth0. Esto te proporcionará credenciales específicas, como el client ID y el client secret, que necesitarás para configurar la integración en tu backend.
+
+```bash 
+npm install express express-openid-connect --save
+```
+Una vez configurada la aplicación en Auth0, se deben definir las variables de entorno en el proyecto de NestJS. Estas variables incluyen el secret de Auth0, la URL base de tu aplicación, el client ID, y el dominio de Auth0.
+
+```env
+AUTH0_SECRET=your_auth0_secret
+AUTH0_BASE_URL=http://localhost:3000
+AUTH0_CLIENT_ID=your_auth0_client_id
+AUTH0_ISSUER_BASE_URL=https://your-auth0-domain.auth0.com
+```
+
+### Configuración del Backend
+El backend de NestJS se configura para utilizar estas credenciales a través de un archivo de configuración dedicado. Esta configuración se utiliza para asegurar que las rutas de autenticación estén protegidas y que el backend pueda comunicarse correctamente con Auth0 para autenticar a los usuarios.
+
+``` typescript
+// config/auth0-config.ts
+import * as dotenv from 'dotenv';
+
+dotenv.config({
+  path: '.env',
+});
+
+export const auth0Config = {
+  authRequired: false,
+  auth0Logout: true,
+  secret: process.env.AUTH0_SECRET,
+  baseURL: process.env.AUTH0_BASE_URL,
+  clientID: process.env.AUTH0_CLIENT_ID,
+  issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL,
+};
+```
+
+### Controlador de Autenticación
+El controlador de autenticación en el backend de NestJS gestiona las rutas principales relacionadas con el inicio de sesión y el registro de usuarios. Estas rutas incluyen las que permiten a los usuarios iniciar sesión y registrarse utilizando credenciales tradicionales, así como las rutas que gestionan la autenticación con Auth0.
+
+Para el inicio de sesión, el controlador valida las credenciales proporcionadas por el usuario (correo electrónico y contraseña) y genera un token JWT si las credenciales son correctas. Para el registro, se validan los datos del usuario, y si todo es correcto, se crea un nuevo registro en la base de datos. En caso de que un usuario ya esté registrado con el correo electrónico proporcionado, se maneja el error adecuadamente.
+
+``` typescript
+async Auth0(@Req() req: Request, @Res() res: Response) {
+    try {
+      if (req.oidc?.isAuthenticated()) {
+        const email = req.oidc.user?.email;
+        const auth0Id = req.oidc.user?.sub;
+  
+        if (!email || !auth0Id) {
+          return res.status(HttpStatus.BAD_REQUEST).json({ message: 'No email or auth0Id found' });
+        }
+  
+        let user = await this.authService.findUserByAuth0IdOrEmail(auth0Id, email);
+  
+        if (!user) {
+          const newUser: SignUpAuthDto = {
+            email: email,
+            name: req.oidc.user.name || 'Nombre por defecto',
+            password: '', // No se almacena una contraseña si el usuario usa Auth0
+            passwordConfirm: '',
+            auth0Id: auth0Id,
+          };
+  
+          user = await this.authService.registerUserWithAuth0(newUser);
+        }
+  
+        const token = await this.authService.createToken(user);
+  
+        // Redirige al frontend con el token en la URL
+        return res.redirect(`http://localhost:3000/home?token=${token}`);
+      } else {
+        res.status(HttpStatus.UNAUTHORIZED).json({ message: 'User not authenticated' });
+      }
+    } catch (error) {
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error auth0 user', error });
+    }
+  }
+
+```
+
+### Flujo de Autenticación con Auth0
+Cuando un usuario intenta autenticarse con Auth0, se le redirige a la página de inicio de sesión de Auth0. Una vez autenticado, Auth0 redirige al usuario de vuelta a tu aplicación, pasando un "callback" al backend de NestJS.
+
+El backend maneja este callback validando la autenticación y obteniendo los datos del usuario de Auth0. Si el usuario no existe en la base de datos, se crea un nuevo registro para él utilizando la información proporcionada por Auth0. Si el usuario ya existe, se actualiza su registro con el ID de Auth0, si es necesario.
+
+Después de autenticar al usuario, el backend genera un token JWT que se envía al frontend para que el usuario pueda realizar solicitudes autenticadas en la aplicación.
+
+### servicio de Autenticación
+El servicio de autenticación en el backend maneja las operaciones principales relacionadas con la autenticación, como la validación de credenciales, la creación de nuevos usuarios, y la generación de tokens JWT. Además, el servicio interactúa con la base de datos para verificar si un usuario ya existe, registrar nuevos usuarios, y actualizar los registros existentes.
+
+Este servicio también se encarga de manejar los casos en los que un usuario se autentica con Auth0. Si el usuario ya está registrado en la base de datos pero no tiene un ID de Auth0, este se actualiza en el registro del usuario.
+### Manejando Errores y Excepciones
+
+Durante todo el proceso de autenticación, se gestionan adecuadamente los errores y excepciones para garantizar una experiencia de usuario fluida. Por ejemplo, si un usuario intenta registrarse con un correo electrónico que ya está en uso, se lanza una excepción que notifica al usuario del problema. Asimismo, si ocurre un error inesperado durante el proceso de autenticación con Auth0, el sistema está diseñado para manejarlo y proporcionar una respuesta clara al usuario.
+
+
 ## Documentación de Guards y Casos de Uso
 
 ### Guards Implementados

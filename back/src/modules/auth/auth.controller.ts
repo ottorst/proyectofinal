@@ -15,7 +15,7 @@ import { SignUpAuthDto } from './dto/signup-auth.dto';
 import { SignInAuthDto } from './dto/signin-auth.dto';
 import { UserResponseDto } from '../users/dto/response.user.dto';
 import { DateAdderInterceptor } from 'src/interceptor/date-adder.interceptor';
-import { ApiTags, ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBody, ApiResponse, ApiExcludeEndpoint } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 
@@ -131,19 +131,37 @@ export class AuthController {
     }
   }
 
-  @Get('auth0')
+  @Get('auth0/callback')
+  //@ApiExcludeEndpoint()
+  @ApiOperation({ summary: 'Handle Auth0 callback and authenticate the user' })
+  @ApiResponse({
+    status: 302,
+    description: 'Redirects the user to the frontend with a token',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request. No email or Auth0 ID found.',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized. User not authenticated.',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error. Error authenticating the user.',
+  })
   async Auth0(@Req() req: Request, @Res() res: Response) {
     try {
       if (req.oidc?.isAuthenticated()) {
         const email = req.oidc.user?.email;
         const auth0Id = req.oidc.user?.sub;
-
+  
         if (!email || !auth0Id) {
           return res.status(HttpStatus.BAD_REQUEST).json({ message: 'No email or auth0Id found' });
         }
-
+  
         let user = await this.authService.findUserByAuth0IdOrEmail(auth0Id, email);
-
+  
         if (!user) {
           const newUser: SignUpAuthDto = {
             email: email,
@@ -152,13 +170,14 @@ export class AuthController {
             passwordConfirm: '',
             auth0Id: auth0Id,
           };
-
+  
           user = await this.authService.registerUserWithAuth0(newUser);
         }
-
+  
         const token = await this.authService.createToken(user);
-
-        return res.status(HttpStatus.OK).json({ token });
+  
+        // Redirige al frontend con el token en la URL
+        return res.redirect(`http://localhost:3000/home?token=${token}`);
       } else {
         res.status(HttpStatus.UNAUTHORIZED).json({ message: 'User not authenticated' });
       }

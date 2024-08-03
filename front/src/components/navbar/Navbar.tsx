@@ -1,9 +1,8 @@
 'use client';
-
-import { useEffect, useRef } from 'react'; 
-import Cookies from 'js-cookie'; 
+import { useEffect, useRef } from 'react';
+import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import jwt from 'jsonwebtoken'; 
+import jwt from 'jsonwebtoken';
 import { useAuth } from '../AuthContext';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -20,22 +19,21 @@ const Navbar: React.FC = () => {
         }
     };
 
-    const handleLogOut = () => {
-        if (menuRef.current) {
-            menuRef.current.checked = false;
-        }
+    const handleLogOut = async () => {
         try {
-            localStorage.removeItem("userToken");
-            localStorage.removeItem("userData"); 
             Cookies.remove("appSession");
+
+            localStorage.removeItem("userToken");
+            localStorage.removeItem("userData");
+
             setToken(null);
             setUser(null);
+
             router.push('/login');
         } catch (error) {
             console.error('Error during logout:', error);
         }
     };
-    
 
     const extractUserIdFromToken = (token: string): string | null => {
         try {
@@ -43,10 +41,10 @@ const Navbar: React.FC = () => {
                 console.error('Token is empty or null');
                 return null;
             }
-    
+
             const decoded: any = jwt.decode(token);
-            console.log('Decoded token:', decoded); 
-    
+            console.log('Decoded token:', decoded);
+
             if (decoded && decoded.sub) {
                 const auth0Id = decoded.sub;
                 const userId = auth0Id.split('|')[1];
@@ -66,7 +64,7 @@ const Navbar: React.FC = () => {
             } else {
                 router.push(`/account/user/${user.id}/dashboard`);
             }
-        } else if (token) { 
+        } else if (token) {
             const userId = extractUserIdFromToken(token);
             if (userId) {
                 router.push(`/account/user/${userId}/dashboard`);
@@ -108,23 +106,13 @@ const Navbar: React.FC = () => {
                             <li className="hover:underline decoration-4 underline-offset-8 neon-shadow">Contact</li>
                         </Link>
 
-                        {token || user ? ( 
+                        {token || user ? (
                             <>
-                                {user?.auth0Id ? (
-                                    <a href="/api/auth/logout" onClick={handleLogOut}>
-                                        <li className="hover:underline offset-8 decoration-yellow-500">
-                                            <Image src="/assets/signin-icon.svg" alt="Sign Out" width={45} height={50} className="red-filter shadow-xl" />
-                                        </li>
-                                    </a>
-                                ) : (
-                                    <Link href="/login" onClick={handleLogOut}>
-                                        <li className="hover:underline offset-8 decoration-yellow-500">
-                                            <Image src="/assets/signin-icon.svg" alt="Sign Out" width={45} height={50} className="red-filter shadow-xl" />
-                                        </li>
-                                    </Link>
-                                )}
+                                <li onClick={handleLogOut} className="hover:underline offset-8 decoration-yellow-500 cursor-pointer">
+                                    <Image src="/assets/signin-icon.svg" alt="Sign Out" width={45} height={50} className="red-filter shadow-xl" />
+                                </li>
                                 <li className="hover:underline decoration-4 underline-offset-8" onClick={handleDashboardRedirect}>
-                                    <FaUser size={45} className="transition-transform duration-300 ease-in-out transform hover:scale-125 hover:text-yellow-500" />
+                                    <FaUser size={45} className="transition-transform duration-300 ease-in-out transform hover:scale-125 hover:text-yellow-500 cursor-pointer" />
                                 </li>
                             </>
                         ) : (
@@ -134,7 +122,6 @@ const Navbar: React.FC = () => {
                                 </li>
                             </Link>
                         )}
-                     
                     </ul>
                 </div>
             </nav>

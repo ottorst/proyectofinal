@@ -28,35 +28,5 @@
     "maxseats": 8,
     "picture": "https://images.pexels.com/photos/14681748/pexels-photo-14681748.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     "price": 230
-  },
-  {
-    "title": "Vinos de Mendoza",
-    "subtitle": "Explora la tierra del Malbec",
-    "description": "Mendoza es conocida por sus viñedos y bodegas, especialmente por su Malbec. Disfruta de un asado argentino acompañado de un buen vino mientras contemplas la cordillera de los Andes.",
-    "date": "2025-01-05",
-    "location": "-32.8894155, -68.8446177",
-    "maxseats": 12,
-    "picture": "https://images.pexels.com/photos/3525539/pexels-photo-3525539.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    "price": 233
-  },
-  {
-    "title": "Sabor a Oporto",
-    "subtitle": "Descubre la ciudad del vino de Oporto",
-    "description": "Oporto es famosa por su vino de Oporto, un vino fortificado dulce y robusto. Además, disfruta de la francesinha, un sándwich local con salsa picante y queso fundido.",
-    "date": "2024-12-05",
-    "location": "41.157944, -8.629105",
-    "maxseats": 6,
-    "picture": "https://images.pexels.com/photos/24878897/pexels-photo-24878897/free-photo-of-mar-ciudad-punto-de-referencia-oceano.jpeg",
-    "price": 500
-  },
-  {
-    "title": "Sabores de Florencia",
-    "subtitle": "Explora la cuna de la cocina toscana",
-    "description": "Florencia, la joya de la Toscana, es famosa por su pasta fresca, como los ravioli y los pappardelle. Además, no puedes dejar de probar el Chianti, un vino tinto emblemático de la región.",
-    "date": "2024-11-05",
-    "location": "43.769562, 11.255814",
-    "maxseats": 10,
-    "picture": "https://images.pexels.com/photos/2422461/pexels-photo-2422461.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    "price": 300
   }
 ]

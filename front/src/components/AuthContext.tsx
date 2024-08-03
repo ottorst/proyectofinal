@@ -1,6 +1,6 @@
 'use client';
 import { createContext, useState, useEffect, useContext, ReactNode, Dispatch, SetStateAction } from 'react';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
 import { IUser } from '../types/IUser';
 import { fetchUserById } from './helpers/Helpers';
@@ -17,6 +17,7 @@ interface AuthContextProps {
     decodedToken: DecodedToken | null;
     user: IUser | null;
     setUser: Dispatch<SetStateAction<IUser | null>>;
+    handleLogout: () => void;  
 }
 
 const AuthContext = createContext<AuthContextProps | null>(null);
@@ -58,37 +59,48 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const { user: auth0User, isLoading } = useAuth0User();
 
     useEffect(() => {
-        const storedToken = localStorage.getItem('userToken');
-        const storedUser = localStorage.getItem('userData');
+        // Check if there's a token in the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlToken = urlParams.get('token');
 
-        if (storedToken) {
-            setToken(storedToken);
-            try {
-                const decoded = jwtDecode<DecodedToken>(storedToken);
-                setDecodedToken(decoded);
-                if (storedUser) {
-                    setUser(JSON.parse(storedUser));
-                } else {
-                    fetchUserById(decoded.id, storedToken)
-                        .then(userData => {
-                            setUser(userData);
-                            localStorage.setItem('userData', JSON.stringify(userData));
-                        })
-                        .catch(error => {
-                            console.error('Error fetching user data:', error);
-                            setUser(null);
-                        });
-                }
-            } catch (error) {
-                console.error('Error decoding token:', error);
-                setDecodedToken(null);
-            }
+        if (urlToken) {
+            localStorage.setItem('userToken', urlToken);
+            setToken(urlToken);
+            // Optionally remove the token from the URL
+            window.history.replaceState({}, document.title, window.location.pathname);
         } else {
-            const fetchedToken = getToken();
-            console.log('Fetched token:', fetchedToken);
-            if (fetchedToken) {
-                setToken(fetchedToken);
-                localStorage.setItem('userToken', fetchedToken);
+            const storedToken = localStorage.getItem('userToken');
+            const storedUser = localStorage.getItem('userData');
+
+            if (storedToken) {
+                setToken(storedToken);
+                try {
+                    const decoded = jwtDecode<DecodedToken>(storedToken);
+                    setDecodedToken(decoded);
+                    if (storedUser) {
+                        setUser(JSON.parse(storedUser));
+                    } else {
+                        fetchUserById(decoded.id, storedToken)
+                            .then(userData => {
+                                setUser(userData);
+                                localStorage.setItem('userData', JSON.stringify(userData));
+                            })
+                            .catch(error => {
+                                console.error('Error fetching user data:', error);
+                                setUser(null);
+                            });
+                    }
+                } catch (error) {
+                    console.error('Error decoding token:', error);
+                    setDecodedToken(null);
+                }
+            } else {
+                const fetchedToken = getToken();
+                console.log('Fetched token:', fetchedToken);
+                if (fetchedToken) {
+                    setToken(fetchedToken);
+                    localStorage.setItem('userToken', fetchedToken);
+                }
             }
         }
     }, []);
@@ -152,8 +164,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     }, [token]);
 
+    const handleLogout = () => {
+        localStorage.removeItem("userToken");
+        localStorage.removeItem("userData");
+        Cookies.remove("appSession", { path: '/' });
+        setToken(null);
+        setUser(null);
+    };
+
     return (
-        <AuthContext.Provider value={{ token, setToken, decodedToken, user, setUser }}>
+        <AuthContext.Provider value={{ token, setToken, decodedToken, user, setUser, handleLogout }}>
             {children}
         </AuthContext.Provider>
     );
