@@ -33,8 +33,8 @@ const handleImageClick = (event:IEvent) => {
           events.map((event) => (
               <div key={event.id} className="flex flex-col h-full bg-gray-800 rounded-md p-4 text-center space-y-4 
                border-2 border-transparent transform transition-colors duration-500 hover:border-white">
-                  <div onClick={()=> handleImageClick(event)}>
-                    <Image src={event.picture} alt="Event Image" width={500} height={500} className="rounded-lg cursor-pointer"/>
+                  <div>
+                    <Image src={event.picture} alt="Event Image" width={500} height={500} className="rounded-lg"/>
                   </div>
                   <div className="flex flex-col flex-grow justify-between">
                       <div>
@@ -44,7 +44,9 @@ const handleImageClick = (event:IEvent) => {
                         
                       </div>
                       <div className="mt-auto">
+                      <button className="bg-yellow-500 rounded-md hover:bg-yellow-700 px-8 py-4 mt-4 w-full" onClick={() => handleImageClick(event)}>Event Details</button>
                           <button className="bg-yellow-500 rounded-md hover:bg-yellow-700 px-8 py-4 mt-4 w-full">BookNow</button>
+                          
                       </div>
                   </div>
               </div>
@@ -65,6 +67,7 @@ const handleImageClick = (event:IEvent) => {
                         <p className="text-gray-700 mb-2"><span className="font-bold text-black">MaxSeats:</span> {selectedEvent.maxseats}</p>
                         <p className="text-gray-700 mb-2"><span className="font-bold text-black">Price:</span> ${selectedEvent.price}</p>
                         <button className="bg-yellow-500 rounded-md hover:bg-yellow-700 px-8 py-4 mt-4 w-full">BookNow</button>
+
                         </div>
                     </div>
                 </div>
