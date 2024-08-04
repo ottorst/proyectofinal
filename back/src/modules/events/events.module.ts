@@ -5,7 +5,6 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
 
 
-
 @Module({
   controllers: [EventsController],
   providers: [EventsService,ConfigService,PrismaService],
