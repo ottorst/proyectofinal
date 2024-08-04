@@ -11,28 +11,29 @@ import {
   HttpStatus,
   BadRequestException,
   HttpException,
-  UseGuards,
+  UseGuards
 } from '@nestjs/common';
+
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { IsAdmin } from 'src/decorators/rol/IsAdmin.decorator';
 import { RolesGuards } from 'src/guards/role/roles.guard';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
+
+
 import {
   ApiTags,
   ApiBearerAuth,
   ApiResponse,
   ApiUnauthorizedResponse,
-  ApiConsumes,
-  ApiBody,
+  
 } from '@nestjs/swagger';
-import { error } from 'console';
-
 @ApiTags('events')
 @Controller('events')
 export class EventsController {
-  constructor(private readonly eventsService: EventsService) {}
+  constructor(private readonly eventsService: EventsService
+  ) {}
 
   @Get('seeder')
   @HttpCode(HttpStatus.CREATED)
@@ -46,16 +47,19 @@ export class EventsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @ApiConsumes('multipart/form-data')
+ 
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
   })
-  @ApiResponse({ status: 403, description: 'Forbidden.' }) // @ApiBody({
-  async create(@Body() createEventDto: CreateEventDto) {
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  async create(
+    @Body() createEventDto: CreateEventDto) {
     try {
-      const eventCreated = await this.eventsService.create(createEventDto);
-      return eventCreated;
+        const eventCreated = await this.eventsService.create(createEventDto);
+        return eventCreated;
+      
+     
     } catch (err: any) {
       throw new BadRequestException('Error creating an event. ' + err.message);
     }
