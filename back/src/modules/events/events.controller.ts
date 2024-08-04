@@ -11,13 +11,9 @@ import {
   HttpStatus,
   BadRequestException,
   HttpException,
-  UseGuards,
-  UseInterceptors,
-  UploadedFile
+  UseGuards
 } from '@nestjs/common';
-import { FileValidationPipe } from 'src/pipes/image-upload.pipe';
 
-import {CloudinaryService} from "src/clouinary/cloudinary.service"
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { IsAdmin } from 'src/decorators/rol/IsAdmin.decorator';
 import { RolesGuards } from 'src/guards/role/roles.guard';
@@ -30,10 +26,8 @@ import {
   ApiBearerAuth,
   ApiResponse,
   ApiUnauthorizedResponse,
-  ApiConsumes,
-  ApiBody,
+  
 } from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
 @ApiTags('events')
 @Controller('events')
 export class EventsController {
@@ -53,18 +47,14 @@ export class EventsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
  
-  @UseInterceptors(FileInterceptor('file')) 
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async create(
-    @Body() createEventDto: CreateEventDto, @UploadedFile(new FileValidationPipe()) file: Express.Multer.File,) {
+    @Body() createEventDto: CreateEventDto) {
     try {
-      if (!file) {
-        throw new BadRequestException('No file uploaded');
-      }
         const eventCreated = await this.eventsService.create(createEventDto);
         return eventCreated;
       
