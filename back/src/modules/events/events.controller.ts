@@ -19,6 +19,7 @@ import { IsAdmin } from 'src/decorators/rol/IsAdmin.decorator';
 import { RolesGuards } from 'src/guards/role/roles.guard';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
+import { UpdateEventDto } from './dto/update-event.dto';
 
 
 import {
