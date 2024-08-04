@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { config as dotenvConfig } from 'dotenv';
+import * as dotenv from 'dotenv';
 import { UploadApiOptions, v2 as cloudinary } from 'cloudinary';
-import { UploadFileDto } from 'src/modules/image-upload/dto/image-upload.dto';
-
 @Injectable()
 export class CloudinaryService {
   constructor() {
-    dotenvConfig();
+    dotenv.config({
+      path: '.env.development.local',
+    });
     cloudinary.config({
       cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
       api_key: process.env.CLOUDINARY_API_KEY,
@@ -14,34 +14,30 @@ export class CloudinaryService {
     });
   }
 
-  async uploadFile({ buffer, originalname }: UploadFileDto): Promise<string> {
+  async uploadFile(buffer: Buffer, orignalName?: string) {
     const options: UploadApiOptions = {
       folder: 'uploads',
-      public_id: originalname,
+      public_id: orignalName,
       resource_type: 'auto',
     };
-
     return new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(options, (error, result) => {
-        if (error) {
-          console.error('Error uploading to Cloudinary:', error);
-          reject(error);
-        } else {
-          resolve(result.secure_url);
-        }
-      });
+      const stream = cloudinary.uploader.upload_stream(
+        options,
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        },
+      ); 
       stream.write(buffer);
       stream.end();
     });
   }
-
-  async getUrl(publicId: string): Promise<string> {
-    try {
-      const result = await cloudinary.api.resource(publicId);
-      return result.secure_url;
-    } catch (error) {
-      console.error('Error retrieving Cloudinary resource:', error);
-      throw new Error(`Failed to retrieve resource: ${error.message}`);
-    }
-  }
 }
+/*
+async uploadFile(@UploadedFile() file: Express.Multer.File) {
+    const { buffer, originalname } = file;
+    const result = await this.cloudinaryService.uploadFile(buffer, originalname);
+*/
