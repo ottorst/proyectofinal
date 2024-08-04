@@ -5,12 +5,14 @@ import {
   UseInterceptors,
   UploadedFile,
   BadRequestException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiBody,
+  ApiConsumes,
 } from '@nestjs/swagger';
 import { FileUploadService } from './image-upload.service';
 import { FileValidationPipe } from 'src/pipes/image-upload.pipe';
@@ -23,12 +25,12 @@ export class FileUploadController {
 
   @Post('uploadImage')
   @HttpCode(200)
+  @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({ summary: 'Subir una imagen' })
   @ApiBody({
     description: 'Imagen que se subirá',
-    required: true,
-    type: 'multipart/form-data', // Especifica que el tipo es multipart/form-data
+    required: true, 
     schema: {
       type: 'object',
       properties: {
@@ -58,6 +60,10 @@ export class FileUploadController {
     status: 400,
     description: 'Solicitud incorrecta, archivo no proporcionado',
   })
+  @ApiResponse({
+    status: 500,
+    description: 'Error interno del servidor al subir la imagen a Cloudinary',
+  })
   async uploadImage(
     @UploadedFile(new FileValidationPipe()) file: Express.Multer.File,
   ) {
@@ -65,8 +71,12 @@ export class FileUploadController {
       throw new BadRequestException('No file uploaded');
     }
 
-    const { imgUrl } = await this.fileUploadService.uploadFile(file);
-    return { imgUrl };
+    try {
+      const { imgUrl } = await this.fileUploadService.uploadFile(file);
+      return { imgUrl };
+    } catch (error) {
+      throw new InternalServerErrorException('Error uploading file to Cloudinary');
+    }
   }
 }
 

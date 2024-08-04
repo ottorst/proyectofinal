@@ -52,7 +52,7 @@ export class EventsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @ApiConsumes('multipart/form-data')
+ 
   @UseInterceptors(FileInterceptor('file')) 
   @ApiResponse({
     status: 201,
