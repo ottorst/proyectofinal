@@ -5,5 +5,5 @@ export interface IBooking{
     Paid:number,
     Date:string,
     userId?:number,
-    eventsId:number,    
+    eventsId?:number,    
 };

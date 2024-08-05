@@ -4,47 +4,31 @@ import DashboardUser from './UserDashboard';
 import PaymentMethod from './PaymentDashboard';
 import { useAuth } from '../../AuthContext';
 import EventDashboard from './EventDashboard';
-import { useRouter } from 'next/navigation';
 import LoadingPage from '../../LoadingPage/loading';
+import { IEvent } from '@/src/types/IEvent';
+import { IBooking } from '@/src/types/IBooking';
+
+interface IEventWithBookings extends IEvent {
+    bookings: IBooking[];
+}
 
 interface DashboardProps {
     userId: number;
 }
 
-export interface Booking {
-    id: number;
-    userId: number;
-    eventId: number;
-}
-
-export interface Event {
-    id: number;
-    title: string;
-    subtitle?: string;
-    description?: string;
-    date: string;
-    location?: string;
-    maxseats: number;
-    price: number;
-    picture: string;
-    bookings: Booking[];
-}
-
 const DashboardMenu: React.FC<DashboardProps> = ({ userId }) => {
     const [selectedOption, setSelectedOption] = useState<'Profile' | 'Payment' | 'Events'>('Profile');
-    const [userEvents, setUserEvents] = useState<Event[]>([]);
+    const [userEvents, setUserEvents] = useState<IEventWithBookings[]>([]);
     const { user } = useAuth();
-    const router = useRouter();
 
     useEffect(() => {
         const fetchEvents = async () => {
             try {
                 const response = await fetch('http://localhost:3001/events/eventsWithBookingsAndUsers');
-                const data: Event[] = await response.json();
+                const data: IEventWithBookings[] = await response.json();
 
-                // Filtrar eventos reservados por el usuario específico
-                const eventsReservedByUser = data.filter((event: Event) =>
-                    event.bookings.some((booking: Booking) => booking.userId === userId)
+                const eventsReservedByUser = data.filter((event: IEventWithBookings) =>
+                    event.bookings.some((booking: IBooking) => booking.userId === userId)
                 );
 
                 setUserEvents(eventsReservedByUser);
