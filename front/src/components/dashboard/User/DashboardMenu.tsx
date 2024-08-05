@@ -11,17 +11,59 @@ interface DashboardProps {
     userId: number;
 }
 
+export interface Booking {
+    id: number;
+    userId: number;
+    eventId: number;
+}
+
+export interface Event {
+    id: number;
+    title: string;
+    subtitle?: string;
+    description?: string;
+    date: string;
+    location?: string;
+    maxseats: number;
+    price: number;
+    picture: string;
+    bookings: Booking[];
+}
+
 const DashboardMenu: React.FC<DashboardProps> = ({ userId }) => {
     const [selectedOption, setSelectedOption] = useState<'Profile' | 'Payment' | 'Events'>('Profile');
+    const [userEvents, setUserEvents] = useState<Event[]>([]);
     const { user } = useAuth();
     const router = useRouter();
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const response = await fetch('http://localhost:3001/events/eventsWithBookingsAndUsers');
+                const data: Event[] = await response.json();
+
+                // Filtrar eventos reservados por el usuario específico
+                const eventsReservedByUser = data.filter((event: Event) =>
+                    event.bookings.some((booking: Booking) => booking.userId === userId)
+                );
+
+                setUserEvents(eventsReservedByUser);
+            } catch (error) {
+                console.error('Error fetching events:', error);
+            }
+        };
+
+        if (userId) {
+            fetchEvents();
+        }
+    }, [userId]);
 
     const handleOptionChange = (option: 'Profile' | 'Payment' | 'Events') => {
         setSelectedOption(option);
     };
 
     if (!user) {
-        return <LoadingPage/>
+        return <LoadingPage />;
     }
 
     return (
@@ -71,7 +113,7 @@ const DashboardMenu: React.FC<DashboardProps> = ({ userId }) => {
                     )}
                     {selectedOption === 'Events' && (
                         <div className="bg-gray-800 text-gray-100 rounded-lg h-full p-4">
-                            <EventDashboard />
+                            <EventDashboard events={userEvents} />
                         </div>
                     )}
                 </div>
