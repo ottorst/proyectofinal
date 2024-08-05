@@ -72,8 +72,8 @@ export class FileUploadController {
     }
 
     try {
-      const { imgUrl } = await this.fileUploadService.uploadFile(file);
-      return { imgUrl };
+      const imgUrl = await this.fileUploadService.uploadFile(file);
+      return imgUrl;
     } catch (error) {
       throw new InternalServerErrorException('Error uploading file to Cloudinary');
     }
