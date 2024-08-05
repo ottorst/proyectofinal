@@ -37,7 +37,6 @@ export class CreateEventDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(80)
-  @MaxLength(300)
   description: string;
 
   @ApiProperty({
