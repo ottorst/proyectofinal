@@ -24,7 +24,12 @@ const EventDashboard: React.FC<EventDashboardProps> = ({ events, bookings }) => 
                 <p className="text-gray-600 text-sm">Transaction: {booking.TransactionNumber}</p>
                 <p className="text-gray-600 text-sm">Quantity: {booking.Quantity}</p>
                 <p className="text-gray-600 text-sm">Paid: ${booking.Paid}</p>
-                <p className="text-gray-600 text-sm">Date: {new Date(booking.Date).toLocaleDateString()}</p>
+                <p className="text-gray-600 text-sm">
+                  Date: {new Date(booking.Date).toLocaleString('en-US', { 
+                    dateStyle: 'short',
+                   timeStyle: 'short' 
+                  })}
+                </p>
               </li>
             ))
           ) : (
@@ -43,7 +48,12 @@ const EventDashboard: React.FC<EventDashboardProps> = ({ events, bookings }) => 
                 <p className="text-gray-600 text-sm">Transaction: {booking.TransactionNumber}</p>
                 <p className="text-gray-600 text-sm">Quantity: {booking.Quantity}</p>
                 <p className="text-gray-600 text-sm">Paid: ${booking.Paid}</p>
-                <p className="text-gray-600 text-sm">Date: {new Date(booking.Date).toLocaleDateString()}</p>
+                <p className="text-gray-600 text-sm">
+                  Date: {new Date(booking.Date).toLocaleString('en-US', { 
+                    dateStyle: 'short', 
+                    timeStyle: 'short' 
+                  })}
+                </p>
               </li>
             ))
           ) : (
