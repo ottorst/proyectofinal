@@ -20,7 +20,7 @@ const EventDashboard: React.FC<EventDashboardProps> = ({ events, bookings }) => 
           {activeEvents.length > 0 ? (
             activeEvents.map(booking => (
               <li key={booking.TransactionNumber} className="flex-none bg-gray-200 p-4 rounded-md shadow-md w-1/4">
-                <h3 className="text-gray-800 text-md font-semibold">Event: {booking.eventTitle}</h3>
+                <h3 className="text-gray-800 text-md font-semibold">{booking.eventTitle}</h3>
                 <p className="text-gray-600 text-sm">Transaction: {booking.TransactionNumber}</p>
                 <p className="text-gray-600 text-sm">Quantity: {booking.Quantity}</p>
                 <p className="text-gray-600 text-sm">Paid: ${booking.Paid}</p>

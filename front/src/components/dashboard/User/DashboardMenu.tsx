@@ -1,7 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
 import DashboardUser from './UserDashboard';
-import PaymentMethod from './PaymentDashboard';
 import { useAuth } from '../../AuthContext';
 import EventDashboard from './EventDashboard';
 import LoadingPage from '../../LoadingPage/loading';
@@ -40,7 +39,7 @@ const DashboardMenu: React.FC<DashboardProps> = ({ userId }) => {
                 const bookingsWithTitles = await Promise.all(bookingsData.map(async (booking) => {
                     const eventResponse = await fetch(`http://localhost:3001/events/${booking.eventsId}`);
                     const eventData = await eventResponse.json();
-                    
+
                     return {
                         ...booking,
                         eventTitle: eventData.title || 'Unknown Event'
@@ -59,7 +58,7 @@ const DashboardMenu: React.FC<DashboardProps> = ({ userId }) => {
         }
     }, [userId]);
 
-    const handleOptionChange = (option: 'Profile' | 'Payment' | 'Events') => {
+    const handleOptionChange = (option: 'Profile' | 'Events') => {
         setSelectedOption(option);
     };
 
@@ -70,7 +69,7 @@ const DashboardMenu: React.FC<DashboardProps> = ({ userId }) => {
     return (
         <div>
             <title>Dashboard User</title>
-            <h1 className="text-gray-100 text-4xl font-bold mb-7 underline flex justify-center items-center p-6">{`Welcome ${user?.name}`}</h1>
+            <h1 className="text-gray-100 text-4xl font-bold mb-7 flex justify-center items-center p-6">{`Welcome ${user?.name}`}</h1>
             <div className="flex flex-row mt-8 space-x-6 text-gray-100 pl-4">
                 <div className="bg-gray-800 w-1/4 h-80 p-4 rounded-lg flex flex-col">
                     <h2 className="text-2xl font-semibold mb-4">Dashboard Menu</h2>
@@ -81,14 +80,6 @@ const DashboardMenu: React.FC<DashboardProps> = ({ userId }) => {
                                 onClick={() => handleOptionChange('Profile')}
                             >
                                 Profile
-                            </button>
-                        </li>
-                        <li>
-                            <button
-                                className={`w-full py-2 px-4 rounded-lg text-left hover:bg-gray-700 focus:outline-none ${selectedOption === 'Payment' ? 'bg-gray-700 font-semibold' : ''}`}
-                                onClick={() => handleOptionChange('Payment')}
-                            >
-                                Payment
                             </button>
                         </li>
                         <li>
@@ -107,11 +98,7 @@ const DashboardMenu: React.FC<DashboardProps> = ({ userId }) => {
                             <DashboardUser userId={userId} />
                         </div>
                     )}
-                    {selectedOption === 'Payment' && (
-                        <div className="bg-gray-800 text-gray-100 rounded-lg h-full p-4">
-                            <PaymentMethod userId={userId} />
-                        </div>
-                    )}
+                    
                     {selectedOption === 'Events' && (
                         <div className="bg-gray-800 text-gray-100 rounded-lg h-full p-4">
                             <EventDashboard events={userEvents} bookings={userBookings} />
