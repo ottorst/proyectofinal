@@ -7,6 +7,9 @@ import EventDashboard from './EventDashboard';
 import { useRouter } from 'next/navigation';
 import LoadingPage from '../../LoadingPage/loading';
 
+
+
+
 interface DashboardProps {
     userId: number;
 }
@@ -15,6 +18,7 @@ const DashboardMenu: React.FC<DashboardProps> = ({ userId }) => {
     const [selectedOption, setSelectedOption] = useState<'Profile' | 'Payment' | 'Events'>('Profile');
     const { user } = useAuth();
     const router = useRouter();
+    const [address, setAddress] = useState("");
 
     const handleOptionChange = (option: 'Profile' | 'Payment' | 'Events') => {
         setSelectedOption(option);

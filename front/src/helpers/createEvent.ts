@@ -1,12 +1,20 @@
 import { IEventProps } from "../types/IEventProps";
 
 export async function createEvent(eventData: IEventProps) {
+
+    const keepData = {
+        ...eventData,
+        price: Number(eventData.price),
+    maxseats: Number(eventData.maxseats),
+
+    }
     try {
+        console.log(keepData);
         const res = await fetch (`http://localhost:3001/events`,{
             method: 'POST',
             headers: { 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(eventData)
+            body: JSON.stringify(keepData)
 
         })
         if (res.ok){
