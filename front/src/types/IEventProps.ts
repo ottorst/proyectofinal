@@ -1,15 +1,13 @@
-import {ILocation} from "./ILocation"
-
-
 
 export interface IEventProps{
     title: string;
     subtitle: string;
     description: string;
-    date: number;
-    location: ILocation;
+    date: string;
+    location: string;
     maxseats: number;
     price: number;
     picture: string;
+   
 
 }

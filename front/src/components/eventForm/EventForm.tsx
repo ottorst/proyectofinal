@@ -1,30 +1,35 @@
-import React, { useState } from "react";
-import {IEventErrorProps} from "../../types/IEventErrorProps";
+"use client"
+
+import React, { useEffect, useState } from "react";
+import { IEventErrorProps } from "../../types/IEventErrorProps";
 import { IEventProps } from "@/src/types/IEventProps";
 import { validateFormEvent } from "@/src/helpers/validateFormEvent";
 import { createEvent } from "@/src/helpers/createEvent";
+import "leaflet/dist/leaflet.css";
+import { uploadFile } from "@/src/helpers/uploadFile"; 
+/*  import MapComponent from "../mapComponent/MapComponent";  */
+
 
 
 export const EventForm: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [date, setDate] = useState<string>('');
-  const [time, setTime] = useState<string>('');
+  const [address, setAddress] = useState("");
+  const [file, setFile] = useState<File | null>(null);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
- 
+
   const [dataEvent, setDataEvent] = useState<IEventProps>({
     title: "",
     subtitle: "",
     description: "",
-    date: Date.now(),
-    location: { lat: 0, lng: 0 }, 
+    date: "",
+    location: "",
     maxseats: 0,
-    price:  0,
+    price: 0,
     picture: "",
-
-  });
+    });
 
   const [errorDataEvent, setErrorDataEvent] = useState<IEventErrorProps>({
     title: "",
@@ -35,50 +40,72 @@ export const EventForm: React.FC = () => {
     maxseats: "",
     price: "",
     picture: "",
-
   });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+
+
+ 
+
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setDataEvent({
       ...dataEvent,
       [event.target.name]: event.target.value,
     });
+  
+  };
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
+     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0] || null;
+    setFile(selectedFile);
+  };  
 
-      const dataToSend = {
-        ...dataEvent,
-       
-      };
-  
-      const [year, month, day] = date.split('-').map(Number);
-      const [hour, minute] = time.split(':').map(Number);
-      const eventDate = new Date(year, month - 1, day, hour, minute).getTime();
-  
-      const errors = validateFormEvent(dataEvent);
-      setErrorDataEvent(errors);
-  
-      if (Object.values(errors).every((error) => error === "")) {
-        try {
-          await createEvent(dataToSend);
-          alert("Creación de nuevo evento exitoso!");
-        } catch (error: any) {
-          alert(`Error during creation: ${error.message}`);
-          console.error("Error during creation:", error);
-        }
-      } else {
-        console.log("Errors in the form", errors);
-      }
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+ 
+    const googleMapsUrl = address
+      ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+          address
+        )}`
+      : "";
+
+    const newEvent = {
+      ...dataEvent,
+      location: googleMapsUrl,
+  picture: file ? await uploadFile(file) : dataEvent.picture,  
     };
 
-  }
+
+
+    const errors = validateFormEvent(newEvent, address);
+    setErrorDataEvent(errors);
+
+    if (Object.values(errors).every((error) => error === "")) {
+      try {
+        await createEvent(newEvent);
+        alert("Successful new event creation!");
+        toggleModal();
+      } catch (error: any) {
+        alert(`Error during creation: ${error.message}`);
+        console.error("Error during creation:", error);
+      }
+    } else {
+      console.log("Errors in the form", errors);
+    }
+  };
+
+
+  useEffect(() => {
+    const errors = validateFormEvent(dataEvent, address);
+    setErrorDataEvent(errors);
+  }, [dataEvent]);
+
   return (
     <>
       {/* <!-- Modal toggle --> */}
       <button
-      onClick={toggleModal}
+        onClick={toggleModal}
         data-modal-target="crud-modal"
         data-modal-toggle="crud-modal"
         className="block text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -127,45 +154,50 @@ export const EventForm: React.FC = () => {
                 </button>
               </div>
               {/* Modal body */}
-              <form className="p-4 md:p-5 ">
+              <form onSubmit={handleSubmit} className="p-4 md:p-5 ">
                 <div className="grid gap-4 mb-4 grid-cols-2">
                   <div className="col-span-2">
                     <label
                       htmlFor="title"
                       className="block mb-2 text-sm font-medium text-white dark:text-white"
                     >
-                     Event title
+                      Event title
                     </label>
-                    {errorDataEvent.title && (
-            <p className="text-red-500 text-xs absolute bottom-[-1.5rem] left-0">
-              {errorDataEvent.title}
-            </p>
-          )}
                     <input
                       type="text"
                       name="title"
                       id="title"
-                    
+                      value={dataEvent.title}
+                      onChange={handleChange}
                       className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="Type event title"
-                      required
-                    />
+                      />
+                      {errorDataEvent.title && (
+                        <p className="text-red-500 text-xs bottom-[-1.5rem] left-0">
+                          {errorDataEvent.title}
+                        </p>
+                      )}
                   </div>
                   <div className="col-span-2">
                     <label
                       htmlFor="subtitle"
                       className="block mb-2 text-sm font-medium text-white dark:text-white"
                     >
-                     Subtitle
+                      Subtitle
                     </label>
+                    {errorDataEvent.subtitle && (
+                      <p className="text-red-500 text-xs bottom-[-1.5rem] left-0">
+                        {errorDataEvent.subtitle}
+                      </p>
+                    )}
                     <input
                       type="text"
                       name="subtitle"
                       id="subtitle"
-                     
+                      value={dataEvent.subtitle}
+                      onChange={handleChange}
                       className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="Type subtitle"
-                      required
                     />
                   </div>
                   <div className="col-span-2 sm:col-span-1">
@@ -173,20 +205,24 @@ export const EventForm: React.FC = () => {
                       htmlFor="maxseats"
                       className="block mb-2 text-sm font-medium text-white dark:text-white"
                     >
-                      
-                    Max. seats
+                      Max. seats
                     </label>
+                    {errorDataEvent.maxseats && (
+                      <p className="text-red-500 text-xs bottom-[-1.5rem] left-0">
+                        {errorDataEvent.maxseats}
+                      </p>
+                    )}
                     <input
                       type="number"
                       name="maxseats"
                       id="maxseats"
-                    
+                      value={dataEvent.maxseats}
+                      onChange={handleChange}
                       className="bg-gray-50 border border-gray-300 text-black first-line:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="8"
-                      required
                     />
                   </div>
-                 
+
                   <div className="col-span-2">
                     <label
                       htmlFor="description"
@@ -194,119 +230,122 @@ export const EventForm: React.FC = () => {
                     >
                       Description
                     </label>
+                    {errorDataEvent.description && (
+                      <p className="text-red-500 text-xs bottom-[-1.5rem] left-0">
+                        {errorDataEvent.description}
+                      </p>
+                    )}
                     <textarea
                       id="description"
-                   
+                      name="description"
+                      value={dataEvent.description}
+                      onChange={handleChange}
                       rows={4}
                       className="block p-2.5 w-full text-sm text-black bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Write menu description here"
                     ></textarea>
                   </div>
 
-                 < div className="col-span-2 sm:col-span-2">
-                <div >
-                    <label
-                      htmlFor="date"
-                      className="block mb-2 text-sm font-medium text-white dark:text-white"
-                    >
-                      
-                    Date
-                    </label>
-                    <input
-                      type="date"
-                      name="date"
-                      id="date"
-                      
-                      onChange={(e) => setDate(e.target.value)} 
-                      className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder="-34.5816"
-                      required
-                    />
+                  <div className="col-span-2 sm:col-span-2">
+                    <div>
+                      <label
+                        htmlFor="date"
+                        className="block mb-2 text-sm font-medium text-white dark:text-white"
+                      >
+                        Date
+                      </label>
+                      {errorDataEvent.date && (
+                        <p className="text-red-500 text-xs bottom-[-1.5rem] left-0">
+                          {errorDataEvent.date}
+                        </p>
+                      )}
+                      <input
+                        type="datetime-local"
+                        name="date"
+                        id="date"
+                        value={dataEvent.date}
+                        onChange={handleChange}
+                        className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="-34.5816"
+                        required
+                        pattern="\d{4}-\d{2}-\d{2}"
+                      />
+                    </div>
                   </div>
-                  <div >
-                    <label
-                      htmlFor="Time"
-                      className="block mb-2 text-sm font-medium text-white dark:text-white"
-                    >
-                      
-                    Time
-                    </label>
-                    <input
-                      type="time"
-                      name="time"
-                      id="time"
-                
-                      onChange={(e) => setTime(e.target.value)} 
-                      className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder="-58.4207"
-                      required
-                    />
-                  </div>
-                </div>
 
-
-                
-                <div className="col-span-2 sm:col-span-1">
+                  <div className="col-span-2 sm:col-span-1">
                     <label
                       htmlFor="price"
                       className="block mb-2 text-sm font-medium text-white dark:text-white"
                     >
-                      
-                    Price
+                      Price
                     </label>
+                    {errorDataEvent.price && (
+                      <p className="text-red-500 text-xs bottom-[-1.5rem] left-0">
+                        {errorDataEvent.price}
+                      </p>
+                    )}
                     <input
-                      type="text"
+                      type="number"
                       name="price"
                       id="price"
-                     
-                      className="bg-gray-50 border border-gray-300 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      value={dataEvent.price}
+                      onChange={handleChange}
+                      className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="$"
-                      required
                     />
                   </div>
-                <div className="col-span-2 sm:col-span-2">
-                <div >
-                    <label
-                      htmlFor="lat"
-                      className="block mb-2 text-sm font-medium text-white dark:text-white"
-                    >
-                      
-                    Latitude
-                    </label>
-                    <input
-                      type="number"
-                      name="lat"
-                      id="lat"
-                    
-                      className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder="-34.5816"
-                      required
-                    />
-                  </div>
-                  <div >
-                    <label
-                      htmlFor="lng"
-                      className="block mb-2 text-sm font-medium text-white dark:text-white"
-                    >
-                      
-                    Longitude
-                    </label>
-                    <input
-                      type="number"
-                      name="lng"
-                      id="lng"
-                      value={dataEvent.location.lng}
-                      className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder="-58.4207"
-                      required
-                    />
+                  <div className="col-span-2 sm:col-span-2">
+                    <div>
+                      <label
+                        htmlFor="address"
+                        className="block mb-2 text-sm font-medium text-white dark:text-white"
+                      >
+                        Location
+                      </label>
+                      {errorDataEvent.location && (
+                        <p className="text-red-500 text-xs bottom-[-1.5rem] left-0">
+                          {errorDataEvent.location}
+                        </p>
+                      )}
+                      <input
+                        type="text"
+                        name="location"
+                        id="address"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="Street No., district"
+                      />
+                    </div>
                   </div>
                 </div>
-                </div>
-                
-<label className="block mb-2 text-sm font-medium  text-white dark:text-white" htmlFor="file_input">Select picture</label>
-<input className="block w-full text-sm text-gray-900 border  border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file"/>
-<p className="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or GIF (MAX. 800x400px).</p>
+
+                <label
+                  className="block mb-2 text-sm font-medium  text-white dark:text-white"
+                  htmlFor="file_input"
+                >
+                  Select picture
+                </label>
+                {errorDataEvent.picture && (
+                      <p className="text-red-500 text-xs bottom-[-1.5rem] left-0">
+                        {errorDataEvent.picture}
+                      </p>
+                    )}
+                <input
+                  className="block w-full text-sm text-gray-900 border  border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                  aria-describedby="file_input_help"
+                  id="file_input"
+                  type="file"
+                name="picture"
+                 onChange={handleFileChange} 
+                />
+                <p
+                  className="mt-1 text-sm text-gray-500 dark:text-gray-300"
+                  id="file_input_help"
+                >
+                  SVG, PNG, JPG or GIF (MAX. 800x400px).
+                </p>
 
                 <button
                   type="submit"
@@ -326,6 +365,7 @@ export const EventForm: React.FC = () => {
                   </svg>
                   Add new event
                 </button>
+             
               </form>
             </div>
           </div>
