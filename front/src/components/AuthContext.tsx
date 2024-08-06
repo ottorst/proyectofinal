@@ -59,14 +59,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const { user: auth0User, isLoading } = useAuth0User();
 
     useEffect(() => {
-        // Check if there's a token in the URL
         const urlParams = new URLSearchParams(window.location.search);
         const urlToken = urlParams.get('token');
 
         if (urlToken) {
             localStorage.setItem('userToken', urlToken);
             setToken(urlToken);
-            // Optionally remove the token from the URL
             window.history.replaceState({}, document.title, window.location.pathname);
         } else {
             const storedToken = localStorage.getItem('userToken');
