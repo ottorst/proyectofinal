@@ -145,7 +145,7 @@ setEditMode(false);
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
         <div className="bg-white p-6 rounded shadow-lg w-full max-w-lg max-h-[90vh] overflow-y-auto">
           <form onSubmit={handleSubmit}>
-            <h2 className="text-lg font-semibold mb-4">Edit Event</h2>
+            <h2 className="text-lg font-semibold mb-4 text-black text-center">Edit Event</h2>
       
             <div className="mb-2">
               <label className="block text-gray-800">Title:</label>
