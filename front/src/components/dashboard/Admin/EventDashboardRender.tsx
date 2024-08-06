@@ -103,25 +103,44 @@ setEditMode(false);
 
 
     
-   <div>
-    <div className="bg-gray-700 rounded-lg p-4 flex flex-col items-center space-y-2 min-w-[150px]
-    border-transparent transform transition-colors duration-500 hover:bg-black hover:bg-opacity-25
-    ">
-        <div className="relative bottom-2 left-28"><button onClick={()=> handleEventDelete(id)}>❌</button></div>
-    <Link href="/experience"><Image src={picture} alt={title} width={120} height={100} 
-    className="rounded-md cursor-pointer" /></Link>
-    <h1 className="text-gray-100 text-xl font-semibold">{title}</h1>
-    <p className="text-gray-300">Price: {price}💲</p>
+    <div>
     
-    <p className="text-gray-400">Date: 📅{new Date(date).toDateString()}</p>
 
-    <button className="bg-blue-500 text-white px-2 py-2 
-    rounded w-32 hover:bg-blue-400" onClick={() => setEditMode(true)}>Edit Event</button>
-  </div>
+    <section id="resumen" className="mb-8">
+                
+                <div className="bg-white p-4 rounded shadow-md">
+                    <ul>
+                      
+                            <li key={id} className="flex flex-wrap justify-between items-center py-2 border-b space-x-4 space-y-0">
+                                <div className="flex-1 min-w-[200px]">
+                                    <Link href={"/experience"}><span className="text-gray-800 hover:text-blue-500">{title} - {new Date(date).toLocaleDateString()}</span></Link>
+                                </div>
+                                <div className="min-w-[100px] md:w-32">
+                                    <span className="text-gray-800">MaxSeats: {maxseats}</span>
+                                </div>
+                                <div className="min-w-[80px] md:w-28">
+                                    <span className="text-gray-800">Price: {price} $</span>
+                                </div>
+                                <div className="flex space-x-2 mt-2 lg:mt-0">
+                                    <button onClick={()=> setEditMode(true)}className="text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">
+                                        Edit Event
+                                    </button>
+                                    <button onClick={() => handleEventDelete(id)} className="text-white bg-red-700 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                                        Delete Event
+                                    </button>
+                                </div>
+                            </li>
+                      
+  
+                        
+                        
+                    </ul>
+                </div>
+            </section>
 
 
-
-
+  
+  
   {editMode && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
         <div className="bg-white p-6 rounded shadow-lg w-full max-w-lg max-h-[90vh] overflow-y-auto">
@@ -236,6 +255,7 @@ setEditMode(false);
         </div>
       </div>
       )}
+
    </div>
   )
 }
