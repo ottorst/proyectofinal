@@ -105,7 +105,7 @@ const DashboardUser: React.FC<DashboardUserProps> = ({ userId }) => {
                     {!isEditing ? (
                         <>
                             <p className="font-bold">{`👤Name: ${user?.name}`}</p>
-                            <p className="font-bold">{`🎂Birth: ${user?.birthday ? new Date(user.birthday).toISOString().split('T')[0] : ''}`}</p>
+                            <p className="font-bold">{`🎂Birthday: ${user?.birthday ? new Date(user.birthday).toISOString().split('T')[0] : ''}`}</p>
                             <p className="font-bold">{`📧Email: ${user?.email}`}</p>
                             <p className="font-bold">{`📍Address: ${user?.address}`}</p>
                             <p className="font-bold">{`🌎Country: ${user?.country}`}</p>
@@ -133,7 +133,7 @@ const DashboardUser: React.FC<DashboardUserProps> = ({ userId }) => {
                                 />
                             </label>
                             <label>
-                                Birth:
+                                Birthday:
                                 <input
                                     type="date"
                                     name="birthday"
@@ -151,6 +151,7 @@ const DashboardUser: React.FC<DashboardUserProps> = ({ userId }) => {
                                     onChange={handleChange}
                                     className="block w-full p-2 mt-1 rounded bg-gray-700 text-white"
                                     required
+                                    readOnly
                                 />
                             </label>
                             <label>
