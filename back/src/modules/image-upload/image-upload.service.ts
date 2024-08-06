@@ -23,6 +23,6 @@ export class FileUploadService {
     });
    
 
-    return { imgUrl: url };
+    return url ;
   }
 }
