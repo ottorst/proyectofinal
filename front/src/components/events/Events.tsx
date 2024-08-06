@@ -71,6 +71,7 @@ const Events: React.FC = () => {
                 <h2 className="text-lg font-medium text-gray-300 mb-4">
                   {event.subtitle}
                 </h2>
+                <p>Price: {event.price} $</p>
               </div>
               <div className="mt-auto">
                 <button
@@ -79,9 +80,7 @@ const Events: React.FC = () => {
                 >
                   Event Details
                 </button>
-                <button className="bg-yellow-500 rounded-md hover:bg-yellow-700 px-8 py-4 mt-4 w-full">
-                  BookNow
-                </button>
+                
               </div>
             </div>
           </div>
