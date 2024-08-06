@@ -1,8 +1,8 @@
 import { IEventProps } from "../types/IEventProps";
 import { IEventErrorProps } from "../types/IEventErrorProps";
 
-export function validateFormEvent(dataEvent:IEventProps, address: string){
-    const { title, subtitle, description, date, price,  maxseats } = dataEvent
+export function validateFormEvent(dataEvent:IEventProps, address: string) : IEventErrorProps {
+    const { title, subtitle, description, date, price,  maxseats, picture } = dataEvent
     let errors: IEventErrorProps = {
     }
      
@@ -24,7 +24,7 @@ export function validateFormEvent(dataEvent:IEventProps, address: string){
         errors.date = "Event date is required.";
 
     } if (!address){
-        errors.location = "Event location  is required."
+        errors.location = "Event location is required."
 
          
     } if (maxseats >= 9 ) {
@@ -34,7 +34,7 @@ export function validateFormEvent(dataEvent:IEventProps, address: string){
         errors.price = "The price is required and must be greater than 0.";
         
 
-    } if (!dataEvent.picture){
+    } if (!picture){
         errors.picture = "Image is required.";
     } 
         return errors;
