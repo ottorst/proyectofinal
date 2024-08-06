@@ -4,8 +4,13 @@ import DashboardUser from './UserDashboard';
 import PaymentMethod from './PaymentDashboard';
 import { useAuth } from '../../AuthContext';
 import EventDashboard from './EventDashboard';
-import { useRouter } from 'next/navigation';
 import LoadingPage from '../../LoadingPage/loading';
+import { IEvent } from '@/src/types/IEvent';
+import { IBooking } from '@/src/types/IBooking';
+
+interface IEventWithBookings extends IEvent {
+    bookings: IBooking[];
+}
 
 
 
@@ -16,16 +21,36 @@ interface DashboardProps {
 
 const DashboardMenu: React.FC<DashboardProps> = ({ userId }) => {
     const [selectedOption, setSelectedOption] = useState<'Profile' | 'Payment' | 'Events'>('Profile');
+    const [userEvents, setUserEvents] = useState<IEventWithBookings[]>([]);
     const { user } = useAuth();
-    const router = useRouter();
-    const [address, setAddress] = useState("");
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const response = await fetch('http://localhost:3001/events/eventsWithBookingsAndUsers');
+                const data: IEventWithBookings[] = await response.json();
+
+                const eventsReservedByUser = data.filter((event: IEventWithBookings) =>
+                    event.bookings.some((booking: IBooking) => booking.userId === userId)
+                );
+
+                setUserEvents(eventsReservedByUser);
+            } catch (error) {
+                console.error('Error fetching events:', error);
+            }
+        };
+
+        if (userId) {
+            fetchEvents();
+        }
+    }, [userId]);
 
     const handleOptionChange = (option: 'Profile' | 'Payment' | 'Events') => {
         setSelectedOption(option);
     };
 
     if (!user) {
-        return <LoadingPage/>
+        return <LoadingPage />;
     }
 
     return (
@@ -75,7 +100,7 @@ const DashboardMenu: React.FC<DashboardProps> = ({ userId }) => {
                     )}
                     {selectedOption === 'Events' && (
                         <div className="bg-gray-800 text-gray-100 rounded-lg h-full p-4">
-                            <EventDashboard />
+                            <EventDashboard events={userEvents} />
                         </div>
                     )}
                 </div>

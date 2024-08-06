@@ -10,7 +10,7 @@ const AdminDashboard = ({ params }: { params: { userId: string } }) =>{
     
     return (
         <ProtectedRoute adminOnly = {true}>
-            <DashboardAdmin userId={userIdNumber} />;
+            <DashboardAdmin userId={userIdNumber} />
         </ProtectedRoute>
     )
 };

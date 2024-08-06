@@ -13,7 +13,6 @@ const DashboardUser: React.FC<DashboardUserProps> = ({ userId }) => {
     const router = useRouter();
     const { user, setUser, token } = useAuth();
     const [formData, setFormData] = useState<IUser | null>(null);
-    const [password, setPassword] = useState('');
     const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
@@ -41,11 +40,6 @@ const DashboardUser: React.FC<DashboardUserProps> = ({ userId }) => {
         }
     };
 
-    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { value } = e.target;
-        setPassword(value);
-    };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!formData) return;
@@ -53,9 +47,8 @@ const DashboardUser: React.FC<DashboardUserProps> = ({ userId }) => {
         const updateData: Partial<IUser> = {
             name: formData.name,
             email: formData.email,
-            password: password,
             ...(formData.phone && { phone: formData.phone }),
-            ...(formData.birthday && { birthday: formData.birthday }),
+            ...(formData.birthday && { birthday: new Date(formData.birthday).toISOString() }),
             ...(formData.allergies && { allergies: formData.allergies }),
             ...(formData.address && { address: formData.address }),
             ...(formData.city && { city: formData.city }),
@@ -64,7 +57,7 @@ const DashboardUser: React.FC<DashboardUserProps> = ({ userId }) => {
 
         try {
             const response = await fetch(`http://localhost:3001/users/${user.id}`, {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
@@ -112,7 +105,7 @@ const DashboardUser: React.FC<DashboardUserProps> = ({ userId }) => {
                     {!isEditing ? (
                         <>
                             <p className="font-bold">{`👤Name: ${user?.name}`}</p>
-                            <p className="font-bold">{`🎂Birth: ${user?.birthday}`}</p>
+                            <p className="font-bold">{`🎂Birth: ${user?.birthday ? new Date(user.birthday).toISOString().split('T')[0] : ''}`}</p>
                             <p className="font-bold">{`📧Email: ${user?.email}`}</p>
                             <p className="font-bold">{`📍Address: ${user?.address}`}</p>
                             <p className="font-bold">{`🌎Country: ${user?.country}`}</p>
@@ -200,19 +193,6 @@ const DashboardUser: React.FC<DashboardUserProps> = ({ userId }) => {
                                     className="block w-full p-2 mt-1 rounded bg-gray-700 text-white"
                                 />
                             </label>
-                            <label>
-                                Password:
-                                <input
-                                    type="password"
-                                    name="password"
-                                    value={password}
-                                    onChange={handlePasswordChange}
-                                    className="block w-full p-2 mt-1 rounded bg-gray-700 text-white"
-                                    placeholder="Leave blank to keep current password"
-
-                                />
-                            </label>
-                           
                             <button
                                 type="submit"
                                 className="mt-4 bg-green-500 text-white px-4 py-2 rounded">
