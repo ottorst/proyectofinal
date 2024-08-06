@@ -59,6 +59,23 @@ export const EventForm: React.FC = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
     setFile(selectedFile);
+<<<<<<< HEAD
+=======
+  
+    // Puedes actualizar la validación aquí si es necesario
+    // Por ejemplo:
+    if (!selectedFile) {
+      setErrorDataEvent((prevErrors) => ({
+        ...prevErrors,
+        picture: "Please select a picture.",
+      }));
+    } else {
+      setErrorDataEvent((prevErrors) => ({
+        ...prevErrors,
+        picture: "",
+      }));
+    }
+>>>>>>> 33800c468722b743ea646e2c424aa6c93d32155c
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -99,7 +116,7 @@ export const EventForm: React.FC = () => {
   useEffect(() => {
     const errors = validateFormEvent(dataEvent, address);
     setErrorDataEvent(errors);
-  }, [dataEvent]);
+  }, [dataEvent, address, ]);
 
   return (
     <>
@@ -323,7 +340,7 @@ export const EventForm: React.FC = () => {
 
                 <label
                   className="block mb-2 text-sm font-medium  text-white dark:text-white"
-                  htmlFor="file_input"
+                  htmlFor="picture"
                 >
                   Select picture
                 </label>
@@ -335,14 +352,20 @@ export const EventForm: React.FC = () => {
                 <input
                   className="block w-full text-sm text-gray-900 border  border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                   aria-describedby="file_input_help"
-                  id="file_input"
+                  id="picture"
                   type="file"
+<<<<<<< HEAD
                   name="picture"
                   onChange={handleFileChange}
+=======
+                name="picture"
+              
+                 onChange={handleFileChange} 
+>>>>>>> 33800c468722b743ea646e2c424aa6c93d32155c
                 />
                 <p
                   className="mt-1 text-sm text-gray-500 dark:text-gray-300"
-                  id="file_input_help"
+                
                 >
                   SVG, PNG, JPG or GIF (MAX. 800x400px).
                 </p>
