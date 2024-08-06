@@ -45,6 +45,7 @@ const config: Config = {
          'black-smoked':'#0b0909f0',
          'softGray':'#e6e6e680',
           'lightGray':'#3e3e3ee0',
+          'global-color':'#0b0909f0',
       },
       fontFamily: {
         'lora': ['Lora', 'serif'],
