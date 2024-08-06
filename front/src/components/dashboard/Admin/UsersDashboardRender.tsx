@@ -44,22 +44,22 @@ const UsersDashboardRender: React.FC<UsersDashboardRenderProps> = ({ users }) =>
 
 
   return (
-    <div className="bg-white p-4 rounded shadow-md">
-      <h2 className="text-xl font-semibold mb-4 text-gray-900">User List</h2>
+    <div className="bg-gray-800 p-4 rounded shadow-md">
+      <h2 className="text-xl font-semibold mb-4 text-white">Users</h2>
       {users.length === 0 ? (
-        <p className="text-gray-700">No users available.</p>
+        <p className="text-white">No users available.</p>
       ) : (
         <>
           <div className="space-y-4">
             {currentUsers.map(user => (
               <div key={user.id} className="flex flex-col sm:flex-row justify-between items-center p-2 border-b">
                 <div className="flex flex-col mb-4 sm:mb-0">
-                  <p className="text-lg font-semibold text-gray-900">{user.name}</p>
-                  <p className="text-gray-700">{user.email}</p>
+                  <p className="text-lg font-semibold text-white">{user.name}</p>
+                  <p className="text-gray-400">{user.email}</p>
                 </div>
                 <div className="flex space-x-2">
                   <button
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-sm"
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-400 text-sm"
                     onClick={() => handleViewDetails(user)}
                   >
                     View Details
@@ -81,7 +81,7 @@ const UsersDashboardRender: React.FC<UsersDashboardRenderProps> = ({ users }) =>
               <button
                 key={index}
                 onClick={() => handlePageChange(index + 1)}
-                className={`px-4 py-2 rounded text-sm ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}
+                className={`px-4 py-2 rounded text-sm ${currentPage === index + 1 ? 'bg-gray-600 text-white ' : 'bg-gray-200 text-gray-800'}`}
               >
                 {index + 1}
               </button>

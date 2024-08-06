@@ -6,7 +6,7 @@ import { IEventProps } from "@/src/types/IEventProps";
 import { validateFormEvent } from "@/src/helpers/validateFormEvent";
 import { createEvent } from "@/src/helpers/createEvent";
 import "leaflet/dist/leaflet.css";
-import { uploadFile } from "@/src/helpers/uploadFile"; 
+import { uploadFile } from "@/src/helpers/uploadFile";
 /*  import MapComponent from "../mapComponent/MapComponent";  */
 
 
@@ -29,7 +29,7 @@ export const EventForm: React.FC = () => {
     maxseats: 0,
     price: 0,
     picture: "",
-    });
+  });
 
   const [errorDataEvent, setErrorDataEvent] = useState<IEventErrorProps>({
     title: "",
@@ -44,7 +44,7 @@ export const EventForm: React.FC = () => {
 
 
 
- 
+
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -53,27 +53,27 @@ export const EventForm: React.FC = () => {
       ...dataEvent,
       [event.target.name]: event.target.value,
     });
-  
+
   };
 
-     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
     setFile(selectedFile);
-  };  
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
- 
+
     const googleMapsUrl = address
       ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-          address
-        )}`
+        address
+      )}`
       : "";
 
     const newEvent = {
       ...dataEvent,
       location: googleMapsUrl,
-  picture: file ? await uploadFile(file) : dataEvent.picture,  
+      picture: file ? await uploadFile(file) : dataEvent.picture,
     };
 
 
@@ -108,7 +108,7 @@ export const EventForm: React.FC = () => {
         onClick={toggleModal}
         data-modal-target="crud-modal"
         data-modal-toggle="crud-modal"
-        className="block text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        className="block text-white bg-blue-500 hover:bg-blue-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         type="button"
       >
         Create Event
@@ -171,12 +171,12 @@ export const EventForm: React.FC = () => {
                       onChange={handleChange}
                       className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                       placeholder="Type event title"
-                      />
-                      {errorDataEvent.title && (
-                        <p className="text-red-500 text-xs bottom-[-1.5rem] left-0">
-                          {errorDataEvent.title}
-                        </p>
-                      )}
+                    />
+                    {errorDataEvent.title && (
+                      <p className="text-red-500 text-xs bottom-[-1.5rem] left-0">
+                        {errorDataEvent.title}
+                      </p>
+                    )}
                   </div>
                   <div className="col-span-2">
                     <label
@@ -328,17 +328,17 @@ export const EventForm: React.FC = () => {
                   Select picture
                 </label>
                 {errorDataEvent.picture && (
-                      <p className="text-red-500 text-xs bottom-[-1.5rem] left-0">
-                        {errorDataEvent.picture}
-                      </p>
-                    )}
+                  <p className="text-red-500 text-xs bottom-[-1.5rem] left-0">
+                    {errorDataEvent.picture}
+                  </p>
+                )}
                 <input
                   className="block w-full text-sm text-gray-900 border  border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                   aria-describedby="file_input_help"
                   id="file_input"
                   type="file"
-                name="picture"
-                 onChange={handleFileChange} 
+                  name="picture"
+                  onChange={handleFileChange}
                 />
                 <p
                   className="mt-1 text-sm text-gray-500 dark:text-gray-300"
@@ -365,7 +365,7 @@ export const EventForm: React.FC = () => {
                   </svg>
                   Add new event
                 </button>
-             
+
               </form>
             </div>
           </div>

@@ -10,7 +10,12 @@ const Events: React.FC = () => {
   const { events, loading } = useCrud();
 
   const handleImageClick = (event: IEvent) => {
-    setSelectedEvent(event);
+    const seatsRemain = event.maxseats - (event.totalBookings || 0);
+
+    setSelectedEvent({
+      ...event,
+      seatsRemain
+    });
   };
 
   const handleCloseModal = () => {
@@ -25,7 +30,10 @@ const Events: React.FC = () => {
     return new Date(date).toLocaleString();
   };
   console.log(events, "imagennnn");
-  
+
+
+
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 my-9">
       <title>Experiences</title>
@@ -40,6 +48,7 @@ const Events: React.FC = () => {
         </div>
       ) : (
         events.map((event) => (
+
           <div
             key={event.id}
             className="flex flex-col h-full bg-gray-800 rounded-md p-4 text-center space-y-4 
@@ -62,7 +71,6 @@ const Events: React.FC = () => {
                 <h2 className="text-lg font-medium text-gray-300 mb-4">
                   {event.subtitle}
                 </h2>
-                <p className="text-gray-200 mb-4">{event.description}</p>
               </div>
               <div className="mt-auto">
                 <button
@@ -83,7 +91,7 @@ const Events: React.FC = () => {
       {selectedEvent && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white bg-opacity-95 p-6 rounded-lg w-11/12 md:w-1/2 max-h-screen overflow-y-auto relative">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-end items-center mb-4">
               <button
                 onClick={handleCloseModal}
                 className="text-black text-3xl"
@@ -125,6 +133,10 @@ const Events: React.FC = () => {
               <p className="text-gray-700 mb-2">
                 <span className="font-bold text-black">Price:</span> $
                 {selectedEvent.price}
+              </p>
+              <p className="text-gray-700 mb-2">
+                <span className="font-bold text-black">SeatsRemain:</span>
+                {selectedEvent.seatsRemain}
               </p>
               <button className="bg-yellow-500 rounded-md hover:bg-yellow-700 px-8 py-4 mt-4 w-full">
                 BookNow
