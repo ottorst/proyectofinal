@@ -59,8 +59,8 @@ export const EventForm: React.FC = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
     setFile(selectedFile);
-<<<<<<< HEAD
-=======
+
+
   
     // Puedes actualizar la validación aquí si es necesario
     // Por ejemplo:
@@ -75,7 +75,7 @@ export const EventForm: React.FC = () => {
         picture: "",
       }));
     }
->>>>>>> 33800c468722b743ea646e2c424aa6c93d32155c
+
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -354,14 +354,11 @@ export const EventForm: React.FC = () => {
                   aria-describedby="file_input_help"
                   id="picture"
                   type="file"
-<<<<<<< HEAD
-                  name="picture"
-                  onChange={handleFileChange}
-=======
+
                 name="picture"
               
                  onChange={handleFileChange} 
->>>>>>> 33800c468722b743ea646e2c424aa6c93d32155c
+
                 />
                 <p
                   className="mt-1 text-sm text-gray-500 dark:text-gray-300"
