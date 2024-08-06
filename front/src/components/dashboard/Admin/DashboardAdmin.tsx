@@ -14,7 +14,7 @@ import { useCrud } from '../../CrudContext';
 
 
 interface DashboardAdminProps {
-    userId: number;
+  userId: number;
 }
 
 const DashboardAdmin: React.FC<DashboardAdminProps> = ({ userId }) => {
@@ -23,13 +23,13 @@ const DashboardAdmin: React.FC<DashboardAdminProps> = ({ userId }) => {
     const [errors,setErrors] = useState<Error | null>(null);
     
 
-    if (!user) {
-        return <LoadingPage/>
-    }
-    
-    if (loading) {
-        return <LoadingPage/>
-    }
+  if (!user) {
+    return <LoadingPage />;
+  }
+
+  if (loading) {
+    return <LoadingPage />;
+  }
 
    
     

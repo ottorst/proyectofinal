@@ -12,6 +12,9 @@ interface IEventWithBookings extends IEvent {
     bookings: IBooking[];
 }
 
+
+
+
 interface DashboardProps {
     userId: number;
 }
