@@ -1,4 +1,4 @@
-import {ILocation} from "./ILocation"
+
 
 export interface IEventErrorProps{
     title?: string;
