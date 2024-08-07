@@ -10,7 +10,7 @@ const Events: React.FC = () => {
   const { events, loading } = useCrud();
 
   const handleImageClick = (event: IEvent) => {
-    const seatsRemain = event.maxseats - (event.totalBookings || 0);
+    const seatsRemain = event.maxseats - (event.totalPersons || 0);
 
     setSelectedEvent({
       ...event,

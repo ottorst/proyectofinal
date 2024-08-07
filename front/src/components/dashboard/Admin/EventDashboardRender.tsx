@@ -14,7 +14,7 @@ import Swal from "sweetalert2"
 import { Booking } from "./IBookings"
 
 
-const DataRender: React.FC<IEvent> = ({ picture, title, price, date, id, location, maxseats, description, subtitle, totalBookings }) => {
+const DataRender: React.FC<IEvent> = ({ picture, title, price, date, id, location, maxseats, description, subtitle, totalPersons,totalBookings }) => {
   const { handleEventDelete, setEvents, } = useCrud();
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState<IEvent>({
@@ -117,7 +117,7 @@ const DataRender: React.FC<IEvent> = ({ picture, title, price, date, id, locatio
   };
 
 
-  const totalSeatsRemain = maxseats - (totalBookings || 0)
+  const totalSeatsRemain = maxseats - (totalPersons || 0)
 
 
   return (
