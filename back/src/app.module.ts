@@ -7,9 +7,10 @@ import { AuthModule } from './modules/auth/auth.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { BookingModule } from './modules/booking/booking.module';
 import {FileUploadModule}from './modules/image-upload/image-upload.module'
+import { SendEmailModule } from './modules/send-email/sendEmail.module';
 
 @Module({
-  imports: [UsersModule, EventsModule, AuthModule, PrismaModule, BookingModule,FileUploadModule],
+  imports: [UsersModule, EventsModule, AuthModule, PrismaModule, BookingModule,FileUploadModule,SendEmailModule],
   controllers: [AppController],
   providers: [AppService],
 })
