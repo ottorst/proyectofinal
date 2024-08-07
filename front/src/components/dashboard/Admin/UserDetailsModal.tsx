@@ -13,7 +13,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, user }) => {
   if (!isOpen || !user) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-40 z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-15 z-50">
       <div className="bg-gray-800 p-6 rounded shadow-lg w-full max-w-lg">
         <div className='flex justify-end'>
           <button

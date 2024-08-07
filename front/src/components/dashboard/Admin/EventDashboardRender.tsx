@@ -10,8 +10,8 @@ import { useCrud } from "../../CrudContext"
 import { useAuth } from "../../AuthContext"
 //Libraries
 import Swal from "sweetalert2"
-
-
+//Types
+import { Booking } from "./IBookings"
 
 
 const DataRender: React.FC<IEvent> = ({ picture, title, price, date, id, location, maxseats, description, subtitle, totalBookings }) => {
@@ -31,8 +31,8 @@ const DataRender: React.FC<IEvent> = ({ picture, title, price, date, id, locatio
   });
   const router = useRouter();
   const { user } = useAuth();
-
-
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [showModal, setShowModal] = useState(false);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     if (formData) {
@@ -95,6 +95,26 @@ const DataRender: React.FC<IEvent> = ({ picture, title, price, date, id, locatio
   }
 
 
+  const handleFetchUsers = async () => {
+    try {
+      const response = await fetch(`http://localhost:3001/events/eventsWithBookingsAndUsers?id=${id}`);
+      if (response.ok) {
+        const eventData = await response.json();
+        const event = eventData.find((e: any) => e.id === id);
+
+        if (event && event.bookings) {
+          setBookings(event.bookings);
+        } else {
+          console.error('No bookings found for this event');
+        }
+        setShowModal(true);
+      } else {
+        console.error('Failed to fetch users');
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
 
 
   const totalSeatsRemain = maxseats - (totalBookings || 0)
@@ -128,11 +148,16 @@ const DataRender: React.FC<IEvent> = ({ picture, title, price, date, id, locatio
               </div>
 
               <div className="flex space-x-2 mt-2 lg:mt-0">
-                <button onClick={() => setEditMode(true)} className="text-white bg-blue-500 w-32 hover:bg-blue-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">
+                <button onClick={() => setEditMode(true)} className="text-white bg-blue-500  hover:bg-blue-400  font-medium rounded-lg text-sm px-1 py-2.5 text-center">
                   Edit Event
                 </button>
-                <button onClick={() => handleEventDelete(id)} className="text-white bg-red-700 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                <button onClick={() => handleEventDelete(id)} className="text-white bg-red-700 hover:bg-red-500  rounded-lg text-sm px-1 py-2.5 text-center ">
                   Delete Event
+                </button>
+                <button className="text-white bg-yellow-500 hover:bg-yellow-400  rounded-lg text-sm px-1 py-2.5 text-center"
+                  onClick={handleFetchUsers}
+                >
+                  Users
                 </button>
               </div>
             </li>
@@ -144,6 +169,41 @@ const DataRender: React.FC<IEvent> = ({ picture, title, price, date, id, locatio
         </div>
       </section>
 
+
+
+      {showModal && (
+        <div className="fixed inset-0 flex justify-center bg-gray-800 bg-opacity-75 items-center z-50">
+          <div className="bg-gray-800 p-4 rounded shadow-lg w-full max-w-md">
+            <h2 className="text-lg font-semibold mb-4">Registered Users</h2>
+            {bookings.length > 0 ? (
+              <ul>
+                {bookings.map((booking) => (
+                  <li key={booking.TransactionNumber} className="border-b py-2">
+                    <div>
+                      <span className="font-medium">👤{booking.user.name}</span> -{" "}
+                      📧 {booking.user.email}
+                    </div>
+                    <div>
+                      <span>📱Phone: {booking.user.phone}</span>
+                    </div>
+                    <div>
+                      <span>🎟️Quantity: {booking.Quantity}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-center text-white">No Users regsiter to this event.</p>
+            )}
+            <button
+              onClick={() => setShowModal(false)}
+              className="mt-4 text-white bg-blue-500 hover:bg-blue-400 rounded-lg px-4 py-2"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
 
 
