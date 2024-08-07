@@ -3,7 +3,7 @@ import * as nodemailer from 'nodemailer';
 import { nodemailerConfig } from 'src/config/nodemailer-config';
 
 @Injectable()
-export class MailService {
+export class NodemailerService {
   private transporter;
 
   constructor() {
